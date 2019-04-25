@@ -1,0 +1,58 @@
+// {{LangUpgrade1}}
+UPGRADE
+// {{LangConfPinout}}
+# PINOUT 13 1 1 0 LedConnectedWiFi
+# PINOUT 12 2 0 0 PinOutName2
+# PINOUT 14 3 0 0 PinOutName3
+// {{LangConfRelay}}
+RELAY 12 1 1 0 {{LangrelayName}}_1
+# RELAY 15 2 0 0 {{LangrelayName}}_2
+# RELAY 13 3 0 0 {{LangrelayName}}_3
+# RELAY 14 4 0 0 {{LangrelayName}}_4
+// {{LangConfSerial}}
+# UART 115200
+# print print
+// {{LangConfNTP}}
+NTP ntp1.vniiftri.ru ntp2.vniiftri.ru
+// {{LangConfTIMERS}}
+TIMERS
+// {{LangConfDDNS}}
+# DDNS
+// {{LangConfDHT}}
+# DHT 14
+// {{LangConfDS18B20}}
+# DS18B20 14
+// Подключается только на 4 и 5 GPIO, совместно с DHT не работает.
+# SI7021
+// {{LangConfA0}}
+# A0
+// {{LangConfTach}}
+TACH 0 0 20 0
+# TACH 0 1 20 0
+# TACH 0 2 20 0
+# TACH 0 3 20 0
+# TACH 0 4 20 0
+# TACH 0 5 20 0
+# TACH 0 6 20 0
+# TACH 0 7 20 0
+// {{LangConfBUZZER}}
+# BUZZER 16
+// {{LangConfRGB}}
+RGB 5 15 0 ff0000 100 255 3 {{LangrgbName}}
+// {{LangConfRGBS}}
+# SRGB 12 4 5 0 ffffff 100 255 {{LangrgbName}}
+// {{LangConfJalousie}}
+# JALOUSIE 4 12 13
+// {{LangConfRfReceived}}
+# RF-RECEIVED 3 433
+// {{LangConfRfTransmitter}}
+# RF-TRANSMITTER 1 433
+# RF-LIVOLO 1
+// {{LangConfIrReceived}}
+# IR-RECEIVED 0
+// {{LangConfIrTransmitter}}
+# IR-TRANSMITTER 14
+// {{LangConfMQTT}}
+# MQTT
+// {{LangConfAdmin}}
+ADMIN

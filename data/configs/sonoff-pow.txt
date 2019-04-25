@@ -1,0 +1,26 @@
+// {{LangUpgrade1}}
+UPGRADE
+// {{LangConfPinout}}
+# PINOUT 13 1 1 0 LedConnectedWiFi
+// {{LangConfRelay}}
+RELAY 12 1 1 0 {{LangrelayName}}_1
+// {{LangConfSerial}}
+# UART 115200
+# print print
+// {{LangConfNTP}}
+NTP ntp1.vniiftri.ru ntp2.vniiftri.ru
+// {{LangConfTIMERS}}
+TIMERS
+// {{LangConfDDNS}}
+# DDNS
+// {{LangConfTach}}
+TACH 0 0 20 0
+# TACH 0 1 20 0
+# TACH 0 2 20 0
+// {{LangConfPOW}}
+POW 2000
+# POW 2000 14 13 5
+// {{LangConfMQTT}}
+# MQTT
+// {{LangConfAdmin}}
+# ADMIN
