@@ -103,12 +103,18 @@ const String pulseTimeS ="pulseTime";
 String Scenary;                      // Строка обработки сценариев
 
 // --------- Update
-// const String Uploader = ""; // Если перепрошивка происходит без Uploader раскоментировать и закоментировать следующую
-const String Uploader = "http://backup.privet.lv/esp/sonoff/Sonoff_Updater.ino.generic.bin";
+ const String Uploader = ""; // Если перепрошивка происходит без Uploader раскоментировать и закоментировать следующую
+//const String Uploader = "http://backup.privet.lv/esp/sonoff/Sonoff_Updater.ino.generic.bin";
 const String spiffsDataS   = "spiffsData";
 const String buildDataS   = "buildData";
 const String spiffsS   = "spiffs";
 const String buildS   = "build";
+const String urlsPath = "http://backup.privet.lv/iotroom/";
+const String fNameSPIFFS = "IoT-Room.spiffs.bin";
+const String fNameBuild = "IoT-Room.ino.generic.bin";
+const String urlsPathS = "urlsPath";
+const String fNameSPIFFSS = "fSPIFFS";
+const String fNameBuildS = "fBuild";
 
 // --------- NTP
 const String timeZoneS   = "timeZone";

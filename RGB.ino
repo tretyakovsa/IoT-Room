@@ -3,38 +3,39 @@
 void initRGB() {
   byte pin = readArgsInt(); // pin
   pin =  pinTest(pin);
-  String num = readArgsString(); // второй аргумент прификс RGB 0 1 2
-  byte numI = num.toInt();
-  sendOptions("rgbNum", getOptionsInt("rgbNum") + 1); // увеличим количество лент +1
-  // Реагирует на комманду rgb
-  sCmd.addCommand(rgbS.c_str(),  rgb);
-  commandsReg(rgbS);
-  ws2812fx[numI].setSegment(0,  0,  readArgsInt() - 1, FX_MODE_BLINK, 0xFF0000, 1000, false); // segment 0 is leds 0 - 9
-  int state = readArgsInt(); //состояние
-  sendStatus(rgbS + num, state);
-  sendStatus(colorRGBS + num,  readArgsString()); //цвет
-  sendStatus(speedRGBS + num, readArgsInt()); //скорость
-  sendStatus(brightnessRGBS + num, readArgsInt()); //яркость
-  sendStatus(modeRGBS + num, readArgsInt()); //режим
-  ws2812fx[numI].init();
-  if (numI == 0) {
-    dma.Initialize();
-    ws2812fx[numI].setCustomShow(myCustomShow);
-  }
-  if (numI == 1) {
-    dma1.Initialize();
-    ws2812fx[numI].setCustomShow(myCustomShow1);
-  }
+  if (pin == 1 || pin == 3 ) {
+    String num = readArgsString(); // второй аргумент прификс RGB 0 1 2
+    byte numI = num.toInt();
+    sendOptions("rgbNum", getOptionsInt("rgbNum") + 1); // увеличим количество лент +1
+    // Реагирует на комманду rgb
+    sCmd.addCommand(rgbS.c_str(),  rgb);
+    commandsReg(rgbS);
+    ws2812fx[numI].setSegment(0,  0,  readArgsInt() - 1, FX_MODE_BLINK, 0xFF0000, 1000, false); // segment 0 is leds 0 - 9
+    int state = readArgsInt(); //состояние
+    sendStatus(rgbS + num, state);
+    sendStatus(colorRGBS + num,  readArgsString()); //цвет
+    sendStatus(speedRGBS + num, readArgsInt()); //скорость
+    sendStatus(brightnessRGBS + num, readArgsInt()); //яркость
+    sendStatus(modeRGBS + num, readArgsInt()); //режим
+    ws2812fx[numI].init();
+    if (numI == 0) {
+      dma.Initialize();
+      ws2812fx[numI].setCustomShow(myCustomShow);
+    }
+    if (numI == 1) {
+      dma1.Initialize();
+      ws2812fx[numI].setCustomShow(myCustomShow1);
+    }
 
-  ws2812fx[numI].setColor(setColorStringI(colorRGBS + num, numI));
-  int temp = getStatusInt(speedRGBS + num);
-  ws2812fx[numI].setSpeed(convertSpeed(temp)); // Скорость
-  ws2812fx[numI].setBrightness(getStatusInt(brightnessRGBS + num)); //Яркость
-  ws2812fx[numI].setMode(getStatusInt(modeRGBS + num)); // Режим
-  //регистрируем модуль
-  modulesReg(rgbS + num);
-  actionsReg(rgbS + num);
-
+    ws2812fx[numI].setColor(setColorStringI(colorRGBS + num, numI));
+    int temp = getStatusInt(speedRGBS + num);
+    ws2812fx[numI].setSpeed(convertSpeed(temp)); // Скорость
+    ws2812fx[numI].setBrightness(getStatusInt(brightnessRGBS + num)); //Яркость
+    ws2812fx[numI].setMode(getStatusInt(modeRGBS + num)); // Режим
+    //регистрируем модуль
+    modulesReg(rgbS + num);
+    actionsReg(rgbS + num);
+  }
 }
 void myCustomShow(void) {
   if (dma.IsReadyToUpdate()) {
@@ -62,6 +63,7 @@ void rgb() {
   String com = readArgsString(); //комманда
   String num = readArgsString(); // номер RGB
   byte numI = num.toInt();
+  if (numI > 1) return;
   String color = readArgsString(); //цвет
   String speed = readArgsString(); //скорость
   String brightness = readArgsString(); //яркость
@@ -111,7 +113,7 @@ void rgb() {
     //flag = sendStatus(stateRGBS + num, 1);
   } else {
     if (com == "on" || com == "1") {
-      sendStatus("RGBtest",  com+" "+num);
+      sendStatus("RGBtest",  com + " " + num);
       if (!ws2812fx[numI].isRunning()) ws2812fx[numI].start();
       //SoketData (stateRGBS + num, "1", getStatus(stateRGBS + num));
       sendStatus(stateRGBS + num, 1);

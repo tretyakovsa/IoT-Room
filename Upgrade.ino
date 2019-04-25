@@ -26,7 +26,7 @@ void webUpgrade() {
     saveConfigSetup (); // Сохранить в файле Setup
   }
   if (buildData != emptyS) { // Если нужно прошить build
-    //Serial.println(buildData);
+    Serial.println(buildData);
     if (Uploader != emptyS) { // Если включен Uploader
       writeFile("buildPach.txt", buildData); // Сохраним путь к файлу в файл которым воспользуется Uploader
       buildData = Uploader; // Изменим url для работы Uploader
@@ -44,11 +44,11 @@ void updateHTTP(String url, boolean mode) {
   if (url == "") return;
   ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
   if (mode) {
-    //Serial.println("Update Build...");
+    Serial.println("Update Spiffs...");
     t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs(url);
     UpdateStatus(ret , "Spiffs");
   } else {
-    //Serial.println("Update Build...");
+    Serial.println("Update Build...");
     t_httpUpdate_return ret = ESPhttpUpdate.update(url);
     UpdateStatus(ret , "build");
   }
@@ -56,17 +56,17 @@ void updateHTTP(String url, boolean mode) {
 void UpdateStatus(t_httpUpdate_return set , String mode) {
   switch (set) {
     case HTTP_UPDATE_FAILED:
-    //Serial.println(mode + "_FAILED");
+    Serial.println(mode + "_FAILED");
       sendSetup(spiffsDataS, mode + "_FAILED");
       statistics();
       break;
     case HTTP_UPDATE_NO_UPDATES:
-    //Serial.println(mode + "_NO_UPDATES");
+    Serial.println(mode + "_NO_UPDATES");
       sendSetup(spiffsDataS, mode + "_NO_UPDATES");
       statistics();
       break;
     case HTTP_UPDATE_OK:
-    //Serial.println(mode + "_UPDATE_OK");
+    Serial.println(mode + "_UPDATE_OK");
       sendSetup(spiffsDataS, mode + "_UPDATE_OK");
       statistics();
       break;

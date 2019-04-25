@@ -51,7 +51,7 @@ String selectFromMarkerToMarker(String str, String found, int number) {
 void statistics() {
   String urls = urlsStat;
   if (urls == emptyS) return; // Если urlsStat пустой статистику не отправлять
-  urls += WiFi.macAddress().c_str();
+  urls += MyWiFi.macAddress().c_str();
   urls += "&";
   urls += getSetup(configsS);
   urls += "&";

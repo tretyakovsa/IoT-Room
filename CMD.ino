@@ -4,6 +4,8 @@ void initCMD() {
   sCmd.addCommand("print",       printTest);
   sCmd.addCommand("ADMIN",       initAdmin);
   sCmd.addCommand("GET",       initGet);
+  sCmd.addCommand("//",       alarmComm);
+  sCmd.addCommand("#",       alarmOff);
   commandsReg("GET");
   sCmd.setDefaultHandler(unrecognized);
   sCmd.addCommand("NTP",        initNTP);
@@ -23,6 +25,16 @@ void initCMD() {
 #ifdef rgbM // #endif
   sCmd.addCommand("RGB",       initRGB);
   #endif
+}
+
+void unrecognized(const char *command) {
+  Serial.println("What?");
+}
+void alarmComm() {
+  //Serial.println("Comment?");
+}
+void alarmOff() {
+  //Serial.println("CommandOff?");
 }
 // Настраивает Serial по команде sCmd.addCommand("Serial",       uart);
 void uart() {
@@ -60,9 +72,6 @@ void initGet() {
     answer = http.getString();
   }
   http.end();
-}
-void unrecognized(const char *command) {
-  Serial.println("What?");
 }
 
 // Читает аргументы из команд каждый слежующий вызов читает следующий аргумент возвращает String

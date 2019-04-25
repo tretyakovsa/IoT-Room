@@ -18,6 +18,9 @@ void setup() {
   jsonWrite(modules, ipS, testIp);
   setupToOptions(langS);
   jsonWrite(modules, langS, getSetup(langS));
+  sendOptions(urlsPathS,urlsPath);
+  sendOptions(fNameSPIFFSS,fNameSPIFFS);
+  sendOptions(fNameBuildS,fNameBuild);
   initPuls();
   initUpgrade();
   initSSDP();
