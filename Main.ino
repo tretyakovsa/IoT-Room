@@ -5,6 +5,13 @@ String defaultTestString(String test, String def) {
   }
   return test;
 }
+// ------------- Значение по умолчанию
+String defaultTestStringMAC(String test, String def) {
+  if (test == emptyS or test == def) {
+    test = def+"-"+WiFi.macAddress().c_str();
+  }
+  return test;
+}
 
 // --------------------Выделяем строку до маркера --------------------------------------------------
 String selectToMarker (String str, String found) {
@@ -316,4 +323,27 @@ String topicToCom (String topicS) {
   }
   if (f) topicS += " ";
   return topicS;
+}
+
+// param add fire 0
+// param send fire 1
+// param on fire
+// param off fire
+// param not fire
+// param + fire 1
+// param - fire 1
+void initParam() {
+  String com = readArgsString(); //Комманда
+  String key = readArgsString(); // Имя
+  String volume = readArgsString();   // Данные
+  String oldVolume = getStatus(key);
+  if (com == "add") sendStatus(key, volume);
+  if (com == "send") flag = sendStatus(key, volume);
+  if (com == "on") flag = sendStatus(key, 1);
+  if (com == "off") flag = sendStatus(key, 0);
+  if (com == "not") flag = sendStatus(key, !getStatusInt(key));
+  if (key != "") {
+    //Serial.println(key);
+    //SoketData (key, getStatus(key), oldVolume);
+  }
 }

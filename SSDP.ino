@@ -1,5 +1,5 @@
 void initSSDP() {
-  sendSetup(ssdpS,defaultTestString(getSetup(ssdpS),ssdpDef));
+  sendSetup(ssdpS,defaultTestStringMAC(getSetup(ssdpS),ssdpDef));
   sendSetup(spaceS,defaultTestString(getSetup(spaceS),spaceDef));
   setupToOptions(ssdpS);
   setupToOptions(spaceS);
@@ -30,6 +30,7 @@ void initSSDP() {
     HTTP.on("/device", HTTP_GET, []() {
       String  ssdpName = HTTP.arg("ssdp");
       sendSetup(ssdpS, ssdpName);
+      sendSetup(ssdpS,defaultTestStringMAC(getSetup(ssdpS),ssdpDef));
       sendOptions(ssdpS, ssdpName);
       SSDP.setName(ssdpName);
       SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
@@ -78,7 +79,7 @@ void handleSSDP() {
       int len = udp.read(packetBuffer, 512);
       if (len > 0) packetBuffer[len] = 0;
       input_string += packetBuffer;
-      int i = input_string.indexOf("Arduino");
+      int i = input_string.indexOf("Arduino"); // Ищем в полученной строке слово Arduino
       if (i > 0) {
         chipIDremote = deleteBeforeDelimiter(input_string, "Arduino"); // Откиним все до слова Arduino
         String IpRemote = deleteBeforeDelimiter(chipIDremote, "LOCATION:");// Найдем строку начинающуюся с LOCATION

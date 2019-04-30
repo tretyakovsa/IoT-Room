@@ -11,7 +11,7 @@ StringCommand sCmd;
 #include <time.h>                    //Содержится в пакете
 #include <FS.h>                      //Содержится в пакете
 //---------- WiFi сеть
-#include <wificonnect.h>
+#include <wificonnect.h>             //https://github.com/tretyakovsa/wificonnect
 WIFICONNECT MyWiFi;
 //---------- Службы обнаружения
 //#include <ESP8266LLMNR.h>
@@ -27,9 +27,6 @@ WiFiClient wclient; //?
 ESP8266WebServer HTTP(80);
 ESP8266WebServer HTTPWAN(8080);
 File fsUploadFile;
-
-#include <WebSocketsServer.h>    //https://github.com/Links2004/arduinoWebSockets
-WebSocketsServer webSocket = WebSocketsServer(81);
 
 //---------- Обновление системы
 #include <ESP8266HTTPUpdateServer.h> //Содержится в пакете
@@ -60,6 +57,7 @@ const String notS   = "not";
 const String messageS   = "message";
 const String configsS   = "configs";
 const String urlsStat = "http://backup.privet.lv/visitors/?";
+const String voiceS   = "voice";
 
 // ----------------- Web
 String Lang = "ru";                  // файлы языка web интерфейса
@@ -203,3 +201,43 @@ const String modeRGBS   = "modeRGB";
 const String speedRGBS   = "speedRGB";
 const String rgbS   = "rgb";
 #endif
+
+#ifdef webSoketM //
+#include <WebSocketsServer.h>    //https://github.com/Links2004/arduinoWebSockets
+WebSocketsServer webSocket = WebSocketsServer(81);
+#include <WebSocketsClient.h>
+WebSocketsClient WebSocketsClient;
+const String webSocketS   = "webSocket";
+#endif
+
+#ifdef A0M //
+// Ocвещенность
+const String stateA0S   = "A0";
+const String highalarmA0S   = "highAlarmA0";
+const String lowalarmA0S   = "lowAlarmA0";
+const String alarmA0S   = "alarmA0";
+#endif
+
+#ifdef DS18B20M //
+#include <OneWire.h>                 //Ставим через менеджер библиотек
+#include <DallasTemperature.h>       //Ставим через менеджер библиотек
+OneWire *oneWire;
+DallasTemperature sensors;
+#endif
+
+#ifdef DHTM // #endif
+#include <DHT.h>                     //https://github.com/markruys/arduino-DHT
+DHT dht;
+#endif
+
+// Температура
+const String temperatureS   = "temperature";
+const String highalarmtempS   = "highAlarmTemp";
+const String lowalarmtempS   = "lowAlarmTemp";
+const String alarmtempS   = "alarmTemp";
+
+// Влажность
+const String humidityS   = "humidity";
+const String highalarmhumS   = "highAlarmHum";
+const String lowalarmhumS   = "lowAlarmHum";
+const String alarmhumS   = "alarmHum";

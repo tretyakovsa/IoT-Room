@@ -122,6 +122,32 @@ void initFS() {
     saveConfigSetup();
     HTTP.send(307, "Temporary Redirect\r\nLocation: /\r\nConnection: Close\r\n", emptyS);
   });
+    // -------------------построение графика
+  HTTP.on("/charts.json", HTTP_GET, []() {
+    String pFile = HTTP.arg("data");
+    String message = "{";
+    if (pFile.indexOf(".") == -1) {
+      for (uint8_t i = 0; i < HTTP.args(); i++) {
+        //message += " " + HTTP.argName(i) + ": " + HTTP.arg(i) + "\n";
+        message += "\"" + HTTP.argName(i) + "\":[";
+        String key = getOptions(HTTP.arg(i));
+        if (key != emptyS)  {
+          message += key;
+          key = emptyS;
+        } else {
+          key = getStatus(HTTP.arg(i));
+          if (key != emptyS)  {
+            message += key;
+            key = emptyS;
+          }
+        }
+        message += "],";
+      }
+    }
+    message += "\"points\":\"10\",\"refresh\":\"1000\"}";
+
+    httpOkText(message);
+  });
 
 }
 
@@ -271,4 +297,86 @@ void http404send() {
 
 void HTTPsendHeader() {
   HTTP.sendHeader("Access-Control-Allow-Origin", "*");
+}
+
+#ifdef webSoketM // #endif
+
+void webSoket_init() {
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
+  sendOptions(webSocketS, 1);
+}
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+  switch (type) {
+    case WStype_DISCONNECTED:  // Событие происходит при отключени клиента
+      //Serial.println("web Socket disconnected");
+      break;
+    case WStype_CONNECTED: // Событие происходит при подключении клиента
+      {
+        //Serial.println("web Socket Connected");
+        webSocket.sendTXT(num, configJson); // Отправим в всю строку с данными используя номер клиента он в num
+      }
+      break;
+    case WStype_TEXT: // Событие происходит при получении данных текстового формата из webSocket
+      if (length > 0) {
+        String command = String((const char *)payload);
+        String cmd;
+          cmd = jsonRead(command, voiceS); // Прислан макрос
+          if (cmd !=""){
+          sendOptions(voiceS, cmd);
+          flag = sendStatus(voiceS, cmd);
+          }
+          cmd = jsonRead(command, "effect"); // Прислан эффект
+          if (cmd !=""){
+            effectTest(cmd);
+          }
+          cmd = jsonRead(command, "cmd");   // Прислана комманда
+          if (cmd !=""){
+            sCmd.readStr(cmd);
+            //Serial.print("effect=");
+            //Serial.println(cmd);
+            effectTest(cmd);
+          }
+      }
+
+      //webSocket.sendTXT(num, "message here"); // Можно отправлять любое сообщение как строку по номеру соединения
+      // webSocket.broadcastTXT("message here");
+      break;
+    case WStype_BIN:      // Событие происходит при получении бинарных данных из webSocket
+      // webSocket.sendBIN(num, payload, length);
+      break;
+  }
+}
+// Отправка данных в Socket всем получателям
+// Параметры Имя ключа, Данные, Предыдущее значение
+void SoketData (String key, String data, String data_old)  {
+  if(getOptions(webSocketS) != "") {
+    if (data_old != data) {
+      String broadcast = "{}";
+      jsonWrite(broadcast, key, data);
+      webSocket.broadcastTXT(broadcast);
+      //Serial.println(getOptions(webSocketS));
+    }
+  }
+}
+
+void SocketClient(String ipSocket){
+   WebSocketsClient.begin(ipSocket, 81, "/");
+     WebSocketsClient.setReconnectInterval(5000);
+     //WebSocketsClient.enableHeartbeat ( 15000 , 3000 , 2 );
+  }
+#endif
+
+void effectTest(String effect) {
+  //sCmd.readStr("rgb off 0");
+  //sCmd.readStr("rgb off 1");
+  String urls = "http://evoflame.co.uk/effect/" + effect;
+  effect =  MyWiFi.getURL(urls); // Получить настройки эффекта с сервера
+  effect = "rgb set 0 " + effect; // Добавим комманду к первой ленте
+  effect.replace("\r\n", "\r\nrgb set 1 "); // Добавим комманду ко второй ленте
+  sCmd.readStr(selectToMarker (effect, "\r\n"));
+  sCmd.readStr(selectToMarkerLast (effect, "\r\n"));
+  sCmd.readStr("pulse on rgb0 30000");
+  sCmd.readStr("pulse on rgb1 30000");
+
 }

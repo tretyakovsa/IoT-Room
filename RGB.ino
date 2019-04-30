@@ -18,6 +18,7 @@ void initRGB() {
     sendStatus(brightnessRGBS + num, readArgsInt()); //яркость
     sendStatus(modeRGBS + num, readArgsInt()); //режим
     ws2812fx[numI].init();
+
     if (numI == 0) {
       dma.Initialize();
       ws2812fx[numI].setCustomShow(myCustomShow);
@@ -31,10 +32,19 @@ void initRGB() {
     int temp = getStatusInt(speedRGBS + num);
     ws2812fx[numI].setSpeed(convertSpeed(temp)); // Скорость
     ws2812fx[numI].setBrightness(getStatusInt(brightnessRGBS + num)); //Яркость
-    ws2812fx[numI].setMode(getStatusInt(modeRGBS + num)); // Режим
+    int modeI=getStatusInt(modeRGBS + num);
+    if (modeI!=100){
+    ws2812fx[numI].setMode(modeI); // Режим
+    } else {
+          if (numI==0)  ws2812fx[0].setCustomMode(myCustomEffect0);
+          if (numI==1)  ws2812fx[1].setCustomMode(myCustomEffect1);
+      }
+
     //регистрируем модуль
     modulesReg(rgbS + num);
     actionsReg(rgbS + num);
+    if (state) ws2812fx[numI].start();
+    if (!state) ws2812fx[numI].stop();
   }
 }
 void myCustomShow(void) {
@@ -103,8 +113,13 @@ void rgb() {
       if (mode == "-") {}
       else {
         temp = mode.toInt();
-        sendStatus(modeRGBS + num,  temp);
-        ws2812fx[numI].setMode(temp);
+        if (temp != 100) {
+          sendStatus(modeRGBS + num,  temp);
+          ws2812fx[numI].setMode(temp);
+        } else {
+          if (numI==0)  ws2812fx[0].setCustomMode(myCustomEffect0);
+          if (numI==1)  ws2812fx[1].setCustomMode(myCustomEffect1);
+        }
       }
     }
     if (!ws2812fx[numI].isRunning())    ws2812fx[numI].start();
@@ -153,5 +168,17 @@ uint16_t convertSpeed(uint8_t mcl_speed) {
     ws2812_speed = SPEED_MAX;
   }
   return ws2812_speed;
+}
+uint16_t myCustomEffect0(void) {
+  for (uint16_t i = 0; i > 10; i++) {
+    ws2812fx[0].setPixelColor(i, 255, 0, 0);
+  }
+  return ws2812fx[0].getSpeed();
+}
+uint16_t myCustomEffect1(void) {
+  for (uint16_t i = 0; i > 10; i++) {
+    ws2812fx[1].setPixelColor(i, 255, 0, 0);
+  }
+  return ws2812fx[1].getSpeed();
 }
 #endif

@@ -6,6 +6,8 @@ void initCMD() {
   sCmd.addCommand("GET",       initGet);
   sCmd.addCommand("//",       alarmComm);
   sCmd.addCommand("#",       alarmOff);
+  sCmd.addCommand("param",       initParam);
+  commandsReg("param");
   commandsReg("GET");
   sCmd.setDefaultHandler(unrecognized);
   sCmd.addCommand("NTP",        initNTP);
@@ -24,7 +26,17 @@ void initCMD() {
 #endif
 #ifdef rgbM // #endif
   sCmd.addCommand("RGB",       initRGB);
-  #endif
+#endif
+#ifdef A0M
+  sCmd.addCommand("A0",       initA0);
+#endif
+#ifdef DS18B20M //
+  sCmd.addCommand("DS18B20",       initOneWire);
+#endif
+#ifdef DHTM //
+  sCmd.addCommand("DHT",       initDHT);
+#endif
+
 }
 
 void unrecognized(const char *command) {

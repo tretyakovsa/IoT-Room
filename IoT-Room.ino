@@ -18,9 +18,11 @@ void setup() {
   jsonWrite(modules, ipS, testIp);
   setupToOptions(langS);
   jsonWrite(modules, langS, getSetup(langS));
-  sendOptions(urlsPathS,urlsPath);
-  sendOptions(fNameSPIFFSS,fNameSPIFFS);
-  sendOptions(fNameBuildS,fNameBuild);
+  sendOptions(urlsPathS, urlsPath);
+  sendOptions(fNameSPIFFSS, fNameSPIFFS);
+  sendOptions(fNameBuildS, fNameBuild);
+  setupToOptions(spiffsDataS);
+  setupToOptions(buildDataS);
   initPuls();
   initUpgrade();
   initSSDP();
@@ -28,10 +30,11 @@ void setup() {
   // setupToOptions(spaceS);
   initScenary();
   initTimers();
+  webSoket_init();
 
   String configs = getSetup(configsS);
   configs.toLowerCase();
-  String test = readFile("configs/" + configs + ".txt", 4096);
+  String test = readFile(configsS+"/" + configs + ".txt", 4096);
   test.replace("\r\n", "\n");
   test += "\n";
   goCommands(test);
@@ -54,5 +57,9 @@ void loop() {
 #ifdef rgbM
   ws2812fx[0].service();
   ws2812fx[1].service();
+#endif
+#ifdef webSoketM // #endif
+  webSocket.loop(); // Работа webSocket
+  WebSocketsClient.loop();
 #endif
 }
