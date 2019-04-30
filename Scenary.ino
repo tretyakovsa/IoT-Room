@@ -30,9 +30,12 @@ void handleScenary() {
 
     //addFileString("events.txt",configJson+"\r\n");
     goCommands(Scenary); // Делаем разбор сценариев
-//    webSocket.broadcastTXT(configJson);
-//    Serial.println("test");
+#ifdef webSoketM // #endif
+    webSocket.broadcastTXT(configJson);
+#endif
+    //    Serial.println("test");
     sendStatus("voice", emptyS);
+
     flag = false;
   }
 }
@@ -47,9 +50,9 @@ void andCommand() {
   String Volume =  readArgsString();    // Значение параметра
   String test = getStatus(Name);        // получить текущее значение параметра
 
-//    Serial.print(Name);
-//    Serial.print("=");
-//    Serial.println("and");
+  //    Serial.print(Name);
+  //    Serial.print("=");
+  //    Serial.println("and");
 
   if (thenOk) {
     thenOk = false; // сброс признака
@@ -63,9 +66,9 @@ void orCommand() {
   String Volume =  readArgsString();    // Значение параметра
   String test = getStatus(Name);        // получить текущее значение параметра
 
-//    Serial.print(Name);
-//    Serial.print("=");
-//    Serial.println("or");
+  //    Serial.print(Name);
+  //    Serial.print("=");
+  //    Serial.println("or");
 
   testCommand(Volume, Condition, test);
 }
@@ -108,8 +111,8 @@ void thenCommand() {
     comm += " " + readArgsString();
     // Если это локальное устройство
     if (ssdp == test or test == "this") {
-//            Serial.println("comm= ");
-//            Serial.println(comm);
+      //            Serial.println("comm= ");
+      //            Serial.println(comm);
       sendOptions("test", comm);
       sCmd.readStr(comm);
     }

@@ -1,3 +1,23 @@
+// ------------- Информация о ESP
+void espInfo(){
+   FSInfo fs_info;
+    SPIFFS.info(fs_info);
+    sendOptions("totalBytes", fs_info.totalBytes);
+    sendOptions("usedBytes", fs_info.usedBytes);
+    sendOptions("blockSize", fs_info.blockSize);
+    sendOptions("pageSize", fs_info.pageSize);
+    sendOptions("maxOpenFiles", fs_info.maxOpenFiles);
+    sendOptions("maxPathLength", fs_info.maxPathLength);
+    sendOptions("flashChip", String(ESP.getFlashChipId(), HEX));
+    sendOptions("ideFlashSize", ESP.getFlashChipSize());
+    sendOptions("realFlashSize", ESP.getFlashChipRealSize());
+    sendOptions("flashChipSpeed", ESP.getFlashChipSpeed() / 1000000);
+    sendOptions("cpuFreqMHz", ESP.getCpuFreqMHz());
+    FlashMode_t ideMode = ESP.getFlashChipMode();
+    sendOptions("FreeSketchSpace", ESP.getFreeSketchSpace());
+    sendOptions("flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
+  }
+
 // ------------- Значение по умолчанию
 String defaultTestString(String test, String def) {
   if (test == emptyS or test == def) {
@@ -127,7 +147,7 @@ void saveConfigSetup () {
 uint8_t pinTest(uint8_t pin) {
   //Serial.print("pin");
   //Serial.print("=");
-  if (pin > 20) {
+  if (pin > maxPin) {
     pin = 17;
   } else {
     if (pins[pin]) {
@@ -149,7 +169,7 @@ uint8_t pinTest(uint8_t pin) {
 uint8_t pinTest(uint8_t pin, boolean multi) {
   //Serial.print("multiPin");
   //Serial.print("=");
-  if (pin > 20) {
+  if (pin > maxPin) {
     pin = 17;
   } else {
     pins[pin] = !multi;

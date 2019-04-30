@@ -23,6 +23,7 @@ void initHTTP() {
     String set = HTTP.arg("set");
     sendSetup(configsS, set);
     saveConfigSetup();
+    jsonWrite(modules, configsS, getSetup(configsS));
     String reqvest = "{\"action\": \"page.htm?configs&" + set + "\"}";
     httpOkText(reqvest);
   });
@@ -48,25 +49,13 @@ void initHTTP() {
   });
   // --------------------Выдаем данные configOptions
   HTTP.on("/config.options.json", HTTP_GET, []() {
-    FSInfo fs_info;
-    SPIFFS.info(fs_info);
-    sendOptions("totalBytes", fs_info.totalBytes);
-    sendOptions("usedBytes", fs_info.usedBytes);
-    sendOptions("blockSize", fs_info.blockSize);
-    sendOptions("pageSize", fs_info.pageSize);
-    sendOptions("maxOpenFiles", fs_info.maxOpenFiles);
-    sendOptions("maxPathLength", fs_info.maxPathLength);
-    sendOptions("flashChip", String(ESP.getFlashChipId(), HEX));
-    sendOptions("ideFlashSize", ESP.getFlashChipSize());
-    sendOptions("realFlashSize", ESP.getFlashChipRealSize());
-    sendOptions("flashChipSpeed", ESP.getFlashChipSpeed() / 1000000);
-    sendOptions("cpuFreqMHz", ESP.getCpuFreqMHz());
-    FlashMode_t ideMode = ESP.getFlashChipMode();
-    sendOptions("FreeSketchSpace", ESP.getFreeSketchSpace());
-    sendOptions("flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
+    espInfo();
     httpOkJson(configOptions);
-
-
+  });
+  // --------------------Выдаем данные configOptions  config.admin.json
+  HTTP.on("/config.admin.json", HTTP_GET, []() {
+    espInfo();
+    httpOkJson(configOptions);
   });
   // ------------------Выполнение команды из запроса
   HTTP.on("/cmd", HTTP_GET, []() {
@@ -122,7 +111,7 @@ void initFS() {
     saveConfigSetup();
     HTTP.send(307, "Temporary Redirect\r\nLocation: /\r\nConnection: Close\r\n", emptyS);
   });
-    // -------------------построение графика
+  // -------------------построение графика
   HTTP.on("/charts.json", HTTP_GET, []() {
     String pFile = HTTP.arg("data");
     String message = "{";
@@ -321,22 +310,22 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       if (length > 0) {
         String command = String((const char *)payload);
         String cmd;
-          cmd = jsonRead(command, voiceS); // Прислан макрос
-          if (cmd !=""){
+        cmd = jsonRead(command, voiceS); // Прислан макрос
+        if (cmd != "") {
           sendOptions(voiceS, cmd);
           flag = sendStatus(voiceS, cmd);
-          }
-          cmd = jsonRead(command, "effect"); // Прислан эффект
-          if (cmd !=""){
-            effectTest(cmd);
-          }
-          cmd = jsonRead(command, "cmd");   // Прислана комманда
-          if (cmd !=""){
-            sCmd.readStr(cmd);
-            //Serial.print("effect=");
-            //Serial.println(cmd);
-            effectTest(cmd);
-          }
+        }
+        cmd = jsonRead(command, "effect"); // Прислан эффект
+        if (cmd != "") {
+          effectTest(cmd);
+        }
+        cmd = jsonRead(command, "cmd");   // Прислана комманда
+        if (cmd != "") {
+          sCmd.readStr(cmd);
+          //Serial.print("effect=");
+          //Serial.println(cmd);
+          effectTest(cmd);
+        }
       }
 
       //webSocket.sendTXT(num, "message here"); // Можно отправлять любое сообщение как строку по номеру соединения
@@ -350,7 +339,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 // Отправка данных в Socket всем получателям
 // Параметры Имя ключа, Данные, Предыдущее значение
 void SoketData (String key, String data, String data_old)  {
-  if(getOptions(webSocketS) != "") {
+  if (getOptions(webSocketS) != "") {
     if (data_old != data) {
       String broadcast = "{}";
       jsonWrite(broadcast, key, data);
@@ -360,11 +349,11 @@ void SoketData (String key, String data, String data_old)  {
   }
 }
 
-void SocketClient(String ipSocket){
-   WebSocketsClient.begin(ipSocket, 81, "/");
-     WebSocketsClient.setReconnectInterval(5000);
-     //WebSocketsClient.enableHeartbeat ( 15000 , 3000 , 2 );
-  }
+void SocketClient(String ipSocket) {
+  WebSocketsClient.begin(ipSocket, 81, "/");
+  WebSocketsClient.setReconnectInterval(5000);
+  //WebSocketsClient.enableHeartbeat ( 15000 , 3000 , 2 );
+}
 #endif
 
 void effectTest(String effect) {

@@ -1,32 +1,34 @@
-// {{LangUpgrade1}}
+// Уведомлять о новых версиях
 UPGRADE
-// {{LangConfPinout}}
+// Включить PCA9685
+PCA9685
+// Управление выводом (Тоже что и RELAY, но без кнопки в веб интерфейсе) /n <GPIO> <Номер реле> <Состояние реле после включения ESP> <Инверсия> <Имя кнопки реле>
 # PINOUT 13 1 1 0 LedConnectedWiFi
 # PINOUT 12 2 0 0 PinOutName2
 # PINOUT 14 3 0 0 PinOutName3
-// {{LangConfRelay}}
-RELAY 12 1 1 0 {{LangrelayName}}_1
-# RELAY 15 2 0 0 {{LangrelayName}}_2
-# RELAY 13 3 0 0 {{LangrelayName}}_3
-# RELAY 14 4 0 0 {{LangrelayName}}_4
-// {{LangConfSerial}}
+// Реле /n <GPIO> <Номер реле> <Состояние реле после включения ESP> <Инверсия> <Имя кнопи реле>
+RELAY 12 1 1 0 Имя_кнопки_реле_1
+RELAY 22 2 0 0 Имя_кнопки_реле_2
+RELAY 29 3 0 0 Имя_кнопки_реле_3
+# RELAY 14 4 0 0 Имя_кнопки_реле_4
+// Включить порт UART
 # UART 115200
 # print print
-// {{LangConfNTP}}
+// Включаем время из сети - (Обновляется 1 раз в сутки и при каждом включение ESP)
 NTP ntp1.vniiftri.ru ntp2.vniiftri.ru
-// {{LangConfTIMERS}}
+// Если требуются таймеры
 TIMERS
-// {{LangConfDDNS}}
+// Доступ по DDNS
 # DDNS
-// {{LangConfDHT}}
+// Датчики температуры и влажности DHT11, DHT22, AM2302, RHT03, Si7021.
 # DHT 14
-// {{LangConfDS18B20}}
+// Датчики температуры. Датчиков может быть сколько угодно. Подключать параллельно.
 # DS18B20 14
 // Подключается только на 4 и 5 GPIO, совместно с DHT не работает.
 # SI7021
-// {{LangConfA0}}
+// Аналоговый вход (Освещенность)
 # A0
-// {{LangConfTach}}
+// Кнопка - На одном GPIO можно делать несколько кнопок c разной задержкой нажатия. Так же сюда можно подключать например PIR сенсор /n <GPIO> <Номер кнопки> <Время в мс.> <Инверсия>
 TACH 0 0 20 0
 # TACH 0 1 20 0
 # TACH 0 2 20 0
@@ -35,24 +37,24 @@ TACH 0 0 20 0
 # TACH 0 5 20 0
 # TACH 0 6 20 0
 # TACH 0 7 20 0
-// {{LangConfBUZZER}}
+// Включить зуммер
 # BUZZER 16
-// {{LangConfRGB}}
-RGB 5 15 0 ff0000 100 255 3 {{LangrgbName}}
-// {{LangConfRGBS}}
-# SRGB 12 4 5 0 ffffff 100 255 {{LangrgbName}}
-// {{LangConfJalousie}}
+// WS2812 / WS2811 / NeoPixel LEDs /n  WS2811 - Проблема с Красным/Зеленым /n <GPIO> <Количество лед> <Состояние после включения ESP> <Цвет> <Скорость> <Яркость> <Динамический режим>
+RGB 5 15 0 ff0000 100 255 3 rgbName
+// RGB 5050 / 3528 / 2835 /n <GPIO R> <GPIO G> <GPIO B> <Состояние после включения ESP> <Цвет> <Скоро...> <Скоро...>
+# SRGB 12 4 5 0 ffffff 100 255 rgbName
+// Жалюзи /n<GPIO счетчик оборотов> <Вторая и Третья GPIO - управление мотором>
 # JALOUSIE 4 12 13
-// {{LangConfRfReceived}}
+// Беспроводной приемник MHz частот /n <GPIO> <Частота - не обязательно>
 # RF-RECEIVED 3 433
-// {{LangConfRfTransmitter}}
+// Беспроводной передатчик MHz частот /n <GPIO> <Частота - не обязательно>
 # RF-TRANSMITTER 1 433
 # RF-LIVOLO 1
-// {{LangConfIrReceived}}
+// Беспроводной приемник IR (инфокрасного сигнала)
 # IR-RECEIVED 0
-// {{LangConfIrTransmitter}}
+// Беспроводной передатчик IR (инфокрасного сигнала)
 # IR-TRANSMITTER 14
-// {{LangConfMQTT}}
+// Рекомендуется использовать с IoT Manager
 # MQTT
-// {{LangConfAdmin}}
+// Показывает дополнительные кнопки для удобства разработки
 ADMIN

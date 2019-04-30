@@ -1,7 +1,7 @@
 {
   "lang": "ru",
   "setIndex": "",
-  "SSDP": "Sonoff",
+  "SSDP": "IoT-Room",
   "space": "home",
   "ssid": "",
   "ssidPass": "",
@@ -15,7 +15,7 @@
   "timeZone": 8,
   "ssidAP": "Sonoff-Start",
   "ssidApPass": "",
-  "configs": "sonoff-rf",
+  "configs": "manually",
   "ddns": "",
   "ddnsName": "",
   "ddnsPort": 8080,

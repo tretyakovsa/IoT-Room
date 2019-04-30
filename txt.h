@@ -1,12 +1,13 @@
 #define pinOutM
-#define buzzerM
+//#define buzzerM
 //#define TachM
 //#define irM
-#define rgbM
+//#define rgbM
 //#define A0M
-#define DS18B20M
+//#define DS18B20M
 //#define DHTM
-#define webSoketM
+//#define webSoketM
+#define PWMServoM
 /* Память при компеляции 4/1
  * 258024 байт (24%) памяти устройства - Пустой скетч
  * 288540 байт (27%) памяти устройства - Основные библиотеки занимают

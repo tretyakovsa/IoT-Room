@@ -10,7 +10,7 @@ void initRelay() {
   String title = readArgsString(); // Пятый аргумент подпись
   initPin(pin, num, state, inv, relayS, title);
   sCmd.addCommand(relayS.c_str(), relay); //
-  addAction(relayS,num);
+  addAction(relayS, num);
   //commandsReg(relayS);
   //actionsReg(relayS + num);
   //modulesReg(relayS + num);
@@ -26,7 +26,7 @@ void initPinOut() {
   String title = readArgsString(); // Пятый аргумент подпись
   initPin(pin, num, state, inv, pinOutS, title);
   sCmd.addCommand(pinOutS.c_str(), pinOut); //
-  addAction(pinOutS,num);
+  addAction(pinOutS, num);
   //commandsReg(pinOutS);
   //actionsReg(pinOutS + num);
   //modulesReg(pinOutS + num);
@@ -36,19 +36,22 @@ void initPin(uint8_t pin, String num, boolean state, boolean inv, String name, S
   String nameR = name + num;
   if (title == "") title = nameR;
   sendStatus(nameR, state);
-  sCmd.readStr("wReg toggle " + nameR + " " + title);
   sendOptions(name + PinS + num, pin);
   sendOptions(name + NotS + num, inv);
-  // 19 pin это реле через UART
-  if (pin > 19 ) {
+  if (pin < 17) { //  это реле через GPIO
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, state ^ inv);
+  }
+  if (pin > 17 && pin <= 21 ) { //это реле через UART
     Serial.begin(9600);
     delay(100);
     relayWrite(pin, state ^ inv);
   }
-  else {
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, state ^ inv);
+#ifdef PWMServoM // #endif
+  if (pin > 21) { // это реле через PCA9685
+    PCA9685Write(pin, state ^ inv);
   }
+#endif
 }
 
 // http://192.168.0.91/cmd?command=relay off 1
@@ -75,11 +78,17 @@ void pinSet(String num, String com, String name) {
   if (com == onS || com == "1" ) state = 1;
   if (com == offS || com == "0") state = 0;
   if (com == notS) state = !(state);
-  if (pin  > 19) {
-    relayWrite(pin, state ^ inv);
-  } else {
+  if (pin < 17) { //  это реле через GPIO
     digitalWrite(pin, state ^ inv);
   }
+  if (pin > 17 && pin <= 21 ) { //это реле через UART
+    relayWrite(pin, state ^ inv);
+  }
+#ifdef PWMServoM // #endif
+  if (pin > 21) { // это реле через PCA9685
+    PCA9685Write(pin, state ^ inv);
+  }
+#endif
   flag = sendStatus(kay, state);
   statusS = htmlStatus(configJson, kay, langOnS, langOffS);
 }
@@ -141,5 +150,28 @@ void buzzerTone() {
   int duration = readArgsInt();
   uint8_t pin = getOptionsInt(buzzerPinS);
   tone(pin, freq, duration);
+}
+#endif
+
+#ifdef PWMServoM // #endif
+void initPCA9685() {
+
+  Serial.println("PCA9685 Start");
+  String clockFrequency = readArgsString(); // первый аргумент частота для связи I2C
+  //Adafruit_PWMServoDriver pwm = new Adafruit_PWMServoDriver();
+  pwm.begin();
+  Wire.setClock(defaultTestString(clockFrequency, "400000").toInt());
+}
+
+void PCA9685Write(uint8_t vpin, boolean state) {
+    Serial.print("vpin=");
+  Serial.println(vpin);
+  uint8_t pin = vpin - 22;
+  Serial.print("pin=");
+  Serial.println(pin);
+  if (state) {
+    pwm.setPWM(pin, 4096, 0); //on
+  } else
+    pwm.setPWM(pin, 0, 4096); // off
 }
 #endif

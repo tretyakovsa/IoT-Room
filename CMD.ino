@@ -36,7 +36,9 @@ void initCMD() {
 #ifdef DHTM //
   sCmd.addCommand("DHT",       initDHT);
 #endif
-
+#ifdef PWMServoM // #endif
+sCmd.addCommand("PCA9685",       initPCA9685);
+#endif
 }
 
 void unrecognized(const char *command) {

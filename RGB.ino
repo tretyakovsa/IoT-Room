@@ -173,12 +173,14 @@ uint16_t myCustomEffect0(void) {
   for (uint16_t i = 0; i > 10; i++) {
     ws2812fx[0].setPixelColor(i, 255, 0, 0);
   }
+  myCustomShow();
   return ws2812fx[0].getSpeed();
 }
 uint16_t myCustomEffect1(void) {
   for (uint16_t i = 0; i > 10; i++) {
     ws2812fx[1].setPixelColor(i, 255, 0, 0);
   }
+  myCustomShow1();
   return ws2812fx[1].getSpeed();
 }
 #endif

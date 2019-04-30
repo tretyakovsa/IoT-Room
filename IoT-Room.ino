@@ -14,8 +14,10 @@ void setup() {
   String testIp = MyWiFi.StringIP();
   Serial.println(testIp);
   if (testIp == "(IP unset)") testIp = "0.0.0.0";
+  if (testIp == "") testIp = "0.0.0.0";
   jsonWrite(ssdpList, getSetup(ssdpS), testIp);
   jsonWrite(modules, ipS, testIp);
+  jsonWrite(modules, configsS, getSetup(configsS));
   setupToOptions(langS);
   jsonWrite(modules, langS, getSetup(langS));
   sendOptions(urlsPathS, urlsPath);
@@ -26,15 +28,14 @@ void setup() {
   initPuls();
   initUpgrade();
   initSSDP();
-  // setupToOptions(ssdpS);
-  // setupToOptions(spaceS);
   initScenary();
   initTimers();
+#ifdef webSoketM // #endif
   webSoket_init();
-
+#endif
   String configs = getSetup(configsS);
   configs.toLowerCase();
-  String test = readFile(configsS+"/" + configs + ".txt", 4096);
+  String test = readFile(configsS + "/" + configs + ".txt", 4096);
   test.replace("\r\n", "\n");
   test += "\n";
   goCommands(test);

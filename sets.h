@@ -39,7 +39,8 @@ String configJson = "{}";            // Здесь все статусы /config
 String configOptions = "{}";         // Здесь данные для всех страниц /config.options.json
 String configSetup = "{}";           // Здесь данные для setup /config.setup.json
 String ssdpList = "{}";              // SSDP имя ip всех модулей в сети /ssdp.list.json
-boolean pins[21];
+#define maxPin 29
+boolean pins[maxPin];
 String modules = "{\"module\":[]}";
 String regCommands = "{\"command\":[]}"; //список доступных комманд для различных модулей /command.json
 
@@ -76,6 +77,7 @@ const String infoS   = "info";
 const String primaryS   = "primary";
 
 // ----------------- wifi
+const String ssidAPDef   = "IoT-Room-Start";
 const String wifiS   = "wifi";
 const String ssidS   = "ssid";
 const String ssidPassS   = "ssidPass";
@@ -188,7 +190,7 @@ const String irsendS   = "irsend";
 // -------- RGB
 #ifdef rgbM // #endif
 #define LED_COUNT 86
-#include <WS2812FX.h>                //https://github.com/renat2985/WS2812FX
+#include <WS2812FX.h>                //https://github.com/kitesurfer1404/WS2812FX
 WS2812FX ws2812fx[2] = WS2812FX(LED_COUNT, 5, NEO_GRB + NEO_KHZ800);
 #include <NeoPixelBus.h>
 NeoEsp8266Dma800KbpsMethod dma = NeoEsp8266Dma800KbpsMethod(LED_COUNT, 3);
@@ -202,7 +204,7 @@ const String speedRGBS   = "speedRGB";
 const String rgbS   = "rgb";
 #endif
 
-#ifdef webSoketM //
+#ifdef webSoketM // #endif
 #include <WebSocketsServer.h>    //https://github.com/Links2004/arduinoWebSockets
 WebSocketsServer webSocket = WebSocketsServer(81);
 #include <WebSocketsClient.h>
@@ -220,8 +222,8 @@ const String alarmA0S   = "alarmA0";
 
 #ifdef DS18B20M //
 #include <OneWire.h>                 //Ставим через менеджер библиотек
-#include <DallasTemperature.h>       //Ставим через менеджер библиотек
 OneWire *oneWire;
+#include <DallasTemperature.h>       //Ставим через менеджер библиотек
 DallasTemperature sensors;
 #endif
 
@@ -241,3 +243,10 @@ const String humidityS   = "humidity";
 const String highalarmhumS   = "highAlarmHum";
 const String lowalarmhumS   = "lowAlarmHum";
 const String alarmhumS   = "alarmHum";
+
+#ifdef PWMServoM // #endif
+// Библиотеки устройств
+#include <Adafruit_PWMServoDriver.h>
+//Adafruit_PWMServoDriver
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+#endif
