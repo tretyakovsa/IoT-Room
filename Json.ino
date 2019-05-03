@@ -105,18 +105,22 @@ void sendOptionsF(String Name, float volume) {
   jsonWrite(configOptions, Name, volume);
 }
 // ------------- Копируем параметр из Setup Options
-void setupToOptions(String Name){
-  sendOptions(Name,getSetup(Name));
-  }
+void setupToOptions(String Name) {
+  sendOptions(Name, getSetup(Name));
+}
 // ------------- Копируем параметр из Setup Options
-void setupToStatus(String Name){
-  sendStatus(Name,getSetup(Name));
-  }
+void setupToStatus(String Name) {
+  sendStatus(Name, getSetup(Name));
+}
 
-String getArray(String Name, String kay, int index){
-  String tmp = deleteBeforeDelimiter(Name, "\""+kay+"\":[");
+String getArray(String Name, String kay, int index) {
+  String tmp = deleteBeforeDelimiter(Name, "\"" + kay + "\":[");
   tmp = selectToMarker (tmp, "]")+",";
-  tmp = selectFromMarkerToMarker(tmp,"},",index);
-  if (tmp !="NAN") tmp+="}";
-  return tmp;
-  }
+  if (tmp == ",") return "NAN";
+  tmp = selectFromMarkerToMarker(tmp, "},", index);
+  if (tmp == "") {
+   tmp = "NAN";
+    return tmp;
+    }
+  return tmp + "}";
+}

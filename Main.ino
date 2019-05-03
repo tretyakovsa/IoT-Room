@@ -67,7 +67,7 @@ String selectFromMarkerToMarker(String str, String found, int number) {
   str += found; // добавим для корректного поиска
   uint8_t i = 0; // Индекс перебора
   do {
-    if (i == number) return selectToMarker(str, found); // если индекс совпал с позицией законцим вернем резултат
+    if (i == number) return selectToMarker(str, found); // если индекс совпал с позицией закончим вернем резултат
     str = deleteBeforeDelimiter(str, found);  // отбросим проверенный блок до разделителя
     i++; // увеличим индекс
   } while (str.length() != 0); // повторим пока строка не пустая
