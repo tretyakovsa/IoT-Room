@@ -112,3 +112,11 @@ void setupToOptions(String Name){
 void setupToStatus(String Name){
   sendStatus(Name,getSetup(Name));
   }
+
+String getArray(String Name, String kay, int index){
+  String tmp = deleteBeforeDelimiter(Name, "\""+kay+"\":[");
+  tmp = selectToMarker (tmp, "]")+",";
+  tmp = selectFromMarkerToMarker(tmp,"},",index);
+  if (tmp !="NAN") tmp+="}";
+  return tmp;
+  }

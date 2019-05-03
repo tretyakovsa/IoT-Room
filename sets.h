@@ -121,6 +121,7 @@ const String timeZoneS   = "timeZone";
 const String ntpS   = "NTP";
 const String ntpServerS   = ".vniiftri.ru";
 const String weekdayS   = "weekday";
+#define NTP_MIN_VALID_EPOCH 1533081600
 
 
 // --------- Timers

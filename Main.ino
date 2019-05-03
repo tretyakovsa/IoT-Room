@@ -63,7 +63,7 @@ String deleteToMarkerLast (String str, String found) {
 
 //--------Выделяем строку от маркера до маркера
 String selectFromMarkerToMarker(String str, String found, int number) {
-  if (str.indexOf(found) == -1) return "not found"; // если строки поиск нет сразу выход
+  if (str.indexOf(found) == -1) return "NAN"; // если строки поиск нет сразу выход
   str += found; // добавим для корректного поиска
   uint8_t i = 0; // Индекс перебора
   do {
@@ -71,7 +71,7 @@ String selectFromMarkerToMarker(String str, String found, int number) {
     str = deleteBeforeDelimiter(str, found);  // отбросим проверенный блок до разделителя
     i++; // увеличим индекс
   } while (str.length() != 0); // повторим пока строка не пустая
-  return "not found"; // Достигли пустой строки и ничего не нашли
+  return "NAN"; // Достигли пустой строки и ничего не нашли
 }
 
 // ------------- Данные статистики -----------------------------------------------------------
@@ -85,7 +85,10 @@ void statistics() {
   urls += ESP.getResetReason();
   urls += "&";
   urls += getSetup(spiffsDataS);
+    Serial.print("Запрос статистики =");
+  Serial.println(urls);
   String stat = MyWiFi.getURL(urls);
+  Serial.print("Ответ статистики =");
   Serial.println(stat);
   sendOptions(messageS, jsonRead(stat, messageS)); // Вернем статус регистрации или пусто если нет сети
 }

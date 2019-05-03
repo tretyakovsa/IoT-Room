@@ -1,7 +1,7 @@
 #include "txt.h"
 #include "sets.h"
 void setup() {
-  system_update_cpu_freq(SYS_CPU_160MHZ);
+  //system_update_cpu_freq(SYS_CPU_160MHZ);
   Serial.begin(115200);
   Serial.println();
   chipID = String( ESP.getChipId() ) + "-" + String( ESP.getFlashChipId() );
@@ -28,8 +28,6 @@ void setup() {
   initPuls();
   initUpgrade();
   initSSDP();
-  initScenary();
-  initTimers();
 #ifdef webSoketM // #endif
   webSoket_init();
 #endif
@@ -40,6 +38,8 @@ void setup() {
   test += "\n";
   goCommands(test);
   test = emptyS;
+  initTimers();
+  initScenary();
 
 }
 

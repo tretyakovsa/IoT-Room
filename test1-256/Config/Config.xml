@@ -10,11 +10,11 @@
   </Data>
   <Data name="ComboBoxFlashSpeed.ItemIndex">
     <Type>Integer</Type>
-    <Value>3</Value>
+    <Value>0</Value>
   </Data>
   <Data name="ComboBoxSPIMode.ItemIndex">
     <Type>Integer</Type>
-    <Value>0</Value>
+    <Value>1</Value>
   </Data>
   <Data name="FrameConfigLine1.Checked">
     <Type>Boolean</Type>
@@ -22,7 +22,7 @@
   </Data>
   <Data name="FrameConfigLine1.FilePath">
     <Type>String</Type>
-    <Value>IoT-Room.ino.generic.bin</Value>
+    <Value>blank_1MB.bin</Value>
   </Data>
   <Data name="FrameConfigLine1.Offset">
     <Type>String</Type>
@@ -34,23 +34,23 @@
   </Data>
   <Data name="FrameConfigLine2.FilePath">
     <Type>String</Type>
-    <Value>IoT-Room.spiffs.bin</Value>
+    <Value>IoT-Room.ino.generic.bin</Value>
   </Data>
   <Data name="FrameConfigLine2.Offset">
     <Type>String</Type>
-    <Value>0xBB000</Value>
+    <Value>0x00000</Value>
   </Data>
   <Data name="FrameConfigLine3.Checked">
     <Type>Boolean</Type>
-    <Value>False</Value>
+    <Value>True</Value>
   </Data>
   <Data name="FrameConfigLine3.FilePath">
     <Type>String</Type>
-    <Value/>
+    <Value>IoT-Room.spiffs.bin</Value>
   </Data>
   <Data name="FrameConfigLine3.Offset">
     <Type>String</Type>
-    <Value/>
+    <Value>0xBB000</Value>
   </Data>
   <Data name="FrameConfigLine4.Checked">
     <Type>Boolean</Type>
@@ -68,15 +68,111 @@
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine5.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
   <Data name="FrameConfigLine6.Checked">
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine7.Checked">
+  <Data name="FrameConfigLine6.Checked">
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine5.FilePath">
+  <Data name="FrameConfigLine6.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
+  </Data>
+  <Data name="FrameConfigLine6.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
+  </Data>
+  <Data name="FrameConfigLine6.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
+  </Data>
+  <Data name="FrameConfigLine6.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
+  </Data>
+  <Data name="FrameConfigLine6.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
+  </Data>
+  <Data name="FrameConfigLine6.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
@@ -84,11 +180,19 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine7.FilePath">
+  <Data name="FrameConfigLine6.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine5.Offset">
+  <Data name="FrameConfigLine6.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine6.FilePath">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine6.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
@@ -96,23 +200,7 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
+  <Data name="FrameConfigLine6.Offset">
     <Type>String</Type>
     <Value/>
   </Data>
@@ -120,47 +208,11 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine7.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
   <Data name="FrameConfigLine6.Offset">
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.Checked">
+  <Data name="FrameConfigLine7.Checked">
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
@@ -168,51 +220,23 @@
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
+  <Data name="FrameConfigLine7.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
   </Data>
   <Data name="FrameConfigLine7.Checked">
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine6.FilePath">
-    <Type>String</Type>
-    <Value/>
+  <Data name="FrameConfigLine7.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
+  <Data name="FrameConfigLine7.Checked">
+    <Type>Boolean</Type>
+    <Value>False</Value>
   </Data>
-  <Data name="FrameConfigLine6.Checked">
+  <Data name="FrameConfigLine7.Checked">
     <Type>Boolean</Type>
     <Value>False</Value>
   </Data>
@@ -220,27 +244,7 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
+  <Data name="FrameConfigLine7.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
@@ -248,27 +252,7 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine6.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine6.FilePath">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine5.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine7.Offset">
-    <Type>String</Type>
-    <Value/>
-  </Data>
-  <Data name="FrameConfigLine6.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine6.FilePath">
+  <Data name="FrameConfigLine7.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
@@ -276,23 +260,39 @@
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine5.Offset">
+  <Data name="FrameConfigLine7.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine6.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine7.Checked">
-    <Type>Boolean</Type>
-    <Value>False</Value>
-  </Data>
-  <Data name="FrameConfigLine5.FilePath">
+  <Data name="FrameConfigLine7.FilePath">
     <Type>String</Type>
     <Value/>
   </Data>
-  <Data name="FrameConfigLine5.Offset">
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
+    <Type>String</Type>
+    <Value/>
+  </Data>
+  <Data name="FrameConfigLine7.Offset">
     <Type>String</Type>
     <Value/>
   </Data>
