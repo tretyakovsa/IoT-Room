@@ -3,6 +3,9 @@ void initSSDP() {
   sendSetup(spaceS,defaultTestString(getSetup(spaceS),spaceDef));
   setupToOptions(ssdpS);
   setupToOptions(spaceS);
+  jsonWrite(modules, ssdpS, getSetup(ssdpS));
+  Serial.print("modules=");
+  Serial.println(modules);
   if (MyWiFi.modeSTA()) { //Если есть подключение к роутеру
     // Включаем определение имени для Windows
     //LLMNR.begin(temp.c_str());

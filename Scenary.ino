@@ -6,36 +6,30 @@ void initScenary() {
   sCmd.addCommand("then", thenCommand);
   HTTP.on("/setscenary", HTTP_GET, []() {
     loadScenary();
-    // ? alarmLoadModules();
+    //alarmLoadModules();
     loadTimer();
     httpOkText();
   });
   loadScenary();
 }
 void loadScenary() {
-  Scenary = readFile(ScenaryS, 4096);
+  String scen =ScenaryS+getSetup(configsS)+".txt";
+  Scenary = readFile(scen, 4096);
   Scenary.replace("\r\n", "\n");
   Scenary.replace("\n\n", "\n");
   Scenary += "\n";
-  //writeFile("test.text",Scenary);
-
 }
 // Ничего не делать если комманда id
 void idNot() {}
 
 void handleScenary() {
-  yield();
-  //Serial.println(flag);
+//  Serial.println(flag);
   if (flag) { // если произошло изменение в данных config.live.json
-
-    //addFileString("events.txt",configJson+"\r\n");
     goCommands(Scenary); // Делаем разбор сценариев
-#ifdef webSoketM // #endif
-    webSocket.broadcastTXT(configJson);
-#endif
-    //    Serial.println("test");
     sendStatus("voice", emptyS);
-
+    #ifdef webSoketM // #endif
+    webSocket.broadcastTXT(configJson);
+    #endif
     flag = false;
   }
 }
@@ -50,10 +44,6 @@ void andCommand() {
   String Volume =  readArgsString();    // Значение параметра
   String test = getStatus(Name);        // получить текущее значение параметра
 
-  //    Serial.print(Name);
-  //    Serial.print("=");
-  //    Serial.println("and");
-
   if (thenOk) {
     thenOk = false; // сброс признака
     testCommand(Volume, Condition, test);
@@ -65,11 +55,6 @@ void orCommand() {
   String Condition =  readArgsString(); // Операция
   String Volume =  readArgsString();    // Значение параметра
   String test = getStatus(Name);        // получить текущее значение параметра
-
-  //    Serial.print(Name);
-  //    Serial.print("=");
-  //    Serial.println("or");
-
   testCommand(Volume, Condition, test);
 }
 
@@ -111,8 +96,8 @@ void thenCommand() {
     comm += " " + readArgsString();
     // Если это локальное устройство
     if (ssdp == test or test == "this") {
-      //            Serial.println("comm= ");
-      //            Serial.println(comm);
+            //Serial.print("comm= ");
+            //Serial.println(comm);
       sendOptions("test", comm);
       sCmd.readStr(comm);
     }

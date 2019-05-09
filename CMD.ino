@@ -39,6 +39,12 @@ void initCMD() {
 #ifdef PWMServoM // #endif
 sCmd.addCommand("PCA9685",       initPCA9685);
 #endif
+#ifdef rfM // #endif
+  sCmd.addCommand("RF-RECEIVED",       rfReceived);
+  sCmd.addCommand("RF-TRANSMITTER",     rfTransmitter);
+  sCmd.addCommand("RF-LIVOLO",     rfLivolo);
+#endif
+
 }
 
 void unrecognized(const char *command) {

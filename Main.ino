@@ -1,22 +1,22 @@
 // ------------- Информация о ESP
-void espInfo(){
-   FSInfo fs_info;
-    SPIFFS.info(fs_info);
-    sendOptions("totalBytes", fs_info.totalBytes);
-    sendOptions("usedBytes", fs_info.usedBytes);
-    sendOptions("blockSize", fs_info.blockSize);
-    sendOptions("pageSize", fs_info.pageSize);
-    sendOptions("maxOpenFiles", fs_info.maxOpenFiles);
-    sendOptions("maxPathLength", fs_info.maxPathLength);
-    sendOptions("flashChip", String(ESP.getFlashChipId(), HEX));
-    sendOptions("ideFlashSize", ESP.getFlashChipSize());
-    sendOptions("realFlashSize", ESP.getFlashChipRealSize());
-    sendOptions("flashChipSpeed", ESP.getFlashChipSpeed() / 1000000);
-    sendOptions("cpuFreqMHz", ESP.getCpuFreqMHz());
-    FlashMode_t ideMode = ESP.getFlashChipMode();
-    sendOptions("FreeSketchSpace", ESP.getFreeSketchSpace());
-    sendOptions("flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
-  }
+void espInfo() {
+  FSInfo fs_info;
+  SPIFFS.info(fs_info);
+  sendOptions("totalBytes", fs_info.totalBytes);
+  sendOptions("usedBytes", fs_info.usedBytes);
+  sendOptions("blockSize", fs_info.blockSize);
+  sendOptions("pageSize", fs_info.pageSize);
+  sendOptions("maxOpenFiles", fs_info.maxOpenFiles);
+  sendOptions("maxPathLength", fs_info.maxPathLength);
+  sendOptions("flashChip", String(ESP.getFlashChipId(), HEX));
+  sendOptions("ideFlashSize", ESP.getFlashChipSize());
+  sendOptions("realFlashSize", ESP.getFlashChipRealSize());
+  sendOptions("flashChipSpeed", ESP.getFlashChipSpeed() / 1000000);
+  sendOptions("cpuFreqMHz", ESP.getCpuFreqMHz());
+  FlashMode_t ideMode = ESP.getFlashChipMode();
+  sendOptions("FreeSketchSpace", ESP.getFreeSketchSpace());
+  sendOptions("flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
+}
 
 // ------------- Значение по умолчанию
 String defaultTestString(String test, String def) {
@@ -28,7 +28,7 @@ String defaultTestString(String test, String def) {
 // ------------- Значение по умолчанию
 String defaultTestStringMAC(String test, String def) {
   if (test == emptyS or test == def) {
-    test = def+"-"+WiFi.macAddress().c_str();
+    test = def + "-" + WiFi.macAddress().c_str();
   }
   return test;
 }
@@ -85,7 +85,7 @@ void statistics() {
   urls += ESP.getResetReason();
   urls += "&";
   urls += getSetup(spiffsDataS);
-    Serial.print("Запрос статистики =");
+  Serial.print("Запрос статистики =");
   Serial.println(urls);
   String stat = MyWiFi.getURL(urls);
   Serial.print("Ответ статистики =");
@@ -95,15 +95,11 @@ void statistics() {
 
 //------------------Выполнить все команды по порядку из строки разделитель \r\n  \n
 String goCommands(String inits) {
-  //Serial.println(inits);
   String temp;
   String rn = "\n";
   inits += rn;
-  //  Serial.println(writeFile("inits.txt", inits));
   do {
     temp = selectToMarker (inits, rn);
-
-    //    Serial.println(temp);
     sCmd.readStr(temp);
     inits = deleteBeforeDelimiter(inits, rn);
   } while (inits.indexOf(rn) != 0);
@@ -193,21 +189,19 @@ uint8_t pinTest(uint8_t pin, boolean multi) {
   return pin;
 }
 // -------------- Добавить действие
-void addAction(String nameAction, String num){
+void addAction(String nameAction, String num) {
   commandsReg(nameAction);
   actionsReg(nameAction + num);
   modulesReg(nameAction + num);
-  }
+}
 // -------------- Добавить действие
-void addAction(String nameAction){
-  addAction(nameAction,"");
-  }
+void addAction(String nameAction) {
+  addAction(nameAction, "");
+}
 // -------------- Регистрация модуля
 void modulesReg(String modName) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(modules);
-  json[ssdpS] = jsonRead(configJson, ssdpS);
-  json[spaceS] = jsonRead(configJson, spaceS);
   JsonArray& data = json["module"].asArray();
   data.add(modName);
   modules = emptyS;

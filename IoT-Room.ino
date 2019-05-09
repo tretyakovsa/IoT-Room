@@ -12,12 +12,13 @@ void setup() {
   Serial.println(configSetup);
   initWIFI();
   String testIp = MyWiFi.StringIP();
-  Serial.println(testIp);
   if (testIp == "(IP unset)") testIp = "0.0.0.0";
   if (testIp == "") testIp = "0.0.0.0";
   jsonWrite(ssdpList, getSetup(ssdpS), testIp);
+  jsonWrite(modules, ssdpS, getSetup(ssdpS));
   jsonWrite(modules, ipS, testIp);
   jsonWrite(modules, configsS, getSetup(configsS));
+  setupToOptions(configsS);
   setupToOptions(langS);
   jsonWrite(modules, langS, getSetup(langS));
   sendOptions(urlsPathS, urlsPath);
@@ -62,5 +63,8 @@ void loop() {
 #ifdef webSoketM // #endif
   webSocket.loop(); // Работа webSocket
   WebSocketsClient.loop();
+#endif
+#ifdef rfM //
+handleRfReceiv();
 #endif
 }

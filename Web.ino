@@ -57,16 +57,34 @@ void initHTTP() {
     espInfo();
     httpOkJson(configOptions);
   });
+
   // ------------------Выполнение команды из запроса
   HTTP.on("/cmd", HTTP_GET, []() {
     String com = HTTP.arg("command");
-    //Serial.println(com);
+    Serial.println(com);
     sendOptions("test", com);
     sCmd.readStr(com);
     httpOkText(statusS);
     //Serial.println(statusS);
   });
 
+  // ------------------Выполнение голосовой команды
+  HTTP.on("/voice", HTTP_GET, []() {
+    String com = HTTP.arg("command");
+    com.replace(" ", "_");
+    sendOptions(voiceS, com);
+    jsonWrite(modules, voiceS, com);
+    flag = sendStatus(voiceS, com);
+    httpOkText(statusS);
+  });
+  sCmd.addCommand(voiceS.c_str(), macros); //
+  sendStatus(voiceS, "");
+  commandsReg(voiceS);
+
+}
+
+void macros() {
+  flag = sendStatus(voiceS, readArgsString());
 }
 
 
@@ -302,7 +320,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       break;
     case WStype_CONNECTED: // Событие происходит при подключении клиента
       {
-        //Serial.println("web Socket Connected");
+        Serial.println("web Socket Connected");
         webSocket.sendTXT(num, configJson); // Отправим в всю строку с данными используя номер клиента он в num
       }
       break;
@@ -310,8 +328,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       if (length > 0) {
         String command = String((const char *)payload);
         String cmd;
+        Serial.print("command=");
+        Serial.println(command);
         cmd = jsonRead(command, voiceS); // Прислан макрос
+        Serial.print("cmd=");
+        Serial.println(cmd);
         if (cmd != "") {
+          Serial.print("voiceS=");
+          Serial.println(cmd);
           sendOptions(voiceS, cmd);
           flag = sendStatus(voiceS, cmd);
         }

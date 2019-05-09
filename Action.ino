@@ -175,3 +175,40 @@ void PCA9685Write(uint8_t vpin, boolean state) {
     pwm.setPWM(pin, 0, 4096); // off
 }
 #endif
+#ifdef rfM // #endif
+// ----------------------Передатчик на 433мГ
+void rfTransmitter() {
+  byte pin = readArgsInt();
+  pin =  pinTest(pin, HIGH);
+  mySwitch.enableTransmit(pin);
+  sCmd.addCommand(rfsendS.c_str(), handleRfTransmit);
+  commandsReg(rfsendS);
+  actionsReg(rfsendS);
+  modulesReg("rfTransmitter");
+}
+
+void handleRfTransmit() {
+  int cod = readArgsInt();
+  int len = readArgsInt();
+  if (len == 0) len = 24;
+  mySwitch.send(cod, len);
+}
+
+// ----------------------Передатчик Livolvo на 433мГ
+void rfLivolo() {
+  byte pin = readArgsInt();
+  pin =  pinTest(pin, HIGH);
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
+  gLivolo = new LivoloTx(pin);
+  sCmd.addCommand(lvsendS.c_str(), handleRfLivolo);
+  commandsReg(lvsendS);
+  modulesReg("rfLivolo");
+}
+
+void handleRfLivolo() {
+  int cod = readArgsInt();
+  int len = readArgsInt();
+  gLivolo->sendButton(cod, len);
+}
+#endif

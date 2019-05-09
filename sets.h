@@ -46,7 +46,6 @@ String regCommands = "{\"command\":[]}"; //список доступных ко�
 
 //----------   Здесь будут храниться все текстовые константы для сокращения кода
 const String fileConfigS   = "config.save.json"; // Имя файла конфигурации
-const String ScenaryS   = "scenary.save.txt";    // Имя файла сценарии
 const String configTimerS   = "timer.save.json"; // Имя файла таймеры
 
 //---------- Общие
@@ -94,16 +93,18 @@ const String ssidApPassS   = "ssidApPass";
 
 // --------- пульс
 String pulsList = "{}";
-uint8_t pulsNum =1;
+uint8_t pulsNum = 1;
 const String pulseS   = "pulse";
-const String pulseComS ="pulseCom";
-const String pulseTimeS ="pulseTime";
+const String pulseComS = "pulseCom";
+const String pulseTimeS = "pulseTime";
 
 // ---------- Scenary
 String Scenary;                      // Строка обработки сценариев
+//const String ScenaryS   = "scenary.save.txt";    // Имя файла сценарии
+const String ScenaryS   = "scenary/";    // Имя файла сценарии
 
 // --------- Update
- const String Uploader = ""; // Если перепрошивка происходит без Uploader раскоментировать и закоментировать следующую
+const String Uploader = ""; // Если перепрошивка происходит без Uploader раскоментировать и закоментировать следующую
 //const String Uploader = "http://backup.privet.lv/esp/sonoff/Sonoff_Updater.ino.generic.bin";
 const String spiffsDataS   = "spiffsData";
 const String buildDataS   = "buildData";
@@ -183,10 +184,22 @@ IRsend *irSender;
 const String irReceivedS   = "irReceived";
 const String irDecodeTypeS   = "irDecodeType";
 const String irTransmitterS   = "irTransmitter";
+const String irsendS   = "irsend";
+#endif
+#ifdef rfM
+// -------- RC
+#include <RCSwitch.h>                //https://github.com/sui77/rc-switch/
+RCSwitch mySwitch = RCSwitch();
+// RF приемник
 const String rfReceivedS   = "rfReceived";
 const String rfBitS   = "rfBit";
 const String rfProtocolS   = "rfProtocol";
-const String irsendS   = "irsend";
+// RF передатчик
+const String rfsendS   = "rfsend";
+// RF передатчик Livolo
+#include <LivoloTx.h>                //https://github.com/bitlinker/LivoloTx
+LivoloTx *gLivolo;
+const String lvsendS   = "lvsend";
 #endif
 // -------- RGB
 #ifdef rgbM // #endif
