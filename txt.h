@@ -6,9 +6,8 @@
 #define A0M
 #define DS18B20M
 #define DHTM
-//#define PWMServoM
 #define rfM
-//#define evonicfires
+//#define PWMServoM
 #define webSoketM
 /* Память при компеляции 4/1
  *
