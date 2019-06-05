@@ -65,7 +65,7 @@ void dump(decode_results *results) {
 void rfReceived() {
   byte pin = readArgsInt();
   pin =  pinTest(pin);
-  Serial.println("rfReceived?");
+//  Serial.println("rfReceived?");
   mySwitch.enableReceive(pin);
   pinMode(pin, INPUT);
   // задача опрашивать RC код

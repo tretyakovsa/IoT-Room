@@ -13,7 +13,7 @@ void initScenary() {
   loadScenary();
 }
 void loadScenary() {
-  String scen =ScenaryS+getSetup(configsS)+".txt";
+  String scen = ScenaryS + getSetup(configsS) + ".txt";
   Scenary = readFile(scen, 4096);
   Scenary.replace("\r\n", "\n");
   Scenary.replace("\n\n", "\n");
@@ -23,13 +23,13 @@ void loadScenary() {
 void idNot() {}
 
 void handleScenary() {
-//  Serial.println(flag);
+  //  Serial.println(flag);
   if (flag) { // если произошло изменение в данных config.live.json
     goCommands(Scenary); // Делаем разбор сценариев
-    sendStatus("voice", emptyS);
-    #ifdef webSoketM // #endif
+#ifdef webSoketM // #endif
     webSocket.broadcastTXT(configJson);
-    #endif
+#endif
+    sendStatus("voice", emptyS);
     flag = false;
   }
 }
@@ -96,8 +96,8 @@ void thenCommand() {
     comm += " " + readArgsString();
     // Если это локальное устройство
     if (ssdp == test or test == "this") {
-            //Serial.print("comm= ");
-            //Serial.println(comm);
+      //Serial.print("comm= ");
+      //Serial.println(comm);
       sendOptions("test", comm);
       sCmd.readStr(comm);
     }

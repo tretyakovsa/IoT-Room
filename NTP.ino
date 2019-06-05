@@ -7,14 +7,14 @@ void initNTP() {
     ntpTemp = ""; // = readArgsString();
     if (ntpTemp == emptyS) ntpTemp = "ntp2" + ntpServerS;
     sendOptions(ntpS + "2", ntpTemp);
-/*
-    if ( getOptions(messageS) == emptyS) { // Если нет связи с интернет пробуем получить время с роутера
-      sendOptions(ntpS + "1", WiFi.gatewayIP().toString()); // Для этого заменяем адрес NTP сервера на адрес роутера
-    }
+    /*
+        if ( getOptions(messageS) == emptyS) { // Если нет связи с интернет пробуем получить время с роутера
+          sendOptions(ntpS + "1", WiFi.gatewayIP().toString()); // Для этого заменяем адрес NTP сервера на адрес роутера
+        }
     */
     sCmd.addCommand("time", handle_time);
     timeSynch();
-    Serial.println("NTP START");
+    //    Serial.println("NTP START");
     if (GetTime() != "00:00:00") { // Проверка на получение времени
       // задача проверять таймеры каждую секунду обновлять текущее время.
       test1Sec();
@@ -38,12 +38,16 @@ void test1Sec() {
       loadTimer();
     }
     if (timeNow == getOptions("timersT")) {
+      //Serial.println(getOptions("timersC"));
       sCmd.readStr(getOptions("timersC"));
       if (getOptions("timersR") == "1") delTimer();
       sendOptions("timersT", " ");
       sendOptions("timersC", " ");
       loadTimer();
     }
+#ifdef webSoketM // #endif
+    SoketData (timeS, timeNow, getStatus(timeS));
+#endif
     sendStatus(timeS, timeNow);
     sendOptions(timeS, timeNow);
     jsonWrite(configSetup, timeS,  timeNow);
@@ -52,10 +56,13 @@ void test1Sec() {
 // ------------------------------ Установка времянной зоны
 void handle_timeZone() {
   int timezone = readArgsInt();
+  //Serial.println(timezone);
+  if (getSetupInt(timeZoneS)!=timezone){
   sendSetup(timeZoneS,  timezone);
   sendOptions(timeZoneS, timezone);
   timeSynch();
   saveConfigSetup ();
+  }
 }
 // ------------------------------ Комманда синхронизации времени
 void handle_time() {
@@ -66,21 +73,21 @@ void handle_time() {
 
 void timeSynch() {
   uint8_t zone = getSetupInt(timeZoneS);
-  Serial.print("timeSynch zone=");
-  Serial.println(zone);
+  //  Serial.print("timeSynch zone=");
+  //  Serial.println(zone);
   String ntp1 = getOptions(ntpS + "1");
   String ntp2 = getOptions(ntpS + "2");
   if (ntp1 == emptyS) ntp1 = "ntp1" + ntpServerS;
   if (ntp2 == emptyS) ntp2 = "ru.pool.ntp.org";
   if (MyWiFi.modeSTA()) {
     // Инициализация соединения с NTP сервером
-    Serial.println(ntp1);
-    Serial.println(ntp2);
+    //    Serial.println(ntp1);
+    //    Serial.println(ntp2);
     configTime(zone * 3600, 0, ntp1.c_str(), ntp2.c_str());
     uint8_t i = 0;
     while ((time(nullptr) < NTP_MIN_VALID_EPOCH) && i < 10) {
       i++;
-      Serial.print(".");
+      //      Serial.print(".");
       delay(1000);
     }
     String timeNow = GetTime();
@@ -123,9 +130,7 @@ String GetWeekday() {
   return weekday;
 }
 
-uint8_t indexWeekday(String week){
+uint8_t indexWeekday(String week) {
   const String weeks = "SunMonTueWedThuFriSat";
-  return weeks.indexOf(week)/3;
-  }
-
-
+  return weeks.indexOf(week) / 3;
+}

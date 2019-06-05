@@ -156,7 +156,7 @@ void buzzerTone() {
 #ifdef PWMServoM // #endif
 void initPCA9685() {
 
-  Serial.println("PCA9685 Start");
+//  Serial.println("PCA9685 Start");
   String clockFrequency = readArgsString(); // первый аргумент частота для связи I2C
   //Adafruit_PWMServoDriver pwm = new Adafruit_PWMServoDriver();
   pwm.begin();
@@ -164,11 +164,11 @@ void initPCA9685() {
 }
 
 void PCA9685Write(uint8_t vpin, boolean state) {
-    Serial.print("vpin=");
-  Serial.println(vpin);
+//    Serial.print("vpin=");
+//  Serial.println(vpin);
   uint8_t pin = vpin - 22;
-  Serial.print("pin=");
-  Serial.println(pin);
+//  Serial.print("pin=");
+//  Serial.println(pin);
   if (state) {
     pwm.setPWM(pin, 4096, 0); //on
   } else

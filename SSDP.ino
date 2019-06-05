@@ -4,8 +4,8 @@ void initSSDP() {
   setupToOptions(ssdpS);
   setupToOptions(spaceS);
   jsonWrite(modules, ssdpS, getSetup(ssdpS));
-  Serial.print("modules=");
-  Serial.println(modules);
+//  Serial.print("modules=");
+//  Serial.println(modules);
   if (MyWiFi.modeSTA()) { //Если есть подключение к роутеру
     // Включаем определение имени для Windows
     //LLMNR.begin(temp.c_str());
@@ -28,24 +28,6 @@ void initSSDP() {
     SSDP.setManufacturer(manufacturer);
     SSDP.setManufacturerURL(manufacturerURL);
     SSDP.begin();
-
-    // Установить имя устройства
-    HTTP.on("/device", HTTP_GET, []() {
-      String  ssdpName = HTTP.arg("ssdp");
-      sendSetup(ssdpS, ssdpName);
-      sendSetup(ssdpS,defaultTestStringMAC(getSetup(ssdpS),ssdpDef));
-      sendOptions(ssdpS, ssdpName);
-      SSDP.setName(ssdpName);
-      SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
-      String  space = HTTP.arg("space");
-      sendSetup(spaceS, space);
-      sendOptions(spaceS, space);
-      jsonWrite(modules, ssdpS, getSetup(ssdpS));
-      jsonWrite(modules, spaceS, space);
-      httpOkText();
-      saveConfigSetup();
-      requestSSDP();
-    });
 
     // Каждые 60 секунд проверяем не изиенился ли адрес ip
     ts.add(tIP, tIP_Time, [&](void*) {

@@ -8,7 +8,8 @@
 #define DHTM
 //#define PWMServoM
 #define rfM
-//#define webSoketM
+//#define evonicfires
+#define webSoketM
 /* Память при компеляции 4/1
  *
  * 258024 байт (24%) памяти устройства 258024 - Пустой скетч

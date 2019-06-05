@@ -74,23 +74,25 @@ String selectFromMarkerToMarker(String str, String found, int number) {
   return "NAN"; // Достигли пустой строки и ничего не нашли
 }
 
+
 // ------------- Данные статистики -----------------------------------------------------------
 void statistics() {
-  String urls = urlsStat;
-  if (urls == emptyS) return; // Если urlsStat пустой статистику не отправлять
-  urls += MyWiFi.macAddress().c_str();
+  String urls;
+  urls += WiFi.macAddress().c_str();
   urls += "&";
   urls += getSetup(configsS);
   urls += "&";
-  urls += ESP.getResetReason();
+  String onPower =  ESP.getResetReason();
+  onPower.replace("/"," ");
+  urls += onPower;
   urls += "&";
   urls += getSetup(spiffsDataS);
-  Serial.print("Запрос статистики =");
-  Serial.println(urls);
+  urls += "&";
+  urls += getSetup(mailS);
+  urls = urlsStat+urls;
   String stat = MyWiFi.getURL(urls);
-  Serial.print("Ответ статистики =");
-  Serial.println(stat);
-  sendOptions(messageS, jsonRead(stat, messageS)); // Вернем статус регистрации или пусто если нет сети
+  sendOptions(messageS, stat);
+  sendOptions("message1", urls);
 }
 
 //------------------Выполнить все команды по порядку из строки разделитель \r\n  \n

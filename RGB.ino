@@ -3,14 +3,14 @@
 void initRGB() {
   byte pin = readArgsInt(); // pin
   pin =  pinTest(pin);
-  if (pin == 1 || pin == 3 ) {
+ // if (pin == 1 || pin == 3 ) {
     String num = readArgsString(); // второй аргумент прификс RGB 0 1 2
     byte numI = num.toInt();
     sendOptions("rgbNum", getOptionsInt("rgbNum") + 1); // увеличим количество лент +1
     // Реагирует на комманду rgb
     sCmd.addCommand(rgbS.c_str(),  rgb);
     commandsReg(rgbS);
-    ws2812fx[numI].setSegment(0,  0,  readArgsInt() - 1, FX_MODE_BLINK, 0xFF0000, 1000, false); // segment 0 is leds 0 - 9
+    ws2812fx[numI].setSegment(0,  0,  readArgsInt() - 1, FX_MODE_CUSTOM, 0xFF0000, 50, false); // segment 0 is leds 0 - 9
     int state = readArgsInt(); //состояние
     sendStatus(rgbS + num, state);
     sendStatus(colorRGBS + num,  readArgsString()); //цвет
@@ -18,12 +18,13 @@ void initRGB() {
     sendStatus(brightnessRGBS + num, readArgsInt()); //яркость
     sendStatus(modeRGBS + num, readArgsInt()); //режим
     ws2812fx[numI].init();
-
-    if (numI == 0) {
+    if (pin==1){
+    //if (numI == 0) {
       dma.Initialize();
       ws2812fx[numI].setCustomShow(myCustomShow);
     }
-    if (numI == 1) {
+    if (pin==3){
+    //if (numI == 1) {
       dma1.Initialize();
       ws2812fx[numI].setCustomShow(myCustomShow1);
     }
@@ -32,20 +33,16 @@ void initRGB() {
     int temp = getStatusInt(speedRGBS + num);
     ws2812fx[numI].setSpeed(convertSpeed(temp)); // Скорость
     ws2812fx[numI].setBrightness(getStatusInt(brightnessRGBS + num)); //Яркость
-    int modeI=getStatusInt(modeRGBS + num);
-    if (modeI!=100){
+    int modeI = getStatusInt(modeRGBS + num);
     ws2812fx[numI].setMode(modeI); // Режим
-    } else {
-          if (numI==0)  ws2812fx[0].setCustomMode(myCustomEffect0);
-          if (numI==1)  ws2812fx[1].setCustomMode(myCustomEffect1);
-      }
-
+    if (numI == 0)  ws2812fx[0].setCustomMode(myCustomEffect0);
+    if (numI == 1)  ws2812fx[1].setCustomMode(myCustomEffect1);
     //регистрируем модуль
     modulesReg(rgbS + num);
     actionsReg(rgbS + num);
     if (state) ws2812fx[numI].start();
     if (!state) ws2812fx[numI].stop();
-  }
+ // }
 }
 void myCustomShow(void) {
   if (dma.IsReadyToUpdate()) {
@@ -78,73 +75,53 @@ void rgb() {
   String speed = readArgsString(); //скорость
   String brightness = readArgsString(); //яркость
   String mode = readArgsString(); //режим
-  int temp;
   uint8_t state = getStatusInt(stateRGBS + num);
-  uint32_t times = color.toInt();
-
   if (com == "set") {
     if (color != emptyS) {
-      if (color == "-") {
-      } else {
+      if (color == "-") {}
+      else {
         sendStatus(colorRGBS + num,  color);
         ws2812fx[numI].setColor(setColorStringI(colorRGBS + num, numI));
       }
-
     }
     if (speed != emptyS) {
       if (speed == "-") {}
       else {
-        temp = speed.toInt();
-        //SoketData (speedRGBS + num, speed, getStatus(speedRGBS + num));
-        sendStatus(speedRGBS + num,  speed);
+        int temp = speed.toInt();
+        flag = sendStatus(speedRGBS + num,  speed);
         ws2812fx[numI].setSpeed(convertSpeed(temp));
       }
     }
     if (brightness != emptyS) {
       if (brightness == "-") {}
       else {
-        temp = brightness.toInt();
-        //SoketData (brightnessRGBS + num, brightness, getStatus(brightnessRGBS + num));
-        sendStatus(brightnessRGBS + num,  temp);
+        int temp = brightness.toInt();
+        flag = sendStatus(brightnessRGBS + num,  temp);
         ws2812fx[numI].setBrightness(temp);
       }
     }
     if (mode != emptyS) {
       if (mode == "-") {}
       else {
-        temp = mode.toInt();
-        if (temp != 100) {
-          sendStatus(modeRGBS + num,  temp);
-          ws2812fx[numI].setMode(temp);
-        } else {
-          if (numI==0)  ws2812fx[0].setCustomMode(myCustomEffect0);
-          if (numI==1)  ws2812fx[1].setCustomMode(myCustomEffect1);
-        }
+        int temp = mode.toInt();
+        sendStatus(modeRGBS + num,  temp);
+        ws2812fx[numI].setMode(temp);
       }
     }
     if (!ws2812fx[numI].isRunning())    ws2812fx[numI].start();
-    //SoketData (stateRGBS + num, "1", getStatus(stateRGBS + num));
     sendStatus(stateRGBS + num, 1);
-    //flag = sendStatus(stateRGBS + num, 1);
   } else {
     if (com == "on" || com == "1") {
-      sendStatus("RGBtest",  com + " " + num);
       if (!ws2812fx[numI].isRunning()) ws2812fx[numI].start();
-      //SoketData (stateRGBS + num, "1", getStatus(stateRGBS + num));
       sendStatus(stateRGBS + num, 1);
-      //flag = sendStatus(stateRGBS + num, 1);
     }
     if (com == "off" || com == "0") {
       if (ws2812fx[numI].isRunning()) ws2812fx[numI].stop();
-      //SoketData (stateRGBS + num, "0", getStatus(stateRGBS + num));
       sendStatus(stateRGBS + num, 0);
-      //flag = sendStatus(stateRGBS + num, 0);
     }
     if (com == "not") {
-      sendStatus("RGBtest" + num,  com);
-      //SoketData (stateRGBS + num, (String)!state, getStatus(stateRGBS + num));
+
       sendStatus(stateRGBS + num, !state);
-      //flag = sendStatus(stateRGBS + num, !state);
       if (state) {
         ws2812fx[numI].stop();
       }
@@ -169,18 +146,41 @@ uint16_t convertSpeed(uint8_t mcl_speed) {
   }
   return ws2812_speed;
 }
-uint16_t myCustomEffect0(void) {
-  for (uint16_t i = 0; i > 10; i++) {
-    ws2812fx[0].setPixelColor(i, 255, 0, 0);
+uint16_t myCustomEffect0(void) { // random chase
+  WS2812FX::Segment* seg = ws2812fx[0].getSegment(); // get the current segment
+  int pixels = pgm_read_byte_near(data + 0);
+  int frames = pgm_read_byte_near(data + 1);
+  int fps = pgm_read_byte_near(data + 2);
+  static  int currentFrame = 0;
+
+  for (int i = seg->stop; i > seg->start; i--) {
+    int pixelIndex = i % pixels;
+    int index = currentFrame * pixels * 3 + pixelIndex * 3;
+
+    //Note: We're using pgm_read_byte_near to read bytes out of the data array stored in PROGMEM. These functions are not required for all configurations
+    ws2812fx[0].setPixelColor(i, pgm_read_byte_near(data + index + 3), pgm_read_byte_near(data + index + 4), pgm_read_byte_near(data + index + 5));
   }
-  myCustomShow();
-  return ws2812fx[0].getSpeed();
+  currentFrame ++;
+  if (currentFrame >= frames) currentFrame = 0;
+  return seg->speed; // return the delay until the next animation step (in msec)
 }
-uint16_t myCustomEffect1(void) {
-  for (uint16_t i = 0; i > 10; i++) {
-    ws2812fx[1].setPixelColor(i, 255, 0, 0);
+
+uint16_t myCustomEffect1(void) { // random chase
+  WS2812FX::Segment* seg = ws2812fx[1].getSegment(); // get the current segment
+  int pixels = pgm_read_byte_near(data + 0);
+  int frames = pgm_read_byte_near(data + 1);
+  int fps = pgm_read_byte_near(data + 2);
+  static  int currentFrame = 0;
+
+  for (int i = seg->stop; i > seg->start; i--) {
+    int pixelIndex = i % pixels;
+    int index = currentFrame * pixels * 3 + pixelIndex * 3;
+
+    //Note: We're using pgm_read_byte_near to read bytes out of the data array stored in PROGMEM. These functions are not required for all configurations
+    ws2812fx[1].setPixelColor(i, pgm_read_byte_near(data + index + 3), pgm_read_byte_near(data + index + 4), pgm_read_byte_near(data + index + 5));
   }
-  myCustomShow1();
-  return ws2812fx[1].getSpeed();
+  currentFrame ++;
+  if (currentFrame >= frames) currentFrame = 0;
+  return seg->speed; // return the delay until the next animation step (in msec)
 }
 #endif

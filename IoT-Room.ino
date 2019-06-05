@@ -2,24 +2,26 @@
 #include "sets.h"
 void setup() {
   //system_update_cpu_freq(SYS_CPU_160MHZ);
-  Serial.begin(115200);
-  Serial.println();
+  //Serial.begin(115200);
+  //Serial.println();
   chipID = String( ESP.getChipId() ) + "-" + String( ESP.getFlashChipId() );
   TickerScheduler(1);
   initCMD();
   initHTTP();
   configSetup = readFile(fileConfigS, 4096 );
-  Serial.println(configSetup);
+ // Serial.println(configSetup);
   initWIFI();
   String testIp = MyWiFi.StringIP();
-  if (testIp == "(IP unset)") testIp = "0.0.0.0";
-  if (testIp == "") testIp = "0.0.0.0";
+  if (testIp == "(IP unset)") testIp = "192.168.4.1";
+  if (testIp == "") testIp = "192.168.4.1";
   jsonWrite(ssdpList, getSetup(ssdpS), testIp);
   jsonWrite(modules, ssdpS, getSetup(ssdpS));
   jsonWrite(modules, ipS, testIp);
   jsonWrite(modules, configsS, getSetup(configsS));
+  jsonWrite(modules, mailS, getSetup(mailS));
   setupToOptions(configsS);
   setupToOptions(langS);
+  sendStatus("firstLoad", 0);
   jsonWrite(modules, langS, getSetup(langS));
   sendOptions(urlsPathS, urlsPath);
   sendOptions(fNameSPIFFSS, fNameSPIFFS);
@@ -39,12 +41,13 @@ void setup() {
   test += "\n";
   goCommands(test);
   test = emptyS;
-  initTimers();
+  //initTimers();
   initScenary();
 
 }
 
 void loop() {
+  handleUart();
   MyWiFi.DNSRequest();
   ts.update();
   HTTP.handleClient();

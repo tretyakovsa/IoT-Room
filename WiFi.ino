@@ -4,18 +4,18 @@ void initWIFI() {
   String ssidPass = MyWiFi.psk();
   sendSetup(ssidPassS, ssidPass);
   String ssidAP = MyWiFi.softAPSSID();
-  Serial.println(ssidAP.indexOf("ESP"));
+//  Serial.println(ssidAP.indexOf("ESP"));
   if (ssidAP.indexOf("ESP")!= -1)  {
     ssidAP = ssidAPDef;
   }
-  Serial.println(ssidAP);
+  //Serial.println(ssidAP);
   sendSetup(ssidAPS, ssidAP);
   String ssidApPass = MyWiFi.softAPPSK();
   sendSetup(ssidApPassS, ssidApPass);
   MyWiFi.init(ssid, ssidPass, ssidAP, ssidApPass, ssidAPDef);
   MyWiFi.start();
   if (MyWiFi.modeSTA()) statistics();
-  Serial.println(WiFi.SSID());
+  //Serial.println(WiFi.SSID());
   HTTP.on("/restart", HTTP_GET, []() {
     if (HTTP.arg("device") == "ok") {               // Если значение равно Ок
       httpOkText("Reset OK"); // Oтправляем ответ Reset OK
@@ -54,7 +54,7 @@ String wifiSet(boolean mode) {
   WiFi.begin(ssid.c_str(), pass.c_str());
   MyWiFi.isConnect();
   String state = "{\"ip\":\"" + MyWiFi.StringIP() + "\"}";
-  Serial.println(state);
+  //Serial.println(state);
   return state;
 }
 void sendSetupArg(String argS) {

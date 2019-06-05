@@ -27,7 +27,7 @@ void delTimer() {
 
 
 void loadTimer() {
-  Serial.println("Load Timers");
+ // Serial.println("Load Timers");
   long lminTime = 86400;
   String jsonTimer = readFile(configTimerS, 4096);
   String Weekday = GetWeekday();
@@ -57,7 +57,7 @@ void loadTimer() {
   sendOptions("timersT", minTime);
   sendOptions("timersC", comTime);
   sendOptions("timersR", runTime);
-
+  //Serial.println(getOptions("timersC"));
 }
 
 long  timeToLong(String Time) {

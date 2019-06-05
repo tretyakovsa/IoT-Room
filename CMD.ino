@@ -1,16 +1,16 @@
 // ---------------Инициализация модулей
 void initCMD() {
   sCmd.addCommand("UART",       uart);
-  sCmd.addCommand("print",       printTest);
   sCmd.addCommand("ADMIN",       initAdmin);
   sCmd.addCommand("GET",       initGet);
+  commandsReg("GET");
   sCmd.addCommand("//",       alarmComm);
   sCmd.addCommand("#",       alarmOff);
   sCmd.addCommand("param",       initParam);
   commandsReg("param");
-  commandsReg("GET");
-  sCmd.setDefaultHandler(unrecognized);
   sCmd.addCommand("NTP",        initNTP);
+  sCmd.setDefaultHandler(unrecognized);
+  sCmd.addCommand("TIMERS",        initTimers);
 #ifdef pinOutM
   sCmd.addCommand("PINOUT",       initPinOut);
   sCmd.addCommand("RELAY",       initRelay);
@@ -37,18 +37,28 @@ void initCMD() {
   sCmd.addCommand("DHT",       initDHT);
 #endif
 #ifdef PWMServoM // #endif
-sCmd.addCommand("PCA9685",       initPCA9685);
+  sCmd.addCommand("PCA9685",       initPCA9685);
 #endif
 #ifdef rfM // #endif
   sCmd.addCommand("RF-RECEIVED",       rfReceived);
   sCmd.addCommand("RF-TRANSMITTER",     rfTransmitter);
   sCmd.addCommand("RF-LIVOLO",     rfLivolo);
 #endif
-
+#ifdef evonicfires //
+  sCmd.addCommand("DS18B20",       initOneWire);
+  sCmd.addCommand("DHT",       initDHT);
+  sCmd.addCommand("LB",       initLB);
+#endif
 }
 
+#ifdef evonicfires //
+void initLB() {
+  modulesReg("light_box");
+}
+#endif
+
 void unrecognized(const char *command) {
-  Serial.println("What?");
+  // Serial.println("What?");
 }
 void alarmComm() {
   //Serial.println("Comment?");
@@ -56,17 +66,34 @@ void alarmComm() {
 void alarmOff() {
   //Serial.println("CommandOff?");
 }
-// Настраивает Serial по команде sCmd.addCommand("Serial",       uart);
+// Настраивает Serial по команде sCmd.addCommand("UART",       uart);
 void uart() {
   Serial.end();
   Serial.begin(readArgsInt());
   delay(100);
   Serial.println();
+  sCmd.addCommand("print",       printTest);
+  //addAction(toneS);
+  modulesReg("uart");
 }
 // По комманде print печатает аргумент для тастов
 void printTest() {
   Serial.println("Test " + readArgsString());
 }
+
+void handleUart() {
+  static String uart;
+  if (Serial.available()) {
+    int inByte = Serial.read();
+    uart += (char)inByte;
+  } else {
+    if (uart != "") {
+      flag=sendStatus("uart", uart);
+      uart="";
+    }
+  }
+}
+
 // Включить модуль ADMIN
 void initAdmin() {
   modulesReg("admin");

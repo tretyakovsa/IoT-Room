@@ -27,6 +27,28 @@ void initHTTP() {
     String reqvest = "{\"action\": \"page.htm?configs&" + set + "\"}";
     httpOkText(reqvest);
   });
+    // Установить имя устройства
+    //device?ssdp=evonicfires&space=home&mail=und@efin.ed
+    HTTP.on("/device", HTTP_GET, []() {
+      String  ssdpName = HTTP.arg("ssdp");
+      sendSetup(ssdpS, ssdpName);
+      sendOptions(ssdpS, ssdpName);
+      SSDP.setName(ssdpName);
+      SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
+      String  space = HTTP.arg("space");
+      sendSetup(spaceS, space);
+      sendOptions(spaceS, space);
+      jsonWrite(modules, ssdpS, getSetup(ssdpS));
+      jsonWrite(modules, spaceS, space);
+      String  mail = HTTP.arg(mailS);
+      sendSetup(mailS, mail);
+      String  fahrenheit = HTTP.arg(fahrenheitS);
+      sendSetup(fahrenheitS, fahrenheit);
+      jsonWrite(modules, mailS, mail);
+      httpOkText();
+      saveConfigSetup();
+      requestSSDP();
+    });
   // --------------------Выдаем данные ssdpList
   HTTP.on("/ssdp.list.json", HTTP_GET, []() {
     httpOkJson(ssdpList);
@@ -45,12 +67,16 @@ void initHTTP() {
   });
   // --------------------Выдаем данные configJson
   HTTP.on("/config.live.json", HTTP_GET, []() {
-    httpOkJson(configJson);
+    String tmp = configJson;
+    tmp.replace(",", ",\r\n");
+    httpOkJson(tmp);
   });
   // --------------------Выдаем данные configOptions
   HTTP.on("/config.options.json", HTTP_GET, []() {
     espInfo();
-    httpOkJson(configOptions);
+    String tmp = configOptions;
+    tmp.replace(",", ",\r\n");
+    httpOkJson(tmp);
   });
   // --------------------Выдаем данные configOptions  config.admin.json
   HTTP.on("/config.admin.json", HTTP_GET, []() {
@@ -61,7 +87,7 @@ void initHTTP() {
   // ------------------Выполнение команды из запроса
   HTTP.on("/cmd", HTTP_GET, []() {
     String com = HTTP.arg("command");
-    Serial.println(com);
+ //   Serial.println(com);
     sendOptions("test", com);
     sCmd.readStr(com);
     httpOkText(statusS);
@@ -84,7 +110,10 @@ void initHTTP() {
 }
 
 void macros() {
-  flag = sendStatus(voiceS, readArgsString());
+  //Serial.println("macros");
+  String tem = readArgsString();
+  flag = sendStatus(voiceS, tem);
+  //Serial.println("macros");
 }
 
 
@@ -320,7 +349,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       break;
     case WStype_CONNECTED: // Событие происходит при подключении клиента
       {
-        Serial.println("web Socket Connected");
+//        Serial.println("web Socket Connected");
         webSocket.sendTXT(num, configJson); // Отправим в всю строку с данными используя номер клиента он в num
       }
       break;
@@ -328,27 +357,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       if (length > 0) {
         String command = String((const char *)payload);
         String cmd;
-        Serial.print("command=");
-        Serial.println(command);
         cmd = jsonRead(command, voiceS); // Прислан макрос
-        Serial.print("cmd=");
-        Serial.println(cmd);
         if (cmd != "") {
-          Serial.print("voiceS=");
-          Serial.println(cmd);
           sendOptions(voiceS, cmd);
           flag = sendStatus(voiceS, cmd);
+          //sendStatus(voiceS, cmd);
         }
-        cmd = jsonRead(command, "effect"); // Прислан эффект
-        if (cmd != "") {
-          effectTest(cmd);
-        }
+
         cmd = jsonRead(command, "cmd");   // Прислана комманда
         if (cmd != "") {
           sCmd.readStr(cmd);
-          //Serial.print("effect=");
-          //Serial.println(cmd);
-          effectTest(cmd);
         }
       }
 
@@ -379,17 +397,3 @@ void SocketClient(String ipSocket) {
   //WebSocketsClient.enableHeartbeat ( 15000 , 3000 , 2 );
 }
 #endif
-
-void effectTest(String effect) {
-  //sCmd.readStr("rgb off 0");
-  //sCmd.readStr("rgb off 1");
-  String urls = "http://evoflame.co.uk/effect/" + effect;
-  effect =  MyWiFi.getURL(urls); // Получить настройки эффекта с сервера
-  effect = "rgb set 0 " + effect; // Добавим комманду к первой ленте
-  effect.replace("\r\n", "\r\nrgb set 1 "); // Добавим комманду ко второй ленте
-  sCmd.readStr(selectToMarker (effect, "\r\n"));
-  sCmd.readStr(selectToMarkerLast (effect, "\r\n"));
-  sCmd.readStr("pulse on rgb0 30000");
-  sCmd.readStr("pulse on rgb1 30000");
-
-}
