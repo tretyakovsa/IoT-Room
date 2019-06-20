@@ -4,7 +4,7 @@ void initWIFI() {
   String ssidPass = MyWiFi.psk();
   sendSetup(ssidPassS, ssidPass);
   String ssidAP = MyWiFi.softAPSSID();
-//  Serial.println(ssidAP.indexOf("ESP"));
+  Serial.println(ssidAP.indexOf("ESP"));
   if (ssidAP.indexOf("ESP")!= -1)  {
     ssidAP = ssidAPDef;
   }
@@ -14,8 +14,9 @@ void initWIFI() {
   sendSetup(ssidApPassS, ssidApPass);
   MyWiFi.init(ssid, ssidPass, ssidAP, ssidApPass, ssidAPDef);
   MyWiFi.start();
+  Serial.println(MyWiFi.modeSTA());
   if (MyWiFi.modeSTA()) statistics();
-  //Serial.println(WiFi.SSID());
+  Serial.println(WiFi.SSID());
   HTTP.on("/restart", HTTP_GET, []() {
     if (HTTP.arg("device") == "ok") {               // Если значение равно Ок
       httpOkText("Reset OK"); // Oтправляем ответ Reset OK

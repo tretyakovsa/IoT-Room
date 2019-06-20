@@ -2,14 +2,14 @@
 #include "sets.h"
 void setup() {
   //system_update_cpu_freq(SYS_CPU_160MHZ);
-  //Serial.begin(115200);
-  //Serial.println();
+  Serial.begin(115200);
+  Serial.println();
   chipID = String( ESP.getChipId() ) + "-" + String( ESP.getFlashChipId() );
   TickerScheduler(1);
   initCMD();
   initHTTP();
   configSetup = readFile(fileConfigS, 4096 );
- // Serial.println(configSetup);
+  Serial.println(configSetup);
   initWIFI();
   String testIp = MyWiFi.StringIP();
   if (testIp == "(IP unset)") testIp = "192.168.4.1";
@@ -21,7 +21,6 @@ void setup() {
   jsonWrite(modules, mailS, getSetup(mailS));
   setupToOptions(configsS);
   setupToOptions(langS);
-  sendStatus("firstLoad", 0);
   jsonWrite(modules, langS, getSetup(langS));
   sendOptions(urlsPathS, urlsPath);
   sendOptions(fNameSPIFFSS, fNameSPIFFS);
@@ -47,7 +46,7 @@ void setup() {
 }
 
 void loop() {
-  handleUart();
+  //handleUart();
   MyWiFi.DNSRequest();
   ts.update();
   HTTP.handleClient();

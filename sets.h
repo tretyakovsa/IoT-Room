@@ -106,8 +106,8 @@ const String pulseTimeS = "pulseTime";
 
 // ---------- Scenary
 String Scenary;                      // Строка обработки сценариев
-//const String ScenaryS   = "scenary.save.txt";    // Имя файла сценарии
-const String ScenaryS   = "scenary/";    // Имя файла сценарии
+const String ScenaryS   = "scenary.save.txt";    // Имя файла сценарии
+//const String ScenaryS   = "scenary/";    // Имя файла сценарии
 
 // --------- Update
 const String Uploader = ""; // Если перепрошивка происходит без Uploader раскоментировать и закоментировать следующую
@@ -281,26 +281,4 @@ const String alarmhumS   = "alarmHum";
 #include <Adafruit_PWMServoDriver.h>
 //Adafruit_PWMServoDriver
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
-#endif
-
-#ifdef evonicfires //#endif
-#include <OneWire.h>                 //Ставим через менеджер библиотек
-OneWire *oneWire;
-#include <DallasTemperature.h>       //Ставим через менеджер библиотек
-DallasTemperature sensors;
-#include <DHT.h>                     //https://github.com/markruys/arduino-DHT
-DHT dht;
-// Уровни
-const String highS   = "high";
-const String lowS   = "low";
-const String alarmS   = "alarm";
-const String AlarmS   = "Alarm";
-// Температура
-const String temperatureS   = "temperature";
-const String templevelS   = "templevel";
-// Влажность
-const String humidityS   = "humidity";
-// Audio
-const String audioS   = "audio";
-const String volumeS   = "volume";
 #endif

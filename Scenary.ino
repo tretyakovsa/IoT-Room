@@ -13,7 +13,8 @@ void initScenary() {
   loadScenary();
 }
 void loadScenary() {
-  String scen = ScenaryS + getSetup(configsS) + ".txt";
+  //String scen = ScenaryS + getSetup(configsS) + ".txt";
+  String scen = ScenaryS;
   Scenary = readFile(scen, 4096);
   Scenary.replace("\r\n", "\n");
   Scenary.replace("\n\n", "\n");

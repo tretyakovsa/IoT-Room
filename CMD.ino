@@ -44,11 +44,6 @@ void initCMD() {
   sCmd.addCommand("RF-TRANSMITTER",     rfTransmitter);
   sCmd.addCommand("RF-LIVOLO",     rfLivolo);
 #endif
-#ifdef evonicfires //
-  sCmd.addCommand("DS18B20",       initOneWire);
-  sCmd.addCommand("DHT",       initDHT);
-  sCmd.addCommand("LB",       initLB);
-#endif
 }
 
 #ifdef evonicfires //

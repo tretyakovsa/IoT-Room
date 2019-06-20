@@ -5,8 +5,8 @@ UPGRADE
 // {{LangConfRelay}}
 RELAY 12 1 1 0 {{LangrelayName}}_1
 // {{LangConfSerial}}
-# UART 115200
-# print print
+UART 115200
+print print
 // {{LangConfNTP}}
 NTP ntp1.vniiftri.ru ntp2.vniiftri.ru
 // {{LangConfTIMERS}}
