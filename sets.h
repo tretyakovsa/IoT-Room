@@ -16,10 +16,12 @@ WIFICONNECT MyWiFi;
 //---------- Службы обнаружения
 //#include <ESP8266LLMNR.h>
 //#include <ESP8266NetBIOS.h>
-#include <ESP8266SSDP.h>             //Содержится в пакете
+//#include <ESP8266SSDP.h>             //Содержится в пакете
 //---------- Сетевой обмен Библиотеки
 #include <WiFiUdp.h>                 //Содержится в пакете
 WiFiUDP udp;
+WiFiUDP udpUpnp;
+#define UDP_PACKET_MAX_SIZE 2048
 #include <ESP8266HTTPClient.h>       //Содержится в пакете
 WiFiClient wclient; //?
 //---------- WEB сервера
@@ -56,11 +58,7 @@ const String offS   = "off";
 const String notS   = "not";
 const String messageS   = "message";
 const String configsS   = "configs";
-#ifdef evonicfires //
-const String urlsStat = "http://evoflame.co.uk/fireplaces/";
-#else
 const String urlsStat = "http://backup.privet.lv/visitors/?";
-#endif
 const String voiceS   = "voice";
 const String mailS   = "mail";
 const String fahrenheitS   = "fahrenheit";

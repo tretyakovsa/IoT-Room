@@ -9,7 +9,8 @@ void setup() {
   initCMD();
   initHTTP();
   configSetup = readFile(fileConfigS, 4096 );
-  Serial.println(configSetup);
+  //Serial.println(configSetup);
+  //Serial.end();
   initWIFI();
   String testIp = MyWiFi.StringIP();
   if (testIp == "(IP unset)") testIp = "192.168.4.1";
@@ -17,6 +18,7 @@ void setup() {
   jsonWrite(ssdpList, getSetup(ssdpS), testIp);
   jsonWrite(modules, ssdpS, getSetup(ssdpS));
   jsonWrite(modules, ipS, testIp);
+  sendOptions(ipS, testIp);
   jsonWrite(modules, configsS, getSetup(configsS));
   jsonWrite(modules, mailS, getSetup(mailS));
   setupToOptions(configsS);
@@ -29,7 +31,8 @@ void setup() {
   setupToOptions(buildDataS);
   initPuls();
   initUpgrade();
-  initSSDP();
+  //initSSDP();
+  initUpnp();
 #ifdef webSoketM // #endif
   webSoket_init();
 #endif
@@ -46,17 +49,18 @@ void setup() {
 }
 
 void loop() {
-  //handleUart();
+  handleUart();
   MyWiFi.DNSRequest();
   ts.update();
   HTTP.handleClient();
   handleSSDP();
+  handleUpnp();
   handleScenary();
 #ifdef TachM
   handleButtons();
 #endif
 #ifdef irM
-  handleIrReceiv();
+  //handleIrReceiv();
 #endif
 #ifdef rgbM
   ws2812fx[0].service();

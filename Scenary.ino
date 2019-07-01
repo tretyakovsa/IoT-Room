@@ -95,6 +95,8 @@ void thenCommand() {
     comm += " " + readArgsString();
     comm += " " + readArgsString();
     comm += " " + readArgsString();
+      //Serial.println("test= ");
+      //Serial.println(test);
     // Если это локальное устройство
     if (ssdp == test or test == "this") {
       //Serial.print("comm= ");
@@ -103,17 +105,22 @@ void thenCommand() {
       sCmd.readStr(comm);
     }
     else {
-      //       Serial.println("comm= ");
-      //      Serial.println(comm);
+
       //http://192.168.0.91/cmd?command=relay on 1
       String urls = "http://";
+      //Serial.println("test1= ");
+      //Serial.println(test);
       String ip = jsonRead(ssdpList, test);
+      //Serial.println("ip= ");
+      //Serial.println(ip);
       urls += ip;
       urls += "/cmd?command=" + comm;
       urls.replace(" ", "%20");
+     // Serial.println("urls= ");
+     // Serial.println(urls);
       if (ip != emptyS) {
-        sendOptions("test", comm);
-        MyWiFi.getURL(urls);
+        sendOptions("test", urls);
+        Serial.println(MyWiFi.getURL(urls));
       }
     }
   }

@@ -7,6 +7,7 @@
 #define DS18B20M
 #define DHTM
 #define irM
+#define irTransmitterM
 #define rfM
 //#define webSoketM
 /* Память при компеляции 4/1

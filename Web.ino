@@ -1,4 +1,4 @@
-void initHTTP() {
+  void initHTTP() {
   SPIFFS.begin();
   initFS();
   HTTP.begin();
@@ -33,8 +33,8 @@ void initHTTP() {
       String  ssdpName = HTTP.arg("ssdp");
       sendSetup(ssdpS, ssdpName);
       sendOptions(ssdpS, ssdpName);
-      SSDP.setName(ssdpName);
-      SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
+      //SSDP.setName(ssdpName);
+      //SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
       String  space = HTTP.arg("space");
       sendSetup(spaceS, space);
       sendOptions(spaceS, space);
@@ -317,6 +317,10 @@ void httpOkText(String text) {
 void httpOkHtml(String text) {
   HTTPsendHeader();
   HTTP.send(200, "text/html", text);
+}
+void httpOkXML(String text) {
+  HTTPsendHeader();
+  HTTP.send(200, "text/xml", text);
 }
 void httpOkJson(String text) {
   HTTPsendHeader();

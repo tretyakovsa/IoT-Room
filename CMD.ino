@@ -23,6 +23,9 @@ void initCMD() {
 #endif
 #ifdef irM
   sCmd.addCommand("IR-RECEIVED",       irReceived);
+#ifdef  irTransmitterM
+  sCmd.addCommand("IR-TRANSMITTER",     irTransmitter);
+#endif
 #endif
 #ifdef rgbM // #endif
   sCmd.addCommand("RGB",       initRGB);
@@ -69,22 +72,53 @@ void uart() {
   Serial.println();
   sCmd.addCommand("print",       printTest);
   //addAction(toneS);
+  commandsReg("print");
+  sendStatus("uart", "");
+  //actionsReg("uart");
   modulesReg("uart");
 }
 // По комманде print печатает аргумент для тастов
 void printTest() {
-  Serial.println("Test " + readArgsString());
+  String test = readArgsString();
+  Serial.println(test);
+  sendStatus("PRINT", test);
 }
 
 void handleUart() {
   static String uart;
+  static String key;
   if (Serial.available()) {
-    int inByte = Serial.read();
-    uart += (char)inByte;
-  } else {
-    if (uart != "") {
-      flag=sendStatus("uart", uart);
-      uart="";
+    byte inByte = Serial.read();
+    // char inChar = Serial.read();
+    char inChar = (char)inByte;
+    // int inByte = Serial.read();
+    sendStatus("u", inChar);
+    //if (Serial.find())
+    if (key != "k" && inByte == 3) {
+      key += "k";
+      sendStatus("u1", key);
+    }
+    if (key != "key" && inByte == 170) {
+      key += "ey";
+      sendStatus("u1", key);
+    }
+    if (key == "key" && inByte < 8) {
+      key += " ";
+      key += inByte;
+      key += " ";
+      sendStatus("u1", key);
+    }
+    if (key.length() == 6) {
+      key += inByte;
+      sendStatus("uart", key);
+      key="";
+      uart = "";
+    } //else
+    uart += inChar;
+    if (uart.lastIndexOf("\r\n") != -1) {
+      uart.replace("\r\n", "");
+      flag = sendStatus("uart", uart);
+      uart = "";
     }
   }
 }
