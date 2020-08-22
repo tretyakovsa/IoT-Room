@@ -1,0 +1,162 @@
+{
+ "configs":[
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/config.admin.json",
+  "/modules.json"
+ ],
+ "title": [{
+  "type":"text",
+  "title":"Debug"
+ }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-danger"
+  },
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+  {
+   "type":"text",
+   "class":"alert alert-dismissible alert-info",
+   "title":"<h5>GitHub Wiki</h5><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/wiki/GET-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5'>GET управление</a><br><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/wiki/JSON-%D1%84%D0%B0%D0%B9%D0%BB%D1%8B-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B'>JSON файлы системы</a> и <a href='/help.htm'>local help</a><br><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/wiki/%D0%92%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8-page.htm%3F*'>Возможности page.htm?*</a><br><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/wiki/MQTT-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5'>MQTT управление</a><hr><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/issues?q=is%3Aissue+is%3Aopen+label%3Awiki'>Часто задоваемые вопросы</a><br><a href='https://github.com/tretyakovsa/Sonoff_WiFi_switch/issues/new'>{{LangNewIssues}}</a>"
+  },
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"input",
+   "name":"config-button",
+   "state":"{{configs}}",
+   "style":"display:none"
+  },
+
+  {
+   "type":"text",
+   "title":"<b>{{LangUpgradeBeta}}<br>{{LangUpgradeInfo}}</b><br><br>",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"link",
+   "title":"Spiffs",
+   "action":"/upgrade?spiffs=http://backup.privet.lv/esp/Sonoff_WiFi_switch.spiffs.bin",
+   "class":"btn btn-block btn-default",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"link",
+   "title":"Build",
+   "action":"/upgrade?build=http://backup.privet.lv/esp/Sonoff_WiFi_switch.ino.generic.bin",
+   "class":"btn btn-block btn-default",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"link",
+   "title":"Spiffs & Build",
+   "action":"/upgrade?spiffs=http://backup.privet.lv/esp/Sonoff_WiFi_switch.spiffs.bin&build=http://backup.privet.lv/esp/Sonoff_WiFi_switch.ino.generic.bin",
+   "class":"btn btn-block btn-default",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"scenary-test"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"h4",
+   "title":"('{{flashChip}}'.slice(4)=='85'?'Flash Chip: <b style=\"color:red\">{{flashChip}} Bad</b>':'Flash Chip: <b>{{flashChip}}</b>')",
+   "style":"text-align:left;"
+  },
+  {
+   "type":"h4",
+   "title":"Flash Size: <b>{{ideFlashSize}}</b> bytes",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Real Flash Size: <b>{{realFlashSize}}</b> bytes",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Free space for the sketch: <b>{{FreeSketchSpace}}</b> bytes",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Flash Chip Speed: <b>{{flashChipSpeed}}</b> MHz",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Flash Chip Mode: <b>{{flashChipMode}}</b>",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"CPU Freq: <b>{{cpuFreqMHz}}</b> MHz",
+   "style":"text-align:left"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"h4",
+   "title":"MAC: <b>{{mac}}</b>",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Spiffs: <small>{{spiffsData}}</small>",
+   "style":"text-align:left"
+  },
+  {
+   "type":"h4",
+   "title":"Build: <small>{{buildData}}</small>",
+   "style":"text-align:left"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"h4",
+   "title":"<b>File system:</b><br>Всего: <b>{{totalBytes}}</b> bytes<br>Использовано: <b>{{usedBytes}}</b> bytes<br>Размер страницы и блока: <b>{{blockSize}}</b><br>Размер страницы: <b>{{pageSize}}</b><br>Количество одновременно открытых файлов: <b>{{maxOpenFiles}}</b><br>Максимальная возможная длина имени файла: <b>{{maxPathLength}}</b>",
+   "style":"text-align:left"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"text",
+   "title":"('{{message}}'!='Registered'?'<div class=\"alert alert-warning\"><b>Not full version</b><br><a href=\"/donate.htm\">{{LangPay}}</a></div>':'')"
+  },
+  {
+   "type":"h4",
+   "title":"('{{message}}'=='Registered'?'<div class=\"alert alert-success\">Full version! Thanks!</div>':'')"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "configs":[
+  "/config.live.json",
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+  "type":"text",
+  "title":"{{LangOptions1}}"
+ }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-info"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+  {
+   "type":"button",
+   "title":"&#8657; 0",
+   "module":"furnace0",
+   "response":"[[furnace0-state]]",
+   "action":"furnace 0 up",
+   "class":"'btn btn-block btn-lg btn-primary",
+   "style":"width:50%;display:inline-block"
+  },
+  {
+   "type":"button",
+   "title":"&#8657; 2",
+   "module":"furnace1",
+   "response":"[[furnace1-state]]",
+   "action":"furnace 1 up",
+   "class":"'btn btn-block btn-lg btn-primary",
+   "style":"width:50%;display:inline-block"
+  },
+
+  {
+   "type":"h4",
+   "name":"furnace0-state",
+   "module":"furnace0",
+   "title":"{{stateFurnace0}}",
+   "style":"text-align: center;width:50%;display:inline-block"
+  },
+  {
+   "type":"h4",
+   "name":"furnace1-state",
+   "module":"furnace1",
+   "title":"{{stateFurnace1}}",
+   "style":"text-align: center;width:50%;display:inline-block"
+  },
+  {
+   "type":"button",
+   "title":"&#8659; 1",
+   "module":"furnace0",
+   "response":"[[furnace0-state]]",
+   "action":"furnace 0 down",
+   "class":"'btn btn-block btn-lg btn-primary",
+   "style":"width:50%;display:inline-block"
+  },
+  {
+   "type":"button",
+   "title":"&#8659; 3",
+   "module":"furnace1",
+   "response":"[[furnace1-state]]",
+   "action":"furnace 1 down",
+   "class":"'btn btn-block btn-lg btn-primary",
+   "style":"width:50%;display:inline-block"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+ ]
+}

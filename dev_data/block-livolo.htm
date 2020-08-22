@@ -1,0 +1,27 @@
+<div class="col-md-6 livolo">
+ <div class="block">
+  <h5 class="alert-danger"><a href="http://{{ip}}">{{SSDP}}</a></h5>
+  <div class="alert alert-dismissible alert-warning {{timerListHidden}} {{g69142-{{ip}}}}">
+   <button class="close" onclick="hide('g69142-{{ip}}',this)">×</button>
+   <a href="http://{{ip}}/page.htm?timer" target="_blank" class="close"><i class="popup-img"></i></a>
+   <ul>{{timerList}}</ul>
+  </div>
+  <hr>
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 0',this);" class="btn btn-block btn-primary" value="1" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 96',this);" class="btn btn-block btn-primary" value="2" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 120',this);" class="btn btn-block btn-primary" value="3" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 24',this);" class="btn btn-block btn-primary" value="4" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 80',this);" class="btn btn-block btn-primary" value="5" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 48',this);" class="btn btn-block btn-primary" value="6" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 108',this);" class="btn btn-block btn-primary" value="7" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 12',this);" class="btn btn-block btn-primary" value="8" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 72',this);" class="btn btn-block btn-primary" value="9" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 40',this);" class="btn btn-block btn-primary" value="0" type="button">
+  <input onclick="ajaxm('{{ip}}','cmd?command=lvsend 6400 106',this);" class="btn btn-block btn-lg btn-warning" value="All off" type="button">
+  <hr>
+  <div class="btn-group btn-block">
+   <a href="http://{{ip}}/page.htm?livolo" class="btn btn-default" style="width:80%"><i class="set-img"></i>{{LangOptions1}}</a>
+   <a href="http://{{ip}}/page.htm?setup" class="btn btn-default" style="width:20%" title="{{LangSetting3}}"><i class="opt-img"></i></a>
+  </div>
+ </div>
+</div>

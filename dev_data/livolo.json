@@ -1,0 +1,198 @@
+{
+ "configs":[
+  "/config.live.json",
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+   "type":"text",
+   "title":"{{LangOptions1}}"
+  }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-danger"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"text",
+   "module":"ddns",
+   "name":"alert-ifttt",
+   "title":"<button class=\"close\" onclick=\"hide('alert-ifttt',this)\">×</button>{{LangIfttt1}}",
+   "class":"alert alert-info {{alert-ifttt}}"
+  },
+
+  {
+   "type":"button",
+   "title":"1",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 0",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"2",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 96",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"3",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 120",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"4",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 24",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"5",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 80",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"6",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 48",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"7",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 108",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"8",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 12",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"9",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 72",
+   "style":"width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"0",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 40",
+   "style":"margin-left:33.33333%;width:33.33333%;display:inline",
+   "class":"btn btn-lg btn-primary"
+  },
+  {
+   "type":"button",
+   "title":"All off",
+   "module":"rfLivolo",
+   "action":"lvsend 6400 106",
+   "class":"btn btn-block btn-lg btn-warning"
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+   "type":"hr",
+   "module":"timers"
+  },
+
+
+  {
+   "type":"h2",
+   "module":"timers",
+   "title":"{{LangTimer}}"
+  },
+
+
+  {
+   "type":"table",
+   "module":"timers",
+   "state":"timer.save.json",
+   "title":{
+    "day":" {{LangDay}} ",
+    "time1":" {{LangTime4}} ",
+    "com1":""
+   },
+   "class":"table alert alert-dismissible alert-warning",
+   "style":"width:100%;"
+  },
+
+  {
+   "type":"link",
+   "module":"timers",
+   "title":"{{LangTimer}}",
+   "action":"page.htm?timer",
+   "class":"btn btn-block btn-default"
+  },
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"macros"
+  },
+
+  {
+   "type":"chart",
+   "title":"{{LangA0}}",
+   "state":"charts.json?data=A0&data1=highAlarmA0&data2=lowAlarmA0",
+   "module":"A0",
+   "action":"/page.htm?chart&A0&highAlarmA0&lowAlarmA0",
+   "style":"height:200px;margin-left:-20px"
+  },
+
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+
+ ]
+}

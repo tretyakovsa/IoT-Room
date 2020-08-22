@@ -1,0 +1,174 @@
+{
+ "configs":[
+  "/config.options.json",
+  "/config.setup.json",
+  "/lang/lang.{{lang}}.json"
+ ],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-warning"
+  },
+  {
+   "type":"select",
+   "state":"{{lang}}",
+   "name":"languages",
+   "action":"/lang?set=[[languages]]",
+   "response":"page.htm?{{urlArray0}}",
+   "style":"margin-top:-47px;float:right;width:70px",
+   "title":{"ru":"RU","en":"EN","lv":"LV","ua":"UA"}
+  },
+
+
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"text",
+   "title":"('{{flashChip}}'.slice(4)=='85'?'<div class=\"alert alert-danger\">YOU ESP8266 BED FLASH CHIP: {{flashChip}}</div>':'<b class=hidden>'+set_time_zone(this)+'</b>')"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangType}}"
+  },
+
+  {
+   "type":"select",
+   "name":"build",
+   "class":"btn btn-block btn-info btn-lg",
+   "style":"height:auto;",
+   "state":"{{configs}}",
+   "action":"/configs?set=[[build]]",
+   "title":{
+    "sonoff-rf":"Sonoff-rf / Sonoff TH16 / Wi-Fi Smart Socket",
+    "sonoff-pow":"Sonoff-Pow ({{LangSoon}})",
+    "rgb":"RGB (WS2811/WS2812/NeoPixel LEDs)",
+    "rgb-shim":"RGB SHIM (5050/3528/2835)",
+    "jalousie":"{{LangJalousie}}",
+    "smart-room":"Smart-Room",
+    "wifi-relay-5v":"WiFi Relay 5v",
+    "manually":"Manually"
+   }
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h2",
+   "title":"{{LangDevice}}"
+  },
+  {
+   "type":"text",
+   "title":"('{{SSDP}}'=='Sonoff'?'<div class=\"alert alert-danger\">{{LangSSDPAlert}}</div>':'')"
+  },
+  {
+   "type":"input",
+   "title":"{{LangDevice}}",
+   "name":"ssdp",
+   "state":"{{SSDP}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9a-zA-Z\\-]{1,15}|[0-9а-яА-Я\\-]{1,7}"
+  },
+  {
+   "type":"input",
+   "title":"{{LangSpace}}",
+   "name":"space",
+   "state":"{{space}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9a-zA-Zа-яА-Я\\-]{1,20}"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "action":"device?ssdp=[[ssdp]]&space=[[space]]",
+   "class":"btn btn-block btn-success"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"text",
+   "name":"ip-adress",
+   "title":"<div class=\"loader\"></div><h3>{{LangConnect1}}</h3>",
+   "style":"position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+   "class":"pop-up hidden"
+  },
+
+
+  {
+   "type":"text",
+   "title":"{{LangWiFi3}}",
+   "class":"alert alert-dismissible alert-danger"
+  },
+
+
+  {
+   "type":"h2",
+   "title":"{{LangWiFi2}}"
+  },
+
+
+  {
+   "type":"wifi",
+   "title":"{{LangWiFi1}}",
+   "name":"ssid",
+   "state":"{{ssid}}",
+   "pattern":".{1,}"
+  },
+  {
+   "type":"password",
+   "title":"{{LangPass}}",
+   "name":"ssidPass",
+   "state":"{{ssidPass}}",
+   "pattern":".{8,}"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "class":"btn btn-block btn-success",
+   "action":"ssid?ssid=[[ssid]]&ssidPass=[[ssidPass]]&checkboxIP=0"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"text",
+   "title":"<small><b>Вы должны знать:</b> После каждого включения устройство пытается отправить данные на наш сервер о дате включения и какое это включение, после аварийного падения или простой перезапуск. Это позволяет вам и нам быстро выявить проблемные версии и выпустить новые. Эти данные можно увидеть нажав: Конфигурация / Настройки разработчика / Starting log.",
+   "class":"alert alert-dismissible alert-info"
+  },
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"link",
+   "title":"{{LangReset1}}",
+   "name":"titi",
+   "action":"javascript:toggle('ip-adress');send_request_post(this,'restartWiFi','{{ip-adress}}');",
+   "class":"btn btn-block btn-warning"
+  }
+ ]}

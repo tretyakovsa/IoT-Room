@@ -1,0 +1,403 @@
+{
+ "configs": [
+  "/config.setup.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+  "type":"text",
+  "title":"{{LangSetting3}}"
+ }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-warning"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"text",
+   "title":"('{{message}}'=='Registered'?'<div class=\"alert alert-warning\"><b>Not full version</b><a href=\"/donate.htm\" style=\"float:right\">{{LangPay}}</a></div>':'')"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangType}} {{configs}}"
+  },
+
+  {
+   "type":"input",
+   "name":"config-button",
+   "state":"{{configs}}",
+   "style":"display:none"
+  },
+  {
+   "type":"link",
+   "title":"{{LangOptions1}} {{configs}} PIN",
+   "module":"admin",
+   "action":"/page.htm?configs&[[config-button]]",
+   "class":"btn btn-block btn-primary"
+  },
+
+  {
+   "type":"dev",
+   "title":"{{LangSetting}}",
+   "state":"http://backup.privet.lv/esp/build/sonoff",
+   "class":"alert alert-dismissible alert-info"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangDevice}}"
+  },
+  {
+   "type":"text",
+   "title":"('{{SSDP}}'=='Sonoff'?'<div class=\"alert alert-danger\">{{LangSSDPAlert}}</div>':'')"
+  },
+  {
+   "type":"input",
+   "title":"{{LangDevice}}",
+   "name":"ssdp",
+   "state":"{{SSDP}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9a-zA-Z\\-]{1,15}|[0-9а-яА-Я\\-]{1,7}"
+  },
+  {
+   "type":"input",
+   "title":"{{LangSpace}}",
+   "name":"space",
+   "state":"{{space}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9a-zA-Zа-яА-Я\\-]{1,20}"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "action":"device?ssdp=[[ssdp]]&space=[[space]]",
+   "class":"btn btn-block btn-success"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h2",
+   "title":"{{LangWiFi2}}"
+  },
+  {
+   "type":"wifi",
+   "title":"{{LangWiFi1}}",
+   "name":"ssid",
+   "state":"{{ssid}}",
+   "pattern":".{1,}"
+  },
+  {
+   "type":"password",
+   "title":"{{LangPass}}",
+   "name":"ssidPass",
+   "state":"{{ssidPass}}",
+   "pattern":".{8,}"
+  },
+
+  {
+   "type":"select",
+   "state":"{{wifiConnect}}",
+   "name":"wifi-connect",
+   "action":"wifi?connect=[[wifi-connect]]&led=[[wifi-blink]]",
+   "style":"width:65%;display:inline;height:auto;font-weight:normal;",
+   "class":"btn btn-sm",
+   "title": {"10":"{{LangWiFi2}} 10 {{LangSecM}}","15":"{{LangWiFi2}} 15 {{LangSecM}}","30":"{{LangWiFi2}} 30 {{LangSecM}}","60":"{{LangWiFi2}} 1 {{LangMin}}","120":"{{LangWiFi2}} 2 {{LangMin}}","240":"{{LangWiFi2}} 4 {{LangMin}}"}
+  },
+  {
+   "type":"select",
+   "state":"{{wifiBlink}}",
+   "name":"wifi-blink",
+   "action":"wifi?connect=[[wifi-connect]]&blink=[[wifi-blink]]",
+   "style":"width:35%;display:inline;height:auto;font-weight:normal;",
+   "class":"btn btn-sm",
+   "title": {"17":"Blink {{LangOff}}","12":"Blink GPIO 12","13":"Blink GPIO 13","14":"Blink GPIO 14","15":"Blink GPIO 15","16":"Blink GPIO 16"}
+  },
+
+  {
+   "type":"checkbox",
+   "title":"Задать статический IP",
+   "name":"checkboxIP",
+   "state":"{{checkboxIP}}",
+   "style":"display:block"
+  },
+  {
+   "type":"input",
+   "title":"IP Adress",
+   "name":"ip",
+   "state":"{{ip}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9.]{1,15}"
+  },
+  {
+   "type":"input",
+   "title":"Subnet Mask",
+   "name":"subnet",
+   "state":"{{subnet}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9.]{1,15}"
+  },
+  {
+   "type":"input",
+   "title":"Default Getway",
+   "name":"getway",
+   "state":"{{getway}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9.]{1,15}"
+  },
+  {
+   "type":"input",
+   "title":"DNS Server ({{LangOptional}})",
+   "name":"dns",
+   "state":"{{dns}}",
+   "style":"width:50%;display:inline",
+   "pattern":"[0-9.]{1,15}"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "class":"btn btn-block btn-success",
+   "action":"ssid?ssid=[[ssid]]&ssidPass=[[ssidPass]]&ip=[[ip]]&subnet=[[subnet]]&getway=[[getway]]&dns=[[dns]]&checkboxIP=[[checkboxIP]]"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h2",
+   "module":"ntp",
+   "title":"{{LangGMT1}}"
+  },
+  {
+   "type":"input",
+   "title":"{{LangSpace}}",
+   "name":"timeZone",
+   "module":"ntp",
+   "state":"{{timeZone}}",
+   "pattern":"[0-9-]{1,2}"
+  },
+  {
+   "type":"button",
+   "module":"ntp",
+   "title":"{{LangSave}}",
+   "class":"btn btn-block btn-success",
+   "action":"zone [[timeZone]]"
+  },
+  {
+   "type":"link",
+   "module":"ntp",
+   "title":"{{LangGMT2}}",
+   "action":"javascript:set_time_zone(this);",
+   "class":"btn btn-block btn-primary btn-xs"
+  },
+
+
+  {
+   "type":"hr",
+   "module":"ntp"
+  },
+
+
+  {
+   "type":"time",
+   "module":"ntp",
+   "name":"times1",
+   "title":"{{LangTime1}}",
+   "state":"{{time}}"
+  },
+  {
+   "type":"button",
+   "module":"ntp",
+   "response":"[[&#116imes1]]",
+   "title":"{{LangTime2}}",
+   "class":"btn btn-block btn-primary btn-xs",
+   "action":"time"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h2",
+   "title":"{{LangAP}}"
+  },
+  {
+   "type":"text",
+   "title":"{{LangWiFi4}}",
+   "class":"alert alert-warning",
+   "style":"width:45%;float:right;"
+  },
+  {
+   "type":"input",
+   "title":"{{LangWiFi1}}",
+   "name":"ssidap",
+   "state":"{{ssidAP}}",
+   "style":"width:50%;display:inline",
+   "pattern":".{1,20}"
+  },
+  {
+   "type":"password",
+   "title":"{{LangPass}}",
+   "name":"ssidApPass",
+   "state":"{{ssidApPass}}",
+   "style":"width:50%;display:inline",
+   "pattern":".{8,}"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "action":"ssidap?ssidAP=[[ssidap]]&ssidApPass=[[ssidApPass]]",
+   "class":"btn btn-block btn-success",
+   "style":"width:50%;display:inline"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h2",
+   "module":"ddns",
+   "title":"{{LangDdns1}}"
+  },
+  {
+   "type":"text",
+   "module":"ddns",
+   "name":"alert-ddns",
+   "title":"<button class=\"close\" onclick=\"hide('alert-ddns',this)\">×</button>{{LangDdns2}}",
+   "class":"alert alert-info {{alert-ddns}}"
+  },
+  {
+   "type":"input",
+   "title":"Host name",
+   "name":"ddns-name",
+   "module":"ddns",
+   "state":"{{ddnsName}}",
+   "style":"width:80%;display:inline",
+   "pattern":"^((?!http:)(?!https:).)+\\..+$"
+  },
+  {
+   "type":"input",
+   "title":"Host port",
+   "name":"ddns-port",
+   "module":"ddns",
+   "state":"{{ddnsPort}}",
+   "style":"width:20%;display:inline",
+   "pattern":"[0-9]{1,5}"
+  },
+  {
+   "type":"input",
+   "title":"Service URL",
+   "name":"ddns-server",
+   "module":"ddns",
+   "state":"{{ddns}}",
+   "pattern":"http://.+"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "module":"ddns",
+   "class":"btn btn-block btn-success",
+   "action":"ddns [[ddns-name]] [[ddns-port]] [[ddns-server]]"
+  },
+  {
+   "type":"hr",
+   "module":"ddns"
+  },
+
+
+  {
+   "type":"h2",
+   "module":"mqtt",
+   "title":"MQTT"
+  },
+  {
+   "type":"text",
+   "module":"mqtt",
+   "title":"{{LangConfMQTT2}}",
+   "class":"alert alert-info"
+  },
+  {
+   "type":"input",
+   "title":"MQTT Server, example: cloudmqtt.com",
+   "name":"mqtt-server",
+   "module":"mqtt",
+   "state":"{{mqttServer}}",
+   "style":"width:80%;display:inline",
+   "pattern":"^((?!http:)(?!https:).)+\\..+$"
+  },
+  {
+   "type":"input",
+   "title":"MQTT port",
+   "name":"mqtt-port",
+   "module":"mqtt",
+   "state":"{{mqttPort}}",
+   "style":"width:20%;display:inline",
+   "pattern":"[0-9]{1,5}"
+  },
+  {
+   "type":"input",
+   "title":"User Name",
+   "name":"mqtt-user",
+   "module":"mqtt",
+   "state":"{{mqttUser}}",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"password",
+   "title":"Pass",
+   "name":"mqtt-pass",
+   "module":"mqtt",
+   "state":"{{mqttPass}}",
+   "style":"width:50%;display:inline"
+  },
+  {
+   "type":"button",
+   "title":"{{LangSave}}",
+   "module":"mqtt",
+   "class":"btn btn-block btn-success",
+   "action":"mqtt [[mqtt-server]] [[mqtt-port]] [[mqtt-user]] [[mqtt-pass]]"
+  },
+
+
+  {
+   "type":"hr",
+   "module":"mqtt"
+  },
+
+
+  {
+   "type":"link",
+   "title":"{{LangCookie}}",
+   "action":"javascript:delAllCookies();location.reload();",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+ ]
+}

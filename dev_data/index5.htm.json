@@ -1,0 +1,80 @@
+{
+ "configs":[
+  "/config.setup.json",
+  "/lang/lang.{{lang}}.json"
+ ],
+ "content":[],
+ "top-content":[],
+ "header-left":[
+  {
+   "type":"h1",
+   "title":"{{space}}."
+  },
+  {
+   "type":"h3",
+   "name":"update",
+   "title":"{{SSDP}}",
+   "style":"color:#999;margin-top:-10px"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default top",
+   "action":"#",
+   "title":"TOP"
+  }
+ ],
+ "header-right":[
+  {
+   "type":"link",
+   "class":"btn btn-default dropdown-toggle",
+   "action":"/page.htm?scenary",
+   "title":"<i class=\"dashboard-img\"></i> <span class=\"hidden-xs\">{{LangScenary}}</span>"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default dropdown-toggle",
+   "action":"/page.htm?timer",
+   "title":"<i class=\"clock-img\"></i>"
+  },
+  {
+   "type":"dropdown",
+   "name":"design",
+   "class":"btn btn-default",
+   "title":{
+    "#":"<span class=\"hidden-xs\">{{LangDesign}}</span> <span class=\"caret\"></span>",
+    "/skins?set=index.htm":"<b>Default</b>",
+    "/skins?set=index2.htm":"<b>Inline</b>",
+    "/skins?set=index3.htm":"<b>Block</b>",
+    "/skins?set=index4.htm":"<b>Life</b>"
+   }
+  }
+ ],
+ "content-right":[
+{
+   "type":"h3",
+   "title":"{{LangIssues}}",
+   "style":"margin-left:40px;color:#fff;"
+  },
+  {
+   "type":"issues",
+   "state":"10",
+   "style":"margin:20px;color:#fff;"
+  },
+{
+   "type":"h3",
+   "title":"{{LangCommits}}",
+   "style":"margin-left:40px;color:#fff;"
+  },
+  {
+   "type":"commits",
+   "state":"5",
+   "style":"margin:20px;color:#fff;"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default top",
+   "action":"#",
+   "title":"TOP"
+  }
+ ]
+}

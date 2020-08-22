@@ -1,0 +1,227 @@
+{
+ "header":"<b>Напишите ниже действие, например:</b>",
+ "footer":"Вы можете попробовать как будет работать комманда нажав на <i class=\"eye-img\"></i>",
+ "relay":[
+  {
+   "command":"on 1",
+   "title":"{{Langrelayon}} под номером 1"
+  },
+  {
+   "command":"off 1",
+   "title":"{{Langrelayoff}} под номером 1"
+  },
+  {
+   "command":"not 1",
+   "title":"{{Langrelaynot}} под номером 1"
+  }
+ ],
+ "pinout":[
+  {
+   "command":"on 1",
+   "title":"{{LangOn}} {{Langpinout}} под номером 1"
+  },
+  {
+   "command":"off 1",
+   "title":"{{LangOff}} {{Langpinout}} под номером 1"
+  },
+  {
+   "command":"not 1",
+   "title":"Переключить {{Langpinout}} под номером 1"
+  }
+ ],
+ "jalousie":[
+  {
+   "command":"open",
+   "title":"{{Langjalousieopen}}"
+  },
+  {
+   "command":"close",
+   "title":"{{Langjalousieclose}}"
+  },
+  {
+   "command":"not",
+   "title":"{{Langjalousienot}}"
+  }
+ ],
+ "rgb":[
+  {
+   "command":"on",
+   "title":"{{Langrgbon}}"
+  },
+  {
+   "command":"off",
+   "title":"{{Langrgbon}}"
+  },
+  {
+   "command":"not",
+   "title":"{{Langrgbnot}}"
+  },
+  {
+   "command":"set ff0000 100 255 9",
+   "title":"{{Langrgbon}}, цвет, скорость, яркость, динамический режим"
+  },  {
+   "command":"set - - 100 -",
+   "title":"В таком случае вы измените только яркость на 100. Те параметры которые вы не хотите менять необходимо ставить \"-\" крайние параметры могут быть упущены."
+  }
+ ],
+ "rgbs":[
+  {
+   "command":"on",
+   "title":"{{Langrgbon}}"
+  },
+  {
+   "command":"off",
+   "title":"{{Langrgbon}}"
+  },
+  {
+   "command":"not",
+   "title":"{{Langrgbnot}}"
+  },
+  {
+   "command":"set ff0000",
+   "title":"{{Langrgbon}}, цвет, "
+  }
+ ],
+ "param":[
+  {
+   "command":"add fire 0",
+   "title":"Добавляет переменную fire с значением 0"
+  },
+  {
+   "command":"set fire 1",
+   "title":"Присвоить fire значение 1"
+  },
+  {
+   "command":"on fire",
+   "title":"Присвоить fire значение on"
+  },
+  {
+   "command":"off fire",
+   "title":"Присвоить fire значение off"
+  },
+  {
+   "command":"not fire",
+   "title":"Переключить значение fire с 0 на 1 или наоборот"
+  },
+  {
+   "command":"+ fire 1",
+   "title":"Прибавить число к параметру fire"
+  },
+  {
+   "command":"- fire 1",
+   "title":"Отнять число от параметра fire"
+  }
+ ],
+ "lvsend":[
+  {
+   "command":"6400 0",
+   "title":"Button 1"
+  },
+  {
+   "command":"6400 96",
+   "title":"Button 2"
+  },
+  {
+   "command":"6400 120",
+   "title":"Button 3"
+  },
+  {
+   "command":"6400 24",
+   "title":"Button 4"
+  },
+  {
+   "command":"6400 106",
+   "title":"All off"
+  }
+ ],
+ "GET":[
+  {
+   "command":"http://www.notifymyandroid.com/publicapi/verify",
+   "title":"API - https://www.notifymyandroid.com/api.jsp"
+  },
+  {
+   "command":"http://maker.ifttt.com/trigger/*/with/key/*",
+   "title":"API - https://ifttt.com/maker_webhooks"
+  },
+  {
+   "command":"http://domain/?val={{Tach0}}&text={{rgb}}",
+   "title":"В двойных скобках вы можете вставлять переменный из файла <a href=\"/config.live.json\">config.live.json</a>"
+  }
+ ],
+ "irsend":[
+  {
+   "command":"3 20dfc03f",
+   "title":"NEC"
+  },
+  {
+   "command":"2 20df40bf",
+   "title":"RC6"
+  },
+  {
+   "command":"",
+   "title":"ОБРАТИТЕ ВНИМАНИЕ, ПЕРЕД КОМАНДОЙ НУЖНО ОТПРАВИТЬ НОМЕР ПРОТОКОЛА: <br>RC5: 1<br>RC6: 2<br>NEC: 3<br>SONY: 4<br>PANASONIC: 5<br>JVC: 6<br>SAMSUNG: 7<br>WHYNTER: 8<br>AIWA_RC_T501: 9<br>LG: 10<br>MITSUBISHI: 12"
+  }
+ ],
+ "rfsend":[
+  {
+   "command":"423441",
+   "title":""
+  },
+  {
+   "command":"6244622",
+   "title":""
+  }
+ ],
+ "tone":[
+  {
+   "command":"3500 1000",
+   "title":"Тон, время звучания в мс."
+  },
+  {
+   "command":"4000 2000",
+   "title":"Тон, время звучания в мс."
+  }
+ ],
+ "pulse":[
+  {
+   "command":"on relay1 400",
+   "title":"Включить, реле под номером 3, включить на 400 мс. и выключить"
+  },
+  {
+   "command":"on rgb 400s",
+   "title":"Включить, rgb, включить на 4 секунды (можно использовать часы(h), минуты(m)). и выключить"
+  },
+  {
+   "command":"on relay1 400 200",
+   "title":"Включить, реле под номером 1, включить на 400 мс., выключить на 200 мс. (Будет постоянно переключать)"
+  },
+  {
+   "command":"on relay3 1m -",
+   "title":"Включить, реле под номером 3, включить на 1 минуту, постоянно переключать"
+  },
+  {
+   "command":"on relay1 400 400 9000",
+   "title":"Включить, реле под номером 1(можно писать rgb), включено мс, выключено мс, время работы в мс."
+  },
+  {
+   "command":"on pinout1 400 400 10i",
+   "title":"Включить, pinout под номером 1, включено мс, выключено мс, сделать 10 импульсов."
+  },
+  {
+   "command":"on relay2 400 400 5s",
+   "title":"Включить, реле под номером 2, включено мс, выключено мс, работать 5 секунд."
+  },
+  {
+   "command":"on rgbs 400 400 5m",
+   "title":"Включить, rgb shim, включено мс, выключено мс, работать 5 минут."
+  },
+  {
+   "command":"on relay2 400 400 5h",
+   "title":"Включить, реле под номером 2, включено мс, выключено мс, работать 5 часов."
+  },
+  {
+   "command":"off relay1",
+   "title":"Выключить пульсацию, реле под номером 1"
+  }
+ ]
+}

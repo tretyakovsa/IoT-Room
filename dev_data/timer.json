@@ -1,0 +1,76 @@
+{
+ "configs":[
+  "/config.live.json",
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+  "type":"text",
+  "title":"{{LangTimer}}"
+ }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-danger"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"time",
+   "title":"{{LangTime1}}",
+   "state":"{{time}}"
+  },
+
+  {
+   "type":"hr"
+  },
+  {
+   "type":"h2",
+   "title":"{{LangList}}"
+  },
+  {
+   "type":"time-list",
+   "style":"width:100%"
+  },
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangTime3}}"
+  },
+
+  {
+   "type":"time-add"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');}",
+   "class":"btn btn-block btn-warning"
+  }
+
+ ]
+}

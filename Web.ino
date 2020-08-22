@@ -1,4 +1,20 @@
-  void initHTTP() {
+// Включить модуль ADMIN
+void initAdmin() {
+  modulesReg("admin");
+}
+void sendSetupArg(String argS) {
+  if (HTTP.hasArg(argS)) {
+    sendSetup(argS, HTTP.arg(argS));
+  }
+}
+
+void sendSetupArg(String argS, String key) {
+  if (HTTP.hasArg(argS)) {
+    sendSetup(key, HTTP.arg(argS));
+  }
+}
+
+void initHTTP() {
   SPIFFS.begin();
   initFS();
   HTTP.begin();
@@ -9,46 +25,40 @@
   HTTP.serveStatic("/img/", SPIFFS, "/img/", "max-age=31536000"); // кеширование на 1 год
   HTTP.serveStatic("/lang/", SPIFFS, "/lang/", "max-age=31536000"); // кеширование на 1 год
 
+  /*  // -------------------Сброс к заводским настройкам
+    HTTP.on("/configs", HTTP_GET, []() {
+      if (HTTP.arg("restore") == "ok") {
+      } else {
+        sendSetupArg("set", configsS);
+        //sendSetupArg(configsS);
+
+        saveConfigSetup();
+        httpOkJson(configSetup);
+      }
+    });
+  */
+  // -------------------Установка конфигурации
+  HTTP.on("/configs", HTTP_GET, []() {
+    //sendSetupArg("set");
+    String set = HTTP.arg("set");
+    sendSetup(configsS, set);
+    saveConfigSetup();
+    String reqvest = "{\"action\": \"page.htm?configs&" + getSetup(configsS) + "\"}";
+    httpOkText(reqvest);
+  });
+
   HTTP.on("/wifi.scan.json", HTTP_GET, []() {
-    HTTP.send(200, "text/plain", MyWiFi.scan(false));
+    httpOkJson(MyWiFi.scan(false));
+    //HTTP.send(200, "text/plain", MyWiFi.scan(false));
   });
 
   // ------------------- Выдаем данные configSetup
   HTTP.on("/config.setup.json", HTTP_GET, []() {
+    //configSetup.replace(",", ",\r\n");
     httpOkJson(configSetup);
   });
 
-  // -------------------Установка конфигурации
-  HTTP.on("/configs", HTTP_GET, []() {
-    String set = HTTP.arg("set");
-    sendSetup(configsS, set);
-    saveConfigSetup();
-    jsonWrite(modules, configsS, getSetup(configsS));
-    String reqvest = "{\"action\": \"page.htm?configs&" + set + "\"}";
-    httpOkText(reqvest);
-  });
-    // Установить имя устройства
-    //device?ssdp=evonicfires&space=home&mail=und@efin.ed
-    HTTP.on("/device", HTTP_GET, []() {
-      String  ssdpName = HTTP.arg("ssdp");
-      sendSetup(ssdpS, ssdpName);
-      sendOptions(ssdpS, ssdpName);
-      //SSDP.setName(ssdpName);
-      //SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
-      String  space = HTTP.arg("space");
-      sendSetup(spaceS, space);
-      sendOptions(spaceS, space);
-      jsonWrite(modules, ssdpS, getSetup(ssdpS));
-      jsonWrite(modules, spaceS, space);
-      String  mail = HTTP.arg(mailS);
-      sendSetup(mailS, mail);
-      String  fahrenheit = HTTP.arg(fahrenheitS);
-      sendSetup(fahrenheitS, fahrenheit);
-      jsonWrite(modules, mailS, mail);
-      httpOkText();
-      saveConfigSetup();
-      requestSSDP();
-    });
+
   // --------------------Выдаем данные ssdpList
   HTTP.on("/ssdp.list.json", HTTP_GET, []() {
     httpOkJson(ssdpList);
@@ -59,104 +69,60 @@
   });
   // --------------------Узнать какие модули есть в устройстве
   HTTP.on("/modules.json", HTTP_GET, []() {
+    //Serial.println(configJson);
     httpOkJson(modules);
-  });
-  // --------------------Узнать какие модули есть в устройстве
-  HTTP.on("/pulse.json", HTTP_GET, []() {
-    httpOkJson(pulsList);
   });
   // --------------------Выдаем данные configJson
   HTTP.on("/config.live.json", HTTP_GET, []() {
-    String tmp = configJson;
-    tmp.replace(",", ",\r\n");
-    httpOkJson(tmp);
+    //configJson.replace(",", ",\r\n");
+    httpOkJson(configJson);
   });
   // --------------------Выдаем данные configOptions
   HTTP.on("/config.options.json", HTTP_GET, []() {
-    espInfo();
-    String tmp = configOptions;
-    tmp.replace(",", ",\r\n");
-    httpOkJson(tmp);
+    httpOkJson(configOptions);
   });
   // --------------------Выдаем данные configOptions  config.admin.json
   HTTP.on("/config.admin.json", HTTP_GET, []() {
     espInfo();
-    httpOkJson(configOptions);
+    //httpOkJson(configOptions);
   });
 
   // ------------------Выполнение команды из запроса
   HTTP.on("/cmd", HTTP_GET, []() {
     String com = HTTP.arg("command");
- //   Serial.println(com);
     sendOptions("test", com);
     sCmd.readStr(com);
     httpOkText(statusS);
-    //Serial.println(statusS);
   });
-
-  // ------------------Выполнение голосовой команды
+  // ------------------Выполнение голосовой команды макроса
   HTTP.on("/voice", HTTP_GET, []() {
     String com = HTTP.arg("command");
     com.replace(" ", "_");
     sendOptions(voiceS, com);
-    jsonWrite(modules, voiceS, com);
     flag = sendStatus(voiceS, com);
     httpOkText(statusS);
   });
+
   sCmd.addCommand(voiceS.c_str(), macros); //
+  sendOptions(voiceS, "");
   sendStatus(voiceS, "");
   commandsReg(voiceS);
-
-}
-
-void macros() {
-  //Serial.println("macros");
-  String tem = readArgsString();
-  flag = sendStatus(voiceS, tem);
-  //Serial.println("macros");
-}
-
-
-// Инициализация FFS
-void initFS() {
-  {
-    Dir dir = SPIFFS.openDir("/");
-    while (dir.next()) {
-      String fileName = dir.fileName();
-      size_t fileSize = dir.fileSize();
-    }
-    // Создаем список файлов каталога /lang
-    Lang = FileList("/lang");
-  }
-  //HTTP страницы для работы с FFS
-  //list directory
-  HTTP.on("/list", HTTP_GET, handleFileList);
-  //загрузка редактора editor
-  HTTP.on("/edit", HTTP_GET, []() {
-    if (!handleFileRead("/edit.htm")) http404send();//HTTP.send(404, "text/plain", "FileNotFound");
-  });
-  //Создание файла
-  HTTP.on("/edit", HTTP_PUT, handleFileCreate);
-  //Удаление файла
-  HTTP.on("/edit", HTTP_DELETE, handleFileDelete);
-  //first callback is called after the request has ended with all parsed arguments
-  //second callback handles file uploads at that location
-  HTTP.on("/edit", HTTP_POST, []() {
-    //HTTP.send(200, "text/plain", emptyS);
-    httpOkText(emptyS);
-  }, handleFileUpload);
-  //called when the url is not defined here
-  //use it to load content from SPIFFS
-  HTTP.onNotFound([]() {
-    if (!handleFileRead(HTTP.uri()))
-      http404send();//HTTP.send(404, "text/plain", "FileNotFound");
-  });
-  HTTP.on("/skins", HTTP_GET, []() {
-    String set = HTTP.arg("set");
-    //configJson = jsonWrite(configJson, "setIndex", set);
-    jsonWrite(configSetup, "setIndex", set);
+  
+  // Установить имя устройства
+  HTTP.on("/device", HTTP_GET, []() {
+    String  ssdpName = HTTP.arg("ssdp");
+    sendSetup(ssdpS, ssdpName);
+    sendOptions(ssdpS, ssdpName);
+    SSDP.setName(ssdpName);
+    SSDP.setModelNumber(chipID + "/" + getSetup(ssdpS));
+    String  space = HTTP.arg("space");
+    sendSetup(spaceS, space);
+    sendOptions(spaceS, space);
+    jsonWrite(modules, ssdpS, getSetup(ssdpS));
+    jsonWrite(modules, spaceS, space);
+    httpOkText();
     saveConfigSetup();
-    HTTP.send(307, "Temporary Redirect\r\nLocation: /\r\nConnection: Close\r\n", emptyS);
+    requestSSDP();
   });
   // -------------------построение графика
   HTTP.on("/charts.json", HTTP_GET, []() {
@@ -184,7 +150,70 @@ void initFS() {
 
     httpOkText(message);
   });
+}
+void macros() {
+  String tem = readArgsString();
+  flag = sendStatus(voiceS, tem);
+}
+// Инициализация FFS
+void initFS() {
+  {
+    Dir dir = SPIFFS.openDir("/");
+    while (dir.next()) {
+      String fileName = dir.fileName();
+      size_t fileSize = dir.fileSize();
+    }
+    // Создаем список файлов каталога /lang
+    Lang = FileList("/lang");
+  }
+  //HTTP страницы для работы с FFS
+  //list directory
+  HTTP.on("/list", HTTP_GET, handleFileList);
+  //загрузка редактора editor
+  HTTP.on("/edit", HTTP_GET, []() {
+    String editTest = jsonRead(modules, "module");
+    if (editTest.indexOf("admin") != -1) { //Serial.println("Откроем доступ");
+      if (!handleFileRead("/edit.htm")) http404send();
+    } else if (!handleFileRead(htm403S)) http403send();
+  });
+  HTTP.on("/admin", HTTP_GET, []() {
+    String editTest = jsonRead(modules, "module");
+    if (editTest.indexOf("admin") != -1) { //Serial.println("Откроем доступ");
+      if (!handleFileRead("/admin/index.htm")) http404send();
+    } else if (!handleFileRead(htm403S)) http403send();
+  });
+  //Создание файла
+  HTTP.on("/edit", HTTP_PUT, handleFileCreate);
+  //Удаление файла
+  HTTP.on("/edit", HTTP_DELETE, handleFileDelete);
+  //first callback is called after the request has ended with all parsed arguments
+  //second callback handles file uploads at that location
+  HTTP.on("/edit", HTTP_POST, []() {
+    httpOkText(emptyS);
+  }, handleFileUpload);
+  HTTP.onNotFound([]() {
+    if (!handleFileRead(HTTP.uri()))
+      if (MyWiFi.status() == 3) {
+        if (!handleFileRead(htm404S)) http404send();
+      } else http404send();
 
+  });
+  HTTP.on("/skins", HTTP_GET, []() {
+    String set = HTTP.arg("set");
+    //configJson = jsonWrite(configJson, "setIndex", set);
+    sendSetup("setIndex", set);
+    saveConfigSetup();
+    HTTPsendHeader();
+    HTTP.send(307, "Temporary Redirect\r\nLocation: /\r\nConnection: Close\r\n", emptyS);
+  });
+  HTTP.on("/lang", HTTP_GET, []() {
+    sendSetup(langS, HTTP.arg("set"));
+    setupToOptions(langS);
+    setupToStatus(langS);
+    jsonWrite(modules, langS, getSetup(langS));
+    saveConfigSetup();
+    httpOkText();
+  });
 }
 
 // Здесь функции для работы с файловой системой
@@ -207,10 +236,20 @@ String getContentType(String filename) {
 }
 
 bool handleFileRead(String path) {
+  //Serial.print("Вход на страницу =");
+  //Serial.println(path);
+  String editTest = jsonRead(modules, "module");
+  if (editTest.indexOf("admin") == -1) {
+    //Serial.println("Закрыть страницы admin");
+    if (path.indexOf("admin") != -1 || path.indexOf(htmEditS) != -1) {
+      path = htm403S;
+      //Serial.println("Содержит страницы admin");
+    }
+  }
+
   String setIndex =  jsonRead(configSetup, setIndexS);
   if (setIndex == emptyS) setIndex = "index.htm";
   if (path.endsWith("/")) path += setIndex;
-  if (path.endsWith("/admin")) path += setIndex;
   String contentType = getContentType(path);
   String pathWithGz = path + ".gz";
   if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
@@ -318,13 +357,13 @@ void httpOkHtml(String text) {
   HTTPsendHeader();
   HTTP.send(200, "text/html", text);
 }
-void httpOkXML(String text) {
-  HTTPsendHeader();
-  HTTP.send(200, "text/xml", text);
-}
 void httpOkJson(String text) {
   HTTPsendHeader();
   HTTP.send(200, "application/json", text);
+}
+void httpOkXML(String text) {
+  HTTPsendHeader();
+  HTTP.send(200, "text/xml", text);
 }
 void http500send(String text) {
   HTTPsendHeader();
@@ -333,6 +372,10 @@ void http500send(String text) {
 void http404send() {
   HTTPsendHeader();
   HTTP.send(404, "text/plain", "FileNotFound");
+}
+void http403send() {
+  HTTPsendHeader();
+  HTTP.send(403, "text/plain", "You don't have permission to access");
 }
 
 void HTTPsendHeader() {
@@ -349,33 +392,17 @@ void webSoket_init() {
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
   switch (type) {
     case WStype_DISCONNECTED:  // Событие происходит при отключени клиента
-      //Serial.println("web Socket disconnected");
       break;
     case WStype_CONNECTED: // Событие происходит при подключении клиента
       {
-//        Serial.println("web Socket Connected");
         webSocket.sendTXT(num, configJson); // Отправим в всю строку с данными используя номер клиента он в num
       }
       break;
     case WStype_TEXT: // Событие происходит при получении данных текстового формата из webSocket
       if (length > 0) {
         String command = String((const char *)payload);
-        String cmd;
-        cmd = jsonRead(command, voiceS); // Прислан макрос
-        if (cmd != "") {
-          sendOptions(voiceS, cmd);
-          flag = sendStatus(voiceS, cmd);
-          //sendStatus(voiceS, cmd);
-        }
-
-        cmd = jsonRead(command, "cmd");   // Прислана комманда
-        if (cmd != "") {
-          sCmd.readStr(cmd);
-        }
+        //remoutget(command);
       }
-
-      //webSocket.sendTXT(num, "message here"); // Можно отправлять любое сообщение как строку по номеру соединения
-      // webSocket.broadcastTXT("message here");
       break;
     case WStype_BIN:      // Событие происходит при получении бинарных данных из webSocket
       // webSocket.sendBIN(num, payload, length);
@@ -385,19 +412,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 // Отправка данных в Socket всем получателям
 // Параметры Имя ключа, Данные, Предыдущее значение
 void SoketData (String key, String data, String data_old)  {
-  if (getOptions(webSocketS) != "") {
+  if (webSocket.connectedClients(false) > 0)  {
     if (data_old != data) {
       String broadcast = "{}";
       jsonWrite(broadcast, key, data);
       webSocket.broadcastTXT(broadcast);
-      //Serial.println(getOptions(webSocketS));
     }
   }
-}
-
-void SocketClient(String ipSocket) {
-  WebSocketsClient.begin(ipSocket, 81, "/");
-  WebSocketsClient.setReconnectInterval(5000);
-  //WebSocketsClient.enableHeartbeat ( 15000 , 3000 , 2 );
 }
 #endif

@@ -1,22 +1,37 @@
 void initWIFI() {
-  String ssid = MyWiFi.SSID();
-  sendSetup(ssidS, ssid);
-  String ssidPass = MyWiFi.psk();
-  sendSetup(ssidPassS, ssidPass);
-  String ssidAP = MyWiFi.softAPSSID();
-  Serial.println(ssidAP.indexOf("ESP"));
-  if (ssidAP.indexOf("ESP")!= -1)  {
-    ssidAP = ssidAPDef;
+  String ssid = getSetup(ssidS); // Читаем имя сети из flash ячейки
+  String ssidPass = getSetup(ssidPassS); // Читаем пароль сети из flash ячейки
+  String ssidAP = getSetup(ssdpS);//-------------------------------------------------
+  String ssidApPass = getSetup(ssidApPassS); // Читаем пароль AP из flash ячейки
+  MyWiFi.init(ssid, ssidPass, ssidAP, ssidApPass); // Оснавные данные для wifi
+  //MyWiFi.initIP(getSetup(checkboxIPS), getSetup(ipS), getSetup(subnetS), getSetup(getwayS));
+  sendSetup(ssdpS, defaultTestStringMAC(getSetup(ssdpS), ssdpDef));
+  sendSetup(spaceS, defaultTestString(getSetup(spaceS), spaceDef));
+  MyWiFi.setHostname(getSetup(ssdpS));
+  MyWiFi.start();        // Запустим WiFi
+  ts.add(tDBM, nTest_Time, [&](void*) {
+    int temp = MyWiFi.RSSI();
+#ifdef webSoketM // #endif
+    SoketData (dbmS, (String)temp, getStatus(dbmS));
+    //ClientSoketData (dbmS, (String)temp, getStatus(dbmS));
+#endif
+    flag = sendStatus(dbmS, temp);
+  }, nullptr, true);
+  if (MyWiFi.modeSTA()) {
+    //statistics(statStart); // Если подключились к роутеру отправим статистику
+    statistics();
   }
-  //Serial.println(ssidAP);
-  sendSetup(ssidAPS, ssidAP);
-  String ssidApPass = MyWiFi.softAPPSK();
-  sendSetup(ssidApPassS, ssidApPass);
-  MyWiFi.init(ssid, ssidPass, ssidAP, ssidApPass, ssidAPDef);
-  MyWiFi.start();
-  Serial.println(MyWiFi.modeSTA());
-  if (MyWiFi.modeSTA()) statistics();
-  Serial.println(WiFi.SSID());
+  sendSetup(ipS, MyWiFi.StringIP());
+  setupToOptions(ipS);
+  sendSetup(getwayS, MyWiFi.StringGatewayIP());
+  sendSetup(subnetS, MyWiFi.StringSubnetMask());
+
+  // -------------------- Основные данные общего web интерфейса WIFI
+  HTTP.on("/wifi.scan.json", HTTP_GET, []() {
+    httpOkJson("test");
+    //httpOkJson(MyWiFi.scan(false));
+  });
+  // перезагрузка при помощи get запроса
   HTTP.on("/restart", HTTP_GET, []() {
     if (HTTP.arg("device") == "ok") {               // Если значение равно Ок
       httpOkText("Reset OK"); // Oтправляем ответ Reset OK
@@ -25,6 +40,7 @@ void initWIFI() {
       httpOkText("No Reset"); // Oтправляем ответ No Reset
     }
   });
+  // перезагрузка при помощи post запроса с установкой новых значений WiFi
   HTTP.on("/restartWiFi", HTTP_POST, []() {
     httpOkJson(wifiSet(true));
     delay(1000);
@@ -39,10 +55,18 @@ void initWIFI() {
     sendSetupArg(dnsS);
     sendSetupArg(ipS);
     sendSetupArg(checkboxIPS);
+    saveConfigSetup(); // --------------------------------------------------------------------
+    httpOkText("OK");
+    //httpOkJson(wifiSet(false));
+  });
+  HTTP.on("/ssidap", HTTP_GET, []() {
+    sendSetupArg(ssidAPS);
+    sendSetupArg(ssidApPassS);
+    httpOkText();
     saveConfigSetup();
-    httpOkJson(wifiSet(false));
   });
 }
+//ssidap?ssidAP=test1&ssidApPass=123456789
 String wifiSet(boolean mode) {
   if (mode) {
     WiFi.mode(WIFI_AP_STA);
@@ -50,14 +74,42 @@ String wifiSet(boolean mode) {
   // Не отключаясь от точки доступа подключаемся к роутеру для получения будущего IP
   String ssid = getSetup(ssidS);
   String pass = getSetup(ssidPassS);
-  saveConfigSetup();
+  //saveConfigSetup();// --------------------------------------------------------------------------
   WiFi.persistent(true);
   WiFi.begin(ssid.c_str(), pass.c_str());
   MyWiFi.isConnect();
   String state = "{\"ip\":\"" + MyWiFi.StringIP() + "\"}";
-  //Serial.println(state);
   return state;
 }
-void sendSetupArg(String argS) {
-  sendSetup(argS, HTTP.arg(argS));
+
+// ------------- Данные статистики -----------------------------------------------------------
+void statistics() {
+  //Serial.println("statistics");
+  String urls = "http://backup.privet.lv/visitors/?";
+  urls += WiFi.macAddress().c_str();
+  urls += "&";
+  urls += getSetup(configsS);
+  urls += "&";
+  urls += ESP.getResetReason();
+  urls += "&";
+  urls += getSetup(spiffsDataS);
+  String stat = MyWiFi.getURL(urls);
+  sendOptions(messageS, jsonRead(stat, messageS));
+  //sendOptions(messageS, stat);
+  //sendOptions("message1", urls);
+}
+void statistics(uint8_t save) {
+  //Serial.println("statistics");
+  String urls = "http://backup.privet.lv/visitors/?";
+  urls += WiFi.macAddress().c_str();
+  urls += "&";
+  urls += getSetup(configsS);
+  urls += "&";
+  urls += ESP.getResetReason();
+  urls += "&";
+  urls += getOptions(spiffsDataS);
+  String stat = MyWiFi.getURL(urls);
+  sendOptions(messageS, jsonRead(stat, messageS));
+  //sendOptions(messageS, stat);
+  //sendOptions("message1", urls);
 }

@@ -1,34 +1,32 @@
-// Уведомлять о новых версиях
+// {{LangUpgrade1}}
 UPGRADE
-// Включить PCA9685
-PCA9685
-// Управление выводом (Тоже что и RELAY, но без кнопки в веб интерфейсе) /n <GPIO> <Номер реле> <Состояние реле после включения ESP> <Инверсия> <Имя кнопки реле>
+// {{LangConfPinout}}
 # PINOUT 13 1 1 0 LedConnectedWiFi
 # PINOUT 12 2 0 0 PinOutName2
 # PINOUT 14 3 0 0 PinOutName3
-// Реле /n <GPIO> <Номер реле> <Состояние реле после включения ESP> <Инверсия> <Имя кнопи реле>
-RELAY 12 1 1 0 Имя_кнопки_реле_1
-RELAY 22 2 0 0 Имя_кнопки_реле_2
-RELAY 29 3 0 0 Имя_кнопки_реле_3
-# RELAY 14 4 0 0 Имя_кнопки_реле_4
-// Включить порт UART
+// {{LangConfRelay}}
+RELAY 12 1 1 0 {{LangrelayName}}_1
+# RELAY 15 2 0 0 {{LangrelayName}}_2
+# RELAY 13 3 0 0 {{LangrelayName}}_3
+# RELAY 14 4 0 0 {{LangrelayName}}_4
+// {{LangConfSerial}}
 # UART 115200
 # print print
-// Включаем время из сети - (Обновляется 1 раз в сутки и при каждом включение ESP)
+// {{LangConfNTP}}
 NTP ntp1.vniiftri.ru ntp2.vniiftri.ru
-// Если требуются таймеры
+// {{LangConfTIMERS}}
 TIMERS
-// Доступ по DDNS
+// {{LangConfDDNS}}
 # DDNS
-// Датчики температуры и влажности DHT11, DHT22, AM2302, RHT03, Si7021.
+// {{LangConfDHT}}
 # DHT 14
-// Датчики температуры. Датчиков может быть сколько угодно. Подключать параллельно.
+// {{LangConfDS18B20}}
 # DS18B20 14
 // Подключается только на 4 и 5 GPIO, совместно с DHT не работает.
 # SI7021
-// Аналоговый вход (Освещенность)
+// {{LangConfA0}}
 # A0
-// Кнопка - На одном GPIO можно делать несколько кнопок c разной задержкой нажатия. Так же сюда можно подключать например PIR сенсор /n <GPIO> <Номер кнопки> <Время в мс.> <Инверсия>
+// {{LangConfTach}}
 TACH 0 0 20 0
 # TACH 0 1 20 0
 # TACH 0 2 20 0
@@ -37,24 +35,24 @@ TACH 0 0 20 0
 # TACH 0 5 20 0
 # TACH 0 6 20 0
 # TACH 0 7 20 0
-// Включить зуммер
+// {{LangConfBUZZER}}
 # BUZZER 16
-// WS2812 / WS2811 / NeoPixel LEDs /n  WS2811 - Проблема с Красным/Зеленым /n <GPIO> <Количество лед> <Состояние после включения ESP> <Цвет> <Скорость> <Яркость> <Динамический режим>
-# RGB 5 0 15 0 ff0000 100 255 3 rgbName
-// RGB 5050 / 3528 / 2835 /n <GPIO R> <GPIO G> <GPIO B> <Состояние после включения ESP> <Цвет> <Скоро...> <Скоро...>
-# SRGB 12 4 5 0 ffffff 100 255 rgbName
-// Жалюзи /n<GPIO счетчик оборотов> <Вторая и Третья GPIO - управление мотором>
+// {{LangConfRGB}}
+RGB 5 15 0 ff0000 100 255 3 {{LangrgbName}}
+// {{LangConfRGBS}}
+# SRGB 12 4 5 0 ffffff 100 255 {{LangrgbName}}
+// {{LangConfJalousie}}
 # JALOUSIE 4 12 13
-// Беспроводной приемник MHz частот /n <GPIO> <Частота - не обязательно>
+// {{LangConfRfReceived}}
 # RF-RECEIVED 3 433
-// Беспроводной передатчик MHz частот /n <GPIO> <Частота - не обязательно>
+// {{LangConfRfTransmitter}}
 # RF-TRANSMITTER 1 433
 # RF-LIVOLO 1
-// Беспроводной приемник IR (инфокрасного сигнала)
+// {{LangConfIrReceived}}
 # IR-RECEIVED 0
-// Беспроводной передатчик IR (инфокрасного сигнала)
+// {{LangConfIrTransmitter}}
 # IR-TRANSMITTER 14
-// Рекомендуется использовать с IoT Manager
+// {{LangConfMQTT}}
 # MQTT
-// Показывает дополнительные кнопки для удобства разработки
+// {{LangConfAdmin}}
 ADMIN

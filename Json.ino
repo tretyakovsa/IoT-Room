@@ -1,8 +1,92 @@
-// ------------- Чтение значения json -------------------
-String jsonRead(String &json, String name) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  return root[name].as<String>();
+// ------------- Запись значения json String в Массив
+void jsonArrAdd(String & json, String name, String volume) {
+  jsonArrAddWriteVol(json, name, "\"" + volume + "\"");
+}
+// ------------- Запись значения json int в Массив
+void jsonArrAdd(String & json, String name, int volume) {
+  jsonArrAddWriteVol(json, name, (String)volume);
+}
+// ------------- Запись значения json int в Массив
+void jsonArrAdd(String & json, String name, float volume) {
+  jsonArrAddWriteVol(json, name, (String)volume);
+}
+// ------------- Запись значения json String в Массив
+void jsonArrAddWriteVol(String & json, String name, String volume) {
+  String KeyAndVol = jsonKeyAndVol(json, name);
+  String arr = jsonRead(json, name);
+  if (KeyAndVol != "") { // Есть ключ в json
+    if (arr.startsWith("[") && arr.endsWith("]")) { // если данные в квадратных скобках то это данные массива
+      if (arr != "[]") {
+        arr.setCharAt(arr.lastIndexOf("]"), ','); // заменим } на ,
+      }  else     arr.replace("]", "");
+      arr += volume + "]";
+      jsonWriteVol(json, name, arr);
+    }
+  } else { // нет ключа добавить данные массива
+    jsonWriteVol(json, name, "[" + volume + "]"); // если массив пустой
+  }
+}
+String jsonKeyAndVol(String &json, String name) {
+  json.trim(); // пропустить все пробелы в начале
+  String fullNameKey = "\"" + name + "\":";//подготовить ключ для поиска
+  int lenlNameKey = fullNameKey.length();// размер ключа в символах
+  int kayBegin = json.indexOf(fullNameKey); // Поиск начала ключа
+  if (kayBegin == -1) return "";                    // Если ключ не найден вернем пустую строку
+  else  {                                           // Иначе
+    // Проверим наличие массива
+    String keyStop = ",\""; // конец ключа если нет массива иначе keyStop = "]"
+    if (json.substring(kayBegin + lenlNameKey, kayBegin + lenlNameKey + 1) == "[") keyStop = "]";
+    int kayEnd = json.indexOf(keyStop, kayBegin);       // Поиск конца ключа
+    if (keyStop == "]")    ++kayEnd;
+    //if (name == "SSDP1") {
+    //  Serial.print("json= ");
+    //  Serial.println(json);
+    //}
+    String volume = json.substring(kayBegin, kayEnd); // Выделим значение ключа с ковычками
+    //if (name == "SSDP1") {
+    //  Serial.print("volume= ");
+    //  Serial.println(volume);
+    //}
+    volume.replace("}", ""); // Удалим лишний символ } если элемент был последним
+    return volume;
+  }
+}
+void jsonDel(String &json, String name) {
+  json.trim();
+  if (!json.startsWith("{") || !json.endsWith("}")) { // если это не json создадим пустой
+    json = "{}";
+  }
+  json.replace(jsonKeyAndVol(json, name) , "");
+  json.replace(",,", ",");
+}
+void jsonWriteVol(String &json, String name, String volume) {
+  json.trim();
+  if (!json.startsWith("{") || !json.endsWith("}")) { // если это не json создадим пустой
+    //Serial.println("empti");
+    json = "{}";
+  }
+  String KeyAndVol = jsonKeyAndVol(json, name);
+  String NewKeyAndVol = "\"" + name + "\":" + volume;
+  if (KeyAndVol != "") {
+    json.replace(KeyAndVol, NewKeyAndVol);
+  } else {
+    if (json != "{}") {
+      json.setCharAt(json.lastIndexOf("}"), ','); // заменим } на ,
+      json += NewKeyAndVol + '}';
+    } else {
+      json = "{" + NewKeyAndVol + "}";
+    }
+  }
+}
+
+// ------------- Чтение значения json String
+String jsonRead(String & json, String name) {
+  String volume = jsonKeyAndVol(json, name);
+  volume = volume.substring(volume.indexOf(":") + 1); // получим значение пары
+  if (volume.startsWith("\"") && volume.endsWith("\"")) { // если данные в кавычках
+    volume = volume.substring(1, volume.length() - 1); // удалим кавачки
+  }
+  return volume;
 }
 int jsonReadToInt(String &json, String name) {
   return jsonRead(json, name).toInt();
@@ -10,6 +94,28 @@ int jsonReadToInt(String &json, String name) {
 float jsonReadToFloat(String &json, String name) {
   return jsonRead(json, name).toFloat();
 }
+
+// ------------- Запись значения json String
+void jsonWrite(String &json, String name, String volume) {
+  volume = "\"" + volume + "\"";
+  jsonWriteVol(json, name, volume);
+}
+
+// ------------- Запись значения json int
+void jsonWrite(String &json, String name, int volume) {
+  String volSrt;
+  volSrt += volume;
+  jsonWriteVol(json, name, volSrt);
+}
+
+// ------------- Запись значения json float
+void jsonWrite(String &json, String name, float volume) {
+  String volSrt;
+  volSrt += volume;
+  jsonWriteVol(json, name, volSrt);
+}
+
+
 // -------------- Чтение configSetup -------------------------------
 String getSetup(String Name) {
   return jsonRead(configSetup, Name);
@@ -41,30 +147,6 @@ float getStatusFloat(String Name) {
   return jsonReadToFloat(configJson, Name);
 }
 
-// ------------- Запись значения json String ----------------
-void jsonWrite(String &json, String name, String volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = emptyS;
-  root.printTo(json);
-}
-// ------------- Запись значения json int ----------------
-void jsonWrite(String &json, String name, int volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = emptyS;
-  root.printTo(json);
-}
-// ------------- Запись значения json float ----------------
-void jsonWrite(String &json, String name, float volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = emptyS;
-  root.printTo(json);
-}
 // ------------- Отправить данные в Setup String ------------------------------
 void sendSetup(String Name, String volume) {
   jsonWrite(configSetup, Name, volume);
@@ -115,12 +197,12 @@ void setupToStatus(String Name) {
 
 String getArray(String Name, String kay, int index) {
   String tmp = deleteBeforeDelimiter(Name, "\"" + kay + "\":[");
-  tmp = selectToMarker (tmp, "]")+",";
+  tmp = selectToMarker (tmp, "]") + ",";
   if (tmp == ",") return "NAN";
   tmp = selectFromMarkerToMarker(tmp, "},", index);
   if (tmp == "") {
-   tmp = "NAN";
+    tmp = "NAN";
     return tmp;
-    }
+  }
   return tmp + "}";
 }

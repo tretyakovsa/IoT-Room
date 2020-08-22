@@ -1,0 +1,91 @@
+{
+ "configs":[
+  "/config.setup.json",
+  "/lang/lang.{{lang}}.json"
+ ],
+ "content":[],
+ "top-content":[],
+ "right-content":[
+  {
+   "type":"h5",
+   "title":"{{LangIssues}}",
+   "style":"margin-top:0;float:left;margin-left:40px;"
+  },
+  {
+   "type":"issues",
+   "state":"10",
+   "class":"block"
+  },
+  {
+   "type":"h5",
+   "title":"{{LangCommits}}",
+   "style":"margin-top:-15px;float:left;margin-left:40px;"
+  },
+  {
+   "type":"commits",
+   "state":"10",
+   "class":"block"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default top",
+   "action":"#",
+   "title":"TOP"
+  }
+ ],
+
+ "header-left":[
+  {
+   "type":"h1",
+   "title":"{{space}}."
+  },
+  {
+   "type":"h3",
+   "name":"update",
+   "title":"{{SSDP}}",
+   "style":"color:#999;margin-top:-10px"
+  }
+ ],
+ "header-right":[
+  {
+   "type":"link",
+   "class":"btn btn-info dropdown-toggle",
+   "action":"/page.htm?scenary",
+   "title":"<i class=\"dashboard-img\"></i> <span class=\"hidden-xs\">{{LangScenary}}</span>"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default dropdown-toggle",
+   "action":"/page.htm?timer",
+   "title":"<i class=\"clock-img\"></i> <span class=\"hidden-xs\">{{LangTimer}}</span>"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default dropdown-toggle",
+   "action":"https://github.com/tretyakovsa/Sonoff_WiFi_switch/issues\" target=\"_blank",
+   "title":"<i class=\"help-img\"></i> <span class=\"hidden-xs\">{{LangHelp}}</span>"
+  },
+  {
+   "type":"dropdown",
+   "name":"design",
+   "class":"btn btn-warning",
+   "title":{
+    "#":"<span class=\"hidden-xs\">{{LangDesign}}</span> <span class=\"caret\"></span>",
+    "/skins?set=index.htm":"<b>Default</b>",
+    "/skins?set=index2.htm":"<b>Inline</b>",
+    "/skins?set=index3.htm":"<b>Block</b>",
+    "/skins?set=index4.htm":"<b>Life</b>"
+   }
+  },
+  {
+   "type":"select",
+   "state":"{{lang}}",
+   "name":"languages",
+   "action":"/lang?set=[[languages]]",
+   "response":"/",
+   "style":"width:70px",
+   "class":"hidden-xs",
+   "title":{"ru":"RU","en":"EN","lv":"LV","ua":"UA"}
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "configs": [
+  "/config.options.json",
+  "/config.setup.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+   "type":"text",
+   "title":"Starting Log"
+  }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-default"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangType}} {{configs}}"
+  },
+  {
+   "type":"text",
+   "title":"<b>Обратите внимание, время показывается в GMT 0.</b><br>Вся эта информация хранится на стороннем сервере. Если у устройсва нет выхода в Интернет, здесь будет пусто.",
+   "class":"alert alert-info"
+  },
+
+
+  {
+   "type":"table",
+   "state":"http://backup.privet.lv/visitors/{{mac}}.json",
+   "title": {
+    "starting":"Starting",
+    "startingInfo":"Starting Info",
+    "module":"Module"
+   },
+   "class":"table table-striped table-hover",
+   "style":"width:100%;"
+  },
+
+  {
+   "type":"hr"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  }
+
+ ]
+}

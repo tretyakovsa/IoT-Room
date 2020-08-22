@@ -1,3 +1,34 @@
+#ifdef irM
+// ----------------------Приемник ИK
+void irReceived() {
+  byte pin = readArgsInt();
+  pin =  pinTest(pin);
+  irReceiver = new IRrecv(pin);  // Create a new IRrecv object. Change to what ever pin you need etc.
+  irReceiver->enableIRIn(); // Start the receiver
+  // задача опрашивать IR код
+  ts.add(tIR, 100, [&](void*) {
+    handleIrReceiv();
+  }, nullptr, true);
+  sendStatus(irReceivedS, "ffffffff");
+  modulesReg(irReceivedS);
+}
+void handleIrReceiv() {
+  if (irReceiver->decode(&results)) {
+    dump(&results);
+    flag = sendStatus(irReceivedS, uint64ToString(results.value, HEX));
+    irReceiver->resume();  // Continue looking for IR codes after your finished dealing with the data.
+  }
+}
+void dump(decode_results *results) {
+  uint16_t count = results->rawlen;
+  //Serial.println(count);
+  sendOptions(irDecodeTypeS, results->decode_type);
+}
+#endif
+
+
+//--------------------------------------------------------------------------------------------------------
+
 #ifdef irTransmitterM
 // ----------------------Передатчик ИK
 void irTransmitter() {

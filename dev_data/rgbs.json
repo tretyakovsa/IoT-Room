@@ -1,0 +1,150 @@
+{
+ "configs":[
+  "/config.live.json",
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+   "type":"text",
+   "title":"{{LangOptions1}}"
+  }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-info"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"text",
+   "module":"ddns",
+   "name":"alert-ifttt",
+   "title":"<button class=\"close\" onclick=\"hide('alert-ifttt',this)\">×</button>{{LangIfttt1}}",
+   "class":"alert alert-info {{alert-ifttt}}"
+  },
+
+  {
+   "type":"rgb",
+   "title":"/img/swatches.png",
+   "name":"color",
+   "module":"rgbs",
+   "state":"{{colorSRGB}}",
+   "response":"[[rgb]]",
+   "action":"rgbs set [[color]]",
+   "style":"cursor:pointer;width:100%"
+  },
+
+  {
+   "type":"range",
+   "title":"R",
+   "name":"colorR",
+   "module":"rgbs",
+   "state":"parseInt(val('color').substr(0,2),12)",
+   "response":"[[rgb]]",
+   "action":"rgbs set '+rgbToHex(Number(val('colorR')),Number(val('colorG')),Number(val('colorB')))+'",
+   "pattern":"min=0 max=255 step=1"
+  },
+  {
+   "type":"range",
+   "title":"G",
+   "name":"colorG",
+   "module":"rgbs",
+   "state":"parseInt(val('color').substr(2,2),12)",
+   "response":"[[rgb]]",
+   "action":"rgbs set '+rgbToHex(Number(val('colorR')),Number(val('colorG')),Number(val('colorB')))+'",
+   "pattern":"min=0 max=255 step=1"
+  },
+  {
+   "type":"range",
+   "title":"B",
+   "name":"colorB",
+   "module":"rgbs",
+   "state":"parseInt(val('color').substr(4,2),12)",
+   "response":"[[rgb]]",
+   "action":"rgbs set '+rgbToHex(Number(val('colorR')),Number(val('colorG')),Number(val('colorB')))+'",
+   "pattern":"min=0 max=255 step=1"
+  },
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"h4",
+   "title":"{{LangTime8}}"
+  },
+  {
+   "type":"select",
+   "state":"{{timeRGB}}",
+   "name":"time",
+   "module":"rgbs",
+   "response":"[[rgb]]",
+   "action":"pulse on rgbs [[time]]s",
+   "title":{
+    "60":"1",
+    "300":"5",
+    "600":"10",
+    "1500":"15",
+    "1800":"30",
+    "3600":"60",
+    "5400":"1:30",
+    "7200":"2:00",
+    "10800":"3:00",
+    "0":"&#8734;"
+   }
+  },
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"button",
+   "title":"({{rgbs}}?'{{LangOff}}':'{{LangOn}}')",
+   "name":"rgb",
+   "module":"rgbs",
+   "response":"[[rgb]]",
+   "action":"rgbs not",
+   "class":"'btn btn-block btn-lg btn-'+({{rgbs}}?'info':'primary')"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"macros"
+  },
+
+  {
+   "type":"chart",
+   "title":"{{LangA0}}",
+   "state":"charts.json?data=A0&data1=highAlarmA0&data2=lowAlarmA0",
+   "module":"A0",
+   "action":"/page.htm?chart&A0&highAlarmA0&lowAlarmA0",
+   "style":"height:200px;margin-left:-20px"
+  },
+
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+ ]
+}

@@ -1,36 +1,46 @@
-// ------------- Информация о ESP
-void espInfo() {
-  FSInfo fs_info;
-  SPIFFS.info(fs_info);
-  sendOptions("totalBytes", fs_info.totalBytes);
-  sendOptions("usedBytes", fs_info.usedBytes);
-  sendOptions("blockSize", fs_info.blockSize);
-  sendOptions("pageSize", fs_info.pageSize);
-  sendOptions("maxOpenFiles", fs_info.maxOpenFiles);
-  sendOptions("maxPathLength", fs_info.maxPathLength);
-  sendOptions("flashChip", String(ESP.getFlashChipId(), HEX));
-  sendOptions("ideFlashSize", ESP.getFlashChipSize());
-  sendOptions("realFlashSize", ESP.getFlashChipRealSize());
-  sendOptions("flashChipSpeed", ESP.getFlashChipSpeed() / 1000000);
-  sendOptions("cpuFreqMHz", ESP.getCpuFreqMHz());
-  FlashMode_t ideMode = ESP.getFlashChipMode();
-  sendOptions("FreeSketchSpace", ESP.getFreeSketchSpace());
-  sendOptions("flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
+boolean inetTest(){
+   HTTPClient http;
+    http.begin(inetTestS);
+    if (http.GET()==200)return true;
+    return false;
+  }
+  
+#ifdef I2CM
+// ------------------- Инициализация I2C
+void initI2C() {
+  String pin1S = readArgsString(); // первый аргумент pin
+  String pin2S = readArgsString(); // первый аргумент pin
+  String clockFrequency = readArgsString(); // третий аргумент частота для связи I2C
+  uint8_t pin1 = 17;
+  uint8_t pin2 = 17;
+  if (pin1S == "" || pin2S == "") { // если один из аргументов не задан используем 4 5
+    pin1 = 4;
+    pin1 = 5;
+  } else {
+    pin1 = pin1S.toInt();
+    pin1 = pin1S.toInt();
+  }
+  pin1 =  pinTest(pin1);
+  pin2 =  pinTest(pin2);
+  if (pin1 == 17 || pin2 == 17) {} else {
+    Wire.setClock(defaultTestString(clockFrequency, "400000").toInt());
+    Wire.begin(pin1, pin2);
+    modulesReg(i2cS);
+  }
+  
 }
+#endif
 
-// ------------- Значение по умолчанию
-String defaultTestString(String test, String def) {
-  if (test == emptyS or test == def) {
-    test = def;
-  }
-  return test;
+// -------------- Регистрация модуля
+void modulesReg(String modName) {
+  String mod = jsonRead(modules, "module"); // читаем массив
+  if (mod.indexOf(modName) == -1) jsonArrAdd(modules, "module", modName); // Если нет значения добавляем
 }
-// ------------- Значение по умолчанию
-String defaultTestStringMAC(String test, String def) {
-  if (test == emptyS or test == def) {
-    test = def + "-" + WiFi.macAddress().c_str();
-  }
-  return test;
+// -------------- Регистрация модуля
+void commandsReg(String comName) {
+  String mod = jsonRead(regCommands, "command"); // читаем массив
+  if (mod.indexOf(comName) == -1) jsonArrAdd(regCommands, "command", comName); // Если нет значения добавляем
+  //jsonArrAdd(regCommands,"command",comName);
 }
 
 // --------------------Выделяем строку до маркера --------------------------------------------------
@@ -73,41 +83,23 @@ String selectFromMarkerToMarker(String str, String found, int number) {
   } while (str.length() != 0); // повторим пока строка не пустая
   return "NAN"; // Достигли пустой строки и ничего не нашли
 }
-
-
-// ------------- Данные статистики -----------------------------------------------------------
-void statistics() {
-  String urls;
-  urls += WiFi.macAddress().c_str();
-  urls += "&";
-  urls += getSetup(configsS);
-  urls += "&";
-  String onPower =  ESP.getResetReason();
-  onPower.replace("/"," ");
-  urls += onPower;
-  urls += "&";
-  urls += getSetup(spiffsDataS);
-  urls += "&";
-  urls += getSetup(mailS);
-  urls = urlsStat+urls;
-  String stat = MyWiFi.getURL(urls);
-  sendOptions(messageS, stat);
-  sendOptions("message1", urls);
-}
-
 //------------------Выполнить все команды по порядку из строки разделитель \r\n  \n
 String goCommands(String inits) {
+  File initsFile = SPIFFS.open("/" + inits, "r");
+  if (!initsFile) {
+    return "Failed";
+  }
   String temp;
-  String rn = "\n";
-  inits += rn;
-  do {
-    temp = selectToMarker (inits, rn);
+  while (initsFile.size() != initsFile.position()) {
+    temp = initsFile.readStringUntil('\n');
+    temp.replace("\r", "");
     sCmd.readStr(temp);
-    inits = deleteBeforeDelimiter(inits, rn);
-  } while (inits.indexOf(rn) != 0);
+  }
+  initsFile.close();
+  Serial.println( "Stop");
   return "OK";
-}
 
+}
 // ------------- Чтение файла в строку --------------------------------------
 String readFile(String fileName, size_t len ) {
   File configFile = SPIFFS.open("/" + fileName, "r");
@@ -135,9 +127,24 @@ String writeFile(String fileName, String strings ) {
 }
 // ------------- Запись файла конфигурации ----------------------------------
 void saveConfigSetup () {
+  //Serial.println(configSetup);
   writeFile(fileConfigS, configSetup );
 }
-
+// ------------- Значение по умолчанию
+String defaultTestString(String test, String def) {
+  if (test == emptyS or test == def or test == "null") {
+    test = def;
+  }
+  return test;
+}
+// ------------- Значение по умолчанию
+String defaultTestStringMAC(String test, String def) {
+  if (test == emptyS or test == def) {
+    //test = def + "-" + WiFi.macAddress().c_str();
+    test = def + "-" + String( ESP.getChipId());
+  }
+  return test;
+}
 // ------------- Проверка занятости пина --------------------------
 /*
    Алгоритм
@@ -146,8 +153,6 @@ void saveConfigSetup () {
 
 */
 uint8_t pinTest(uint8_t pin) {
-  //Serial.print("pin");
-  //Serial.print("=");
   if (pin > maxPin) {
     pin = 17;
   } else {
@@ -164,12 +169,9 @@ uint8_t pinTest(uint8_t pin) {
       }
     }
   }
-  //Serial.println(pin);
   return pin;
 }
 uint8_t pinTest(uint8_t pin, boolean multi) {
-  //Serial.print("multiPin");
-  //Serial.print("=");
   if (pin > maxPin) {
     pin = 17;
   } else {
@@ -187,182 +189,87 @@ uint8_t pinTest(uint8_t pin, boolean multi) {
       }
     }
   }
-  //Serial.println(pin);
   return pin;
 }
-// -------------- Добавить действие
-void addAction(String nameAction, String num) {
-  commandsReg(nameAction);
-  actionsReg(nameAction + num);
-  modulesReg(nameAction + num);
-}
-// -------------- Добавить действие
-void addAction(String nameAction) {
-  addAction(nameAction, "");
-}
-// -------------- Регистрация модуля
-void modulesReg(String modName) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(modules);
-  JsonArray& data = json["module"].asArray();
-  data.add(modName);
-  modules = emptyS;
-  json.printTo(modules);
-}
 
-// -------------- Регистрация команд
-void commandsReg(String comName) {
-  if (regCommands.indexOf(comName) == -1) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& json = jsonBuffer.parseObject(regCommands);
-    JsonArray& data = json["command"].asArray();
-    data.add(comName);
-    regCommands = emptyS;
-    json.printTo(regCommands);
-  }
-}
-// -------------- Регистрация actions
+// -------------- Регистрация actions для функции пульс
 void actionsReg(String actionsName) {
+#ifdef PulsM // 
   jsonWrite(pulsList, actionsName, pulsNum);
   pulsNum++;
-}
-
-// ------------------- Инициализация Импульс
-void initPuls() {
-  sCmd.addCommand(pulseS.c_str(), startPuls);
-  commandsReg(pulseS);
-  modulesReg(pulseS);
-}
-
-void startPuls() {
-  String com = readArgsString(); // on off
-  if (com != "") { // если комманда есть
-    String pulseCom = readArgsString(); // Команда relay3 или rgb
-    String tacks = jsonRead(pulsList, pulseCom);  //Получим номер задачи для устройства
-    sendOptions(pulseS + "State" + tacks, false);
-    pulseCom = topicToCom(pulseCom);   // Пробел между командой и номером
-    pulseCom.replace(" ", " not ");    // Модефицируем командув not
-    sendOptions(pulseComS + tacks, pulseCom); // Сохраним команду
-    if (com == onS || com == "1") {         // Если комманда есть
-      int freq = stringToMilis (readArgsString(), 1); // Как долго включен
-      sendOptions(pulseS + tacks + "0", freq);
-      if (freq != 0) {
-        String temp = readArgsString(); // Как долго выключен
-        int freq1 = temp.toInt();
-        if (temp == "-")freq1 = freq;
-        if (temp == "")freq1 = 0;
-        sendOptions(pulseS + tacks + "1", freq1);
-        int period = freq + freq1;
-        String pulseTime = readArgsString(); // Время работы
-        int pulseTimeInt = stringToMilis(pulseTime, period);
-        int remainder = pulseTimeInt % (period);
-        if (remainder > period / 2) {
-          pulseTimeInt += period - remainder;
-        } else  pulseTimeInt -= remainder;
-        if (getStatusInt(pulseCom)) {
-          pulseCom.replace(notS, offS);          // Модефицируем командув off
-          sCmd.readStr(pulseCom);
-        }
-        sendOptions(pulseTimeS + tacks, pulseTimeInt);
-        imPuls(tacks.toInt());
-      }
-    }
-    if (com == "off" || com == "0") {
-      pulseCom.replace(notS, offS);
-      sCmd.readStr(pulseCom);
-      flipper[tacks.toInt()].detach();
-    }
-  }
-}
-int stringToMilis(String times, int period) {
-  int p = times.length();
-  String unit = times.substring(p - 1, p);
-  int timei = times.toInt();
-  if (unit == "s") timei *= 1000;
-  if (unit == "m") timei *= 60000;
-  if (unit == "h") timei *= 3600000;
-  if (unit == "i") timei *= period;
-  return timei;
-}
-void imPuls(int tacks) {
-  String pulseStateN = "pulseState" + (String)tacks;
-  boolean stopF = true;
-  String pulseCom = getOptions(pulseComS + tacks);           // Получить каким устройством управляем
-  String pulseTime = getOptions(pulseTimeS + tacks);         // Получим текстовое значние времени работы
-  int pulseTimeInt = pulseTime.toInt();                 // Получим int значние времени работы
-  uint8_t low = getOptionsInt(pulseStateN);
-  int timeOn = getOptionsInt(pulseS + tacks + low); // Время включено
-  int timeOff = getOptionsInt(pulseS + tacks + !low); // Время выключено
-  if (timeOn > 0) {                                     // Если время включено >0 сразу закончить
-
-    if (!low) {
-      pulseCom.replace(notS, onS);
-      //Serial.println(pulseCom);
-    }
-    else {
-      pulseCom.replace(notS, offS);
-      //Serial.println(pulseCom);
-    }
-
-    sCmd.readStr(pulseCom);                             // Выполнить команду
-    if (pulseTime != "null" && pulseTimeInt != 0 ) {
-      sendOptions(pulseTimeS + tacks, (String)(pulseTimeInt - timeOn));
-      if (getOptionsInt(pulseTimeS + tacks) <= 0) {
-        flipper[tacks].detach();
-        stopF = false;
-      }
-    }
-    low = !low;
-    sendOptions(pulseStateN, low);
-    if (stopF) {
-      flipper[tacks].attach_ms(timeOn, imPuls, tacks);               // Задать время через которое процедура будет вывана повторно
-    }
-  } else {
-    sCmd.readStr(pulseCom);                            // Выключить
-    flipper[tacks].detach();                               // Остановим таймер
-    //low = false;                                      // Сбросить флаг ???
-    sendOptions(pulseStateN, false);
-  }
-}
-
-String topicToCom (String topicS) {
-  uint8_t   p = 0;
-  boolean f = true;
-  uint8_t   u = topicS.length();
-  while (p != u) {
-    if  (isDigit(topicS.charAt(p))) {
-      String kay = topicS.substring(0, p);
-      //Serial.println(topicS.charAt(p));
-      //Serial.println(kay);
-      topicS.replace(kay, kay + " ");
-      yield();
-      f = false;
-    }
-    p++;
-  }
-  if (f) topicS += " ";
-  return topicS;
+#endif
 }
 
 // param add fire 0
-// param send fire 1
+// param set fire 1
 // param on fire
 // param off fire
 // param not fire
-// param + fire 1
-// param - fire 1
+// param sum fire 1
+// param dif fire 1
+// param inc fire
+// param dec fire
 void initParam() {
   String com = readArgsString(); //Комманда
   String key = readArgsString(); // Имя
   String volume = readArgsString();   // Данные
   String oldVolume = getStatus(key);
   if (com == "add") sendStatus(key, volume);
-  if (com == "send") flag = sendStatus(key, volume);
+  if (com == "set") flag = sendStatus(key, volume);
   if (com == "on") flag = sendStatus(key, 1);
   if (com == "off") flag = sendStatus(key, 0);
   if (com == "not") flag = sendStatus(key, !getStatusInt(key));
-  if (key != "") {
-    //Serial.println(key);
-    //SoketData (key, getStatus(key), oldVolume);
+  if (com == "sum") flag = sendStatus(key, getStatusInt(key) + volume.toInt());
+  if (com == "dif") flag = sendStatus(key, getStatusInt(key) - volume.toInt());
+  if (com == "inc") flag = sendStatus(key, getStatusInt(key) + 1);
+  if (com == "dec") flag = sendStatus(key, getStatusInt(key) - 1);
+}
+
+// ------------- Информация о ESP
+
+void espInfo() {
+  String adminS = "{}";
+  jsonWrite(adminS, heapS, String(ESP.getFreeHeap()));
+  jsonWrite(adminS, "flashChip", String(ESP.getFlashChipId(), HEX));
+  jsonWrite(adminS, "ideFlashSize", (String)ESP.getFlashChipSize());
+  jsonWrite(adminS, "realFlashSize", (String)ESP.getFlashChipRealSize());
+  jsonWrite(adminS, "flashChipSpeed", (String)(ESP.getFlashChipSpeed() / 1000000));
+  jsonWrite(adminS, "cpuFreqMHz", ESP.getCpuFreqMHz());
+  FlashMode_t ideMode = ESP.getFlashChipMode();
+  jsonWrite(adminS, "FreeSketchSpace", (String)ESP.getFreeSketchSpace());
+  jsonWrite(adminS, "getSketchSize", (String)ESP.getSketchSize());
+  jsonWrite(adminS, "flashChipMode", (ideMode == FM_QIO ? "QIO" : ideMode == FM_QOUT ? "QOUT" : ideMode == FM_DIO ? "DIO" : ideMode == FM_DOUT ? "DOUT" : "UNKNOWN"));
+  FSInfo fs_info;
+  SPIFFS.info(fs_info);
+  jsonWrite(adminS, "totalBytes", (String)fs_info.totalBytes);
+  jsonWrite(adminS, "usedBytes", (String)fs_info.usedBytes);
+  jsonWrite(adminS, "blockSize", (String)fs_info.blockSize);
+  jsonWrite(adminS, "pageSize", (String)fs_info.pageSize);
+  jsonWrite(adminS, "maxOpenFiles", (String)fs_info.maxOpenFiles);
+  jsonWrite(adminS, "maxPathLength", (String)fs_info.maxPathLength);
+  jsonWrite(adminS, "mac", MyWiFi.macAddress());
+  jsonWrite(adminS, "sdk", (String)ESP.getSdkVersion());
+  jsonWrite(adminS, "boot", ESP.getBootVersion());
+  String versionS = ESP.getCoreVersion();
+  versionS.replace("_", ".");
+  jsonWrite(adminS, "coreversion", versionS);
+  jsonWrite(adminS, "userbin_addr", (String)system_get_userbin_addr());
+  jsonWrite(adminS, "boot_mode", ESP.getBootMode() == 0 ? F("SYS_BOOT_ENHANCE_MODE") : F("SYS_BOOT_NORMAL_MODE"));
+  jsonWrite(adminS, spiffsDataS, getSetup(spiffsDataS));
+  jsonWrite(adminS, buildDataS, getSetup(buildDataS));
+  uint8_t phyMode = MyWiFi.getPhyMode();
+  String phyModeS;
+  switch (phyMode) {
+    case 1:
+      phyModeS = "MODE_11B";
+      break;
+    case 2:
+      phyModeS = "MODE_11G";
+      break;
+    case 3:
+      phyModeS = "MODE_11N";
+      break;
   }
+  jsonWrite(adminS, "PhyMode", phyModeS);
+  httpOkJson(adminS);
 }

@@ -1,0 +1,136 @@
+{
+ "configs":[
+  "/config.live.json",
+  "/config.options.json",
+  "/lang/lang.{{lang}}.json",
+  "/modules.json"
+ ],
+ "title": [{
+   "type":"text",
+   "title":"{{LangOptions1}}"
+  }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content":[
+  {
+   "type":"h5",
+   "title":"{{SSDP}}",
+   "class":"alert-success"
+  },
+
+  {
+   "type":"loadJson",
+   "state":"header.json"
+  },
+
+  {
+   "type":"text",
+   "module":"ddns",
+   "name":"alert-ifttt",
+   "title":"<button class=\"close\" onclick=\"hide('alert-ifttt',this)\">×</button>{{LangIfttt1}}",
+   "class":"alert alert-info {{alert-ifttt}}"
+  },
+
+
+  {
+   "type":"button",
+   "title":"('{{jalousie}}'==1?'{{LangClose}}':'{{LangOpen}}')",
+   "name":"motor",
+   "module":"jalousie",
+   "response":"[[motor]]",
+   "action":"jalousie not",
+   "class":"'btn btn-block btn-lg btn-'+({{jalousie}}?'info':'primary')"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+  {
+   "type":"h2",
+   "title":"{{LangTurn}}"
+  },
+  {
+   "type":"input",
+   "title":"{{turn}}",
+   "module":"jalousie",
+   "name":"turn",
+   "state":"{{turn}}",
+   "pattern":"[0-9]{1,3}"
+  },
+  {
+   "type":"button",
+   "module":"jalousie",
+   "title":"{{LangSave}}",
+   "class":"btn btn-block btn-success",
+   "action":"jalousie turn [[turn]]"
+  },
+
+  {
+   "type":"macros"
+  },
+
+  {
+   "type":"hr",
+   "module":"timers"
+  },
+
+
+  {
+   "type":"h2",
+   "module":"timers",
+   "title":"{{LangTimer}}"
+  },
+
+
+  {
+   "type":"table",
+   "module":"timers",
+   "state":"timer.save.json",
+   "title":{
+    "day":" {{LangDay}} ",
+    "time1":" {{LangTime4}} ",
+    "com1":""
+   },
+   "class":"table alert alert-dismissible alert-warning",
+   "style":"width:100%;"
+  },
+  {
+   "type":"link",
+   "module":"timers",
+   "title":"{{LangTimer}}",
+   "action":"page.htm?timer",
+   "class":"btn btn-block btn-default"
+  },
+
+
+  {
+   "type":"hr"
+  },
+
+
+  {
+   "type":"chart",
+   "title":"{{LangA0}}",
+   "state":"charts.json?data=A0&data1=highAlarmA0&data2=lowAlarmA0",
+   "module":"A0",
+   "action":"/page.htm?chart&A0&highAlarmA0&lowAlarmA0",
+   "style":"height:200px;margin-left:-20px"
+  },
+
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-block btn-warning"
+  }
+
+ ]
+}
