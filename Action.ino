@@ -9,7 +9,7 @@ void initShimOut() {
   String title = readArgsString(); // Пятый аргумент подпись
   String nameR = sOutS + num;
   if (title == "") title = nameR;
-  sendStatus(nameR, state);
+  sendStatus(nameR, state,1);
   sendOptions(sOutS + PinS + num, pin);
   sendOptions(sOutS + "Old" + num, state);
   sendOptions(sOutS + NotS + num, inv);
@@ -92,7 +92,7 @@ void initPinOut() {
 void initPin(uint8_t pin, String num, boolean state, boolean inv, String name, String title) {
   String nameR = name + num;
   if (title == "") title = nameR;
-  sendStatus(nameR, state);
+  sendStatus(nameR, state,1);
   sendOptions(name + PinS + num, pin);
   sendOptions(name + NotS + num, inv);
   if (pin < 17) { //  это реле через GPIO

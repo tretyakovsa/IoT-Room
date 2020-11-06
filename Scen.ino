@@ -23,17 +23,20 @@ void initScenary() {
 */
 // Ничего не делать если комманда id
 void idNot() {}
+
 void handleScenary() {
   if (scensrioFIFO!=""){
+    Serial.println(scensrioFIFO);
     String key = selectToMarker(scensrioFIFO, ",");
+    Serial.print(key);
+    Serial.println("="+getStatus(key));
     scensrioFIFO=deleteBeforeDelimiter(scensrioFIFO, ",");
     String scen = ScenaryS + getSetup(configsS) + ".txt";
-    Serial.println( scen);
     goCommands(scen,key);
-    sendStatus("voice", emptyS,1);
     flag = false;
     }
   }
+  
 void handleScenary1() {
   if (flag) { // если произошло изменение в данных config.live.json
     //goCommands(Scenary); // Делаем разбор сценариев
@@ -50,6 +53,7 @@ void handleScenary1() {
     flag = false;
   }
 }
+
 // Разбор команды if
 void ifCommand() {
   thenOk = false; // сброс признака

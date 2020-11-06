@@ -172,6 +172,11 @@ boolean sendStatus(String Name, String volume) {
 // ------------- Отправить данные в Status int -----------------------
 boolean sendStatus(String Name, int volume) {
   jsonWrite(configJson, Name, volume);
+  scensrioFIFO+=Name+",";
+  return true;
+}
+boolean sendStatus(String Name, int volume,boolean fifo) {
+  jsonWrite(configJson, Name, volume);
   return true;
 }
 // ------------- Отправить данные в Status float ----------

@@ -109,7 +109,7 @@ void initHTTP() {
 
   sCmd.addCommand(voiceS.c_str(), macros); //
   sendOptions(voiceS, "");
-  sendStatus(voiceS, "");
+  sendStatus(voiceS, "",1);
   commandsReg(voiceS);
   
   // Установить имя устройства
@@ -157,7 +157,8 @@ void initHTTP() {
 }
 void macros() {
   String tem = readArgsString();
-  flag = sendStatus(voiceS, tem);
+  if (tem=="stop")  {sendStatus(voiceS, tem, 1);}
+  else {sendStatus(voiceS, tem);}
 }
 // Инициализация FFS
 void initFS() {

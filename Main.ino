@@ -96,7 +96,6 @@ String goCommands(String inits) {
     sCmd.readStr(temp);
   }
   initsFile.close();
-  Serial.println( "Stop");
   return "OK";
 }
 void goCommand(String temp) {
@@ -106,7 +105,6 @@ void goCommand(String temp) {
     sCmd.readStr(cTemp);
     temp = deleteBeforeDelimiter(temp, "\n");
   } while (temp != emptyS);
-  Serial.println( "Stop goCommand");
 }
 
 String goCommands(String inits, String key) {
@@ -116,29 +114,20 @@ String goCommands(String inits, String key) {
   }
   String scenOne = "";
   String temp;
-  int n = 0;
   while (initsFile.size() != initsFile.position()) {
-    temp = initsFile.readStringUntil('\n')+'\n';
-    //temp.replace("\r", "");
+    temp = initsFile.readStringUntil('\n') + '\n'; // читаем секцию сценария в переменную 
     scenOne += temp;
-    
-    if (temp.indexOf("id ") != -1 ) {
-      n++;
-      if (scenOne.indexOf(key+" ") != -1) {
-        //Serial.println(scenOne +" "+ String(n));
-      //  Serial.println(scenOne);
+    if (temp.indexOf("id ") != -1 ) { // если считано
+      if (scenOne.indexOf("if "+key + " ") != -1 || scenOne.indexOf("and "+key + " ") != -1 ) { // проверяем параметр очереди на наличие и если есть ключ выполняем сценарий
         goCommand(scenOne);
       }
       scenOne = "";
     }
-    //sCmd.readStr(temp);
-    
   }
-
   initsFile.close();
-  Serial.println( "Stop goCommands");
   return "OK";
 }
+
 // ------------- Чтение файла в строку --------------------------------------
 String readFile(String fileName, size_t len ) {
   File configFile = SPIFFS.open("/" + fileName, "r");

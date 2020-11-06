@@ -5,7 +5,7 @@ void initTach() {
   pin =  pinTest(pin, true);
   String num = readArgsString(); // второй аргумент прификс реле 0 1 2
   uint16_t bDelay = readArgsInt(); // третий время нажатия
-  sendStatus(stateTachS + num, 0);
+  sendStatus(stateTachS + num, 0,1);
   buttons[num.toInt()].attach(pin);
   buttons[num.toInt()].interval(bDelay);
   but[num.toInt()] = true;
@@ -41,7 +41,7 @@ void initA0() {
   if (t < 500) t = 1000;
   if (averageFactor == 0) averageFactor = 1023;
   analogRead(A0);
-  sendStatus(stateA0S, analogRead(A0));
+  sendStatus(stateA0S, analogRead(A0),1);
   sendOptions(alarmA0S, 0);
   String alarmSet = "ALARM " + stateA0S + " " + highalarmA0S + " " + lowalarmA0S;
   sCmd.readStr(alarmSet);
@@ -52,7 +52,7 @@ void initA0() {
       a += analogRead(A0);
     }
     a = a / 10;
-    sendStatus(stateA0S, a);
+    sendStatus(stateA0S, a,1);
     alarmTest(stateA0S, highalarmA0S, lowalarmA0S, alarmA0S);
   }, nullptr, true);
   modulesReg("A0");
@@ -149,7 +149,7 @@ void initOneWire() {
     for (byte i = 0; i < num; i++) {
       sensors.setResolution(9);
       String numS = (String)(i + 1);
-      sendStatus(temperatureS + numS, (String)sensors.getTempCByIndex(i));
+      sendStatus(temperatureS + numS, (String)sensors.getTempCByIndex(i),1);
       //Serial.println();
       sendOptions(alarmtempS + numS, 0);
       sendOptions(highalarmtempS + numS, 0);
@@ -166,7 +166,7 @@ void initOneWire() {
         temp = sensors.getTempCByIndex(i);
         String num;
         num = (String)(i + 1);
-        sendStatus(temperatureS + num, (String)temp);
+        sendStatus(temperatureS + num, (String)temp,1);
         alarmTest(temperatureS + num, highalarmtempS + num, lowalarmtempS + num, alarmtempS + num);
       }
     }, nullptr, true);
@@ -188,15 +188,15 @@ void initDHT() {
   temp += dht.getTemperature();
   //Serial.println(temp);
   if (temp != "nan") {
-    sendStatus(temperatureS, dht.getTemperature());
+    sendStatus(temperatureS, dht.getTemperature(),1);
     sendOptions(alarmtempS, 0);
     alarmLoad(temperatureS, highalarmtempS, lowalarmtempS);
-    sendStatus(humidityS, dht.getHumidity());
+    sendStatus(humidityS, dht.getHumidity(),1);
     sendOptions(alarmhumS, 0);
     alarmLoad(humidityS, highalarmhumS, lowalarmhumS);
     ts.add(tDHT, test, [&](void*) {
-      sendStatus(temperatureS, dht.getTemperature());
-      sendStatus(humidityS, dht.getHumidity());
+      sendStatus(temperatureS, dht.getTemperature(),1);
+      sendStatus(humidityS, dht.getHumidity(),1);
       alarmTest(temperatureS, highalarmtempS, lowalarmtempS, alarmtempS);
       alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);
     }, nullptr, true);
@@ -211,15 +211,15 @@ void initDHT() {
 void initSi7021() {
   // Добавить проверку наличия I2C устройств
   if (sensor_Si7021.begin()) {
-    sendStatus(temperatureS, sensor_Si7021.readTemperature());
+    sendStatus(temperatureS, sensor_Si7021.readTemperature(),1);
     sendOptions(alarmtempS, 0);
     alarmLoad(temperatureS, highalarmtempS, lowalarmtempS);
-    sendStatus(humidityS, sensor_Si7021.readHumidity());
+    sendStatus(humidityS, sensor_Si7021.readHumidity(),1);
     sendOptions(alarmhumS, 0);
     alarmLoad(humidityS, highalarmhumS, lowalarmhumS);
     ts.add(tSI, 1000, [&](void*) {
-      sendStatus(temperatureS, sensor_Si7021.readTemperature());
-      sendStatus(humidityS, sensor_Si7021.readHumidity());
+      sendStatus(temperatureS, sensor_Si7021.readTemperature(),1);
+      sendStatus(humidityS, sensor_Si7021.readHumidity(),1);
       alarmTest(temperatureS, highalarmtempS, lowalarmtempS, alarmtempS);
       alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);
     }, nullptr, true);
@@ -238,7 +238,7 @@ void initRC522() {
   ts.add(tRC522, 100, [&](void*) {
     handleRC522();
   }, nullptr, true);
-  sendStatus(rfidkeyS, "");
+  sendStatus(rfidkeyS, "",1);
   modulesReg(rfidS);
 }
 

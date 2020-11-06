@@ -44,11 +44,11 @@ void setup() {
   jsonWrite(modules, langS, getSetup(langS));
   setupToOptions(configsS);
   setupToOptions(langS);
-  sendStatus("firstLoad", 0);
+  sendStatus("firstLoad", 0,1);
   setupToOptions("SSDP1");
   // Начальные параметры для сенсора температуры
   setupToStatus(fahrenheitS);
-  sendStatus(temperatureS, -127);
+  sendStatus(temperatureS, -127,1);
 //  setupToStatus(templevelS);
   jsonWrite(modules, langS, getSetup(langS));
 //  sendOptions(urlsPathS, urlsPath);

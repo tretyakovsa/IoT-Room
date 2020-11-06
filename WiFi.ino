@@ -19,7 +19,7 @@ void initWIFI() {
     SoketData (dbmS, (String)temp, getStatus(dbmS));
 #endif
     flag = sendStatus(dbmS, temp);
-  }, nullptr, true);
+  }, nullptr, false);
   }
   sendSetup(ipS, MyWiFi.StringIP());
   Serial.println(MyWiFi.StringIP());

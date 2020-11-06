@@ -74,9 +74,9 @@ void timeSynch() {
     }
     String timeNow = GetTime();
     sendSetup(timeS,  timeNow);
-    sendStatus(timeS, timeNow);
+    sendStatus(timeS, timeNow,1);
     timeNow = GetWeekday();
-    sendStatus(weekdayS, timeNow);
+    sendStatus(weekdayS, timeNow,1);
   }
 }
 // Получение текущего времени
