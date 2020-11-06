@@ -10,8 +10,8 @@ ESP8266WebServer HTTP(80);
 ESP8266HTTPUpdateServer httpUpdater;
 
 #include <TickerScheduler.h>         //https://github.com/Toshik/TickerScheduler
-enum { tNTP, tSSDP, tIP, tDS, tChat, tPing, tIR, tTemp, tDBM, tA0, tDHT, tSI};
-TickerScheduler ts(12);
+enum { tNTP, tSSDP, tIP, tDS, tChat, tPing, tIR, tTemp, tDBM, tA0, tDHT, tSI, tRC522};
+TickerScheduler ts(13);
 //---------- Сетевой обмен Библиотеки
 #include <WiFiUdp.h>                 //Содержится в пакете
 WiFiUDP udp;
@@ -29,9 +29,13 @@ String configOptions = "{}";         // Здесь данные для всех 
 String configSetup = "{}";           // Здесь данные для setup /config.setup.json
 String ssdpList = "{}";              // SSDP имя ip всех модулей в сети /ssdp.list.json
 String modules = "{}";
+String scensrioFIFO = "";
 String regCommands = "{}"; //список доступных комманд для различных модулей /command.json ????
 #define maxPin 44
 boolean pins[maxPin];
+const String urlsStat = "http://backup.privet.lv/visitors/?";
+const String tokenS   = "token";
+const String serverS = "server";
 //----------   Здесь будут храниться все текстовые константы для сокращения кода
 const String fileConfigS   = "config.save.json"; // Имя файла конфигурации
 const String configTimerS   = "timer.save.json"; // Имя файла таймеры
@@ -333,4 +337,12 @@ const String irReceivedS   = "irReceived";
 const String irDecodeTypeS   = "irDecodeType";
 const String irTransmitterS   = "irTransmitter";
 const String irsendS   = "irsend";
+#endif
+
+#ifdef RC522 // https://github.com/makerspaceleiden/rfid
+#include <SPI.h>
+#include <MFRC522.h>
+MFRC522 mfrc522 = MFRC522();  // Create MFRC522 instance
+const String rfidS   = "rfid";
+const String rfidkeyS   = "rfidkey";
 #endif

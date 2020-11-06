@@ -1,10 +1,10 @@
-boolean inetTest(){
-   HTTPClient http;
-    http.begin(inetTestS);
-    if (http.GET()==200)return true;
-    return false;
-  }
-  
+boolean inetTest() {
+  HTTPClient http;
+  http.begin(inetTestS);
+  if (http.GET() == 200)return true;
+  return false;
+}
+
 #ifdef I2CM
 // ------------------- Инициализация I2C
 void initI2C() {
@@ -27,7 +27,7 @@ void initI2C() {
     Wire.begin(pin1, pin2);
     modulesReg(i2cS);
   }
-  
+
 }
 #endif
 
@@ -98,7 +98,46 @@ String goCommands(String inits) {
   initsFile.close();
   Serial.println( "Stop");
   return "OK";
+}
+void goCommand(String temp) {
+  temp.replace("\r", "");
+  do {
+    String cTemp = selectToMarker(temp, "\n");
+    sCmd.readStr(cTemp);
+    temp = deleteBeforeDelimiter(temp, "\n");
+  } while (temp != emptyS);
+  Serial.println( "Stop goCommand");
+}
 
+String goCommands(String inits, String key) {
+  File initsFile = SPIFFS.open("/" + inits, "r");
+  if (!initsFile) {
+    return "Failed";
+  }
+  String scenOne = "";
+  String temp;
+  int n = 0;
+  while (initsFile.size() != initsFile.position()) {
+    temp = initsFile.readStringUntil('\n')+'\n';
+    //temp.replace("\r", "");
+    scenOne += temp;
+    
+    if (temp.indexOf("id ") != -1 ) {
+      n++;
+      if (scenOne.indexOf(key+" ") != -1) {
+        //Serial.println(scenOne +" "+ String(n));
+      //  Serial.println(scenOne);
+        goCommand(scenOne);
+      }
+      scenOne = "";
+    }
+    //sCmd.readStr(temp);
+    
+  }
+
+  initsFile.close();
+  Serial.println( "Stop goCommands");
+  return "OK";
 }
 // ------------- Чтение файла в строку --------------------------------------
 String readFile(String fileName, size_t len ) {

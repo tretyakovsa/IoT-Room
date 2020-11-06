@@ -6,13 +6,15 @@ void initUpgrade() {
 }
 // ----------------------- Обновление с сайта
 void webUpgrade() {
+    String refresh = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"./css/build.css\"></head><body><br><br><center><div class=\"loader\"></div><h1>Update module... <br><span id=\"countdownt\">90 </span> seconds...</h1></center>   <script>var timeleft=90;var downloadTimer=setInterval(function(){timeleft--;document.getElementById(\"countdownt\").textContent=timeleft;if(timeleft <= 0){clearInterval(downloadTimer);window.location.href=\"/\"}},1000);</script></body></html>";
+  httpOkHtml(refresh);
   if (inetTest()) {
-    httpOkHtml("Ok"); // Сразу отправить ответ редиректа
+   //httpOkHtml("Ok"); // Сразу отправить ответ редиректа
     String spiffsData = HTTP.arg(spiffsS); // Получим путь к файловой системе
     String buildData = HTTP.arg(buildS);  // Получим путь к файлу прошивки
     if (buildData.indexOf("beta") != -1) {
       sendSetup(relizS, "beta");
-    } else if (buildData == "evonicfires.ino.generic.bin") {
+    } else if (buildData == "IoT-Room.ino.generic.bin") {
       sendSetup(relizS, "alpha");
     } else sendSetup(relizS, "");
     if ((spiffsData != emptyS) || (buildData != emptyS)) {
@@ -35,12 +37,13 @@ void webUpdate() {
   ESPhttpUpdate.onEnd(update_finished);
   ESPhttpUpdate.onProgress(update_progress);
   ESPhttpUpdate.onError(update_error);
-  if (getSetup("spiffsData") != spiffs || getSetup(relizS) == "alpha") {
+  if (getSetup("spiffsData") != spiffs || getSetup(relizS) == "alpha" || true) {
     String Timerset = readFile(configTimerS, 4096); // Сохраним все таймеры в глобальной переменной
     typeUpdate = "spiffs";
     //SPIFFS.format();
     SPIFFS.end();
-    //Serial.println(patch + spiffs);
+    Serial.print("Обнавим ФС ");
+    Serial.println(patch + spiffs);
     updateHTTP(patch + spiffs, true); // Обновим файловую систему
     SPIFFS.begin();
     SPIFFS.remove(fileConfigS); // удалим файл конфигурации
@@ -50,7 +53,7 @@ void webUpdate() {
   }
   //if (getSetup("buildData") != build || getSetup(relizS) =="alpha") {
   typeUpdate = "build";
-
+  Serial.print("Обнавим build ");
   Serial.println(patch + build);
   //updateFirmware();
   updateHTTP(patch + build, false); //Обновим булд
@@ -67,7 +70,7 @@ void getVershion() {
   if (RELIZ != "")  RELIZ = "/" + RELIZ;
   const String http = "http://";
   const String server = "backup.privet.lv/iotroom/";
-  const String urlsUpdateData = "production.json/";
+  const String urlsUpdateData = "production.json";
   String adress = http + server + urlsUpdateData + MODEL + RELIZ;
   Serial.println(adress);
   adress = MyWiFi.getURL(adress);
@@ -88,7 +91,7 @@ void updateHTTP(String url, boolean mode) {
   if (url == "") return;
   ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
   ESPhttpUpdate.rebootOnUpdate(false); // Отключим перезагрузку после обновления
-  url="";
+  //url="";
   if (mode) {
     t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs(url);
     UpdateStatus(ret , "Spiffs");
@@ -120,11 +123,11 @@ void UpdateStatus(t_httpUpdate_return & set , String mode) {
 }
 
 void update_started() {
-  //Serial.println("CALLBACK:  HTTP update process started");
+  Serial.println("CALLBACK:  HTTP update process started");
 }
 
 void update_finished() {
-  //Serial.println("CALLBACK:  HTTP update process finished");
+  Serial.println("CALLBACK:  HTTP update process finished");
 }
 
 void update_progress(int cur, int total) {
@@ -132,5 +135,5 @@ void update_progress(int cur, int total) {
 }
 
 void update_error(int err) {
-  //Serial.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
+  Serial.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
 }

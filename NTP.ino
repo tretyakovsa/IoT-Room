@@ -32,7 +32,7 @@ void test1Sec() {
     sendStatus(weekdayS, timeNow);
     timeSynch();
   }
-  sendStatus(timeS, timeNow);
+  sendStatus(timeS, timeNow,1);
   sendOptions(timeS, timeNow);
   sendSetup(timeS,  timeNow);
   sCmd.readStr("timeTest");

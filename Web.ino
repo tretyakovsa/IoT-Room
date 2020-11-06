@@ -58,7 +58,11 @@ void initHTTP() {
     httpOkJson(configSetup);
   });
 
-
+  // --------------------Выдаем данные ssdpList
+  HTTP.on("/fifo", HTTP_GET, []() {
+    httpOkText(scensrioFIFO);
+    scensrioFIFO="";
+  });
   // --------------------Выдаем данные ssdpList
   HTTP.on("/ssdp.list.json", HTTP_GET, []() {
     httpOkJson(ssdpList);

@@ -19,4 +19,5 @@
 #define irM
 #define irTransmitterM
 #define pinExt
+#define RC522
 //#define webSoketM // 395372

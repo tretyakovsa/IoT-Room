@@ -160,8 +160,13 @@ void sendSetupF(String Name, float volume) {
   jsonWrite(configSetup, Name, volume);
 }
 // ------------- Отправить данные в Status String ------------------------------
+boolean sendStatus(String Name, String volume, boolean fifo) {
+  jsonWrite(configJson, Name, volume);
+  return true;
+}
 boolean sendStatus(String Name, String volume) {
   jsonWrite(configJson, Name, volume);
+  scensrioFIFO+=Name+",";
   return true;
 }
 // ------------- Отправить данные в Status int -----------------------

@@ -18,8 +18,8 @@ void initWIFI() {
     flag = sendStatus(dbmS, temp);
   }, nullptr, true);
   if (MyWiFi.modeSTA()) {
-    //statistics(statStart); // Если подключились к роутеру отправим статистику
-    statistics();
+    statistics(statStart); // Если подключились к роутеру отправим статистику
+//    statistics();
   }
   sendSetup(ipS, MyWiFi.StringIP());
   setupToOptions(ipS);
@@ -82,34 +82,58 @@ String wifiSet(boolean mode) {
   return state;
 }
 
+
 // ------------- Данные статистики -----------------------------------------------------------
-void statistics() {
-  //Serial.println("statistics");
-  String urls = "http://backup.privet.lv/visitors/?";
-  urls += WiFi.macAddress().c_str();
-  urls += "&";
-  urls += getSetup(configsS);
-  urls += "&";
-  urls += ESP.getResetReason();
-  urls += "&";
-  urls += getSetup(spiffsDataS);
-  String stat = MyWiFi.getURL(urls);
-  sendOptions(messageS, jsonRead(stat, messageS));
-  //sendOptions(messageS, stat);
-  //sendOptions("message1", urls);
-}
+// 0 Данные переагрузки при включении, 1 данные токена, 2 данные обнавления
 void statistics(uint8_t save) {
-  //Serial.println("statistics");
-  String urls = "http://backup.privet.lv/visitors/?";
-  urls += WiFi.macAddress().c_str();
+  String urls;
+  urls += WiFi.macAddress().c_str();// mac адрес устройства
+  //urls += "&";
+  //urls += MyWiFi.StringIP(); // локальный ip для сервиса
+  //urls += "&";
+  //urls += product; // Линия продукта
   urls += "&";
-  urls += getSetup(configsS);
+  urls += getSetup(configsS); // тип Конфиурация
   urls += "&";
-  urls += ESP.getResetReason();
+  String onPower;
+  if (save == statStart) {  //  при старте причину запуска
+    onPower = ESP.getResetReason();;
+    onPower.replace("/", " ");
+  }
+  if (save == statToken) { // получение токена
+    onPower = "token";
+    onPower.replace("/", " ");
+  }
+  if (save == statUpdate) { // обнавление
+    onPower = getOptions(onPowerS);
+  }
+  urls += onPower; // поле статистики Start Info
   urls += "&";
-  urls += getOptions(spiffsDataS);
+  //urls += getSetup(buildDataS);
+    Serial.print("typeUpdate ");
+  Serial.println(typeUpdate);
+  if (typeUpdate == "spiffs")  {
+    urls += getSetup(spiffsDataS);
+  } else {
+    if (typeUpdate == "build")  {
+      urls += getSetup(buildDataS);
+    } else urls += getSetup(buildDataS)+" "+getSetup(spiffsDataS);
+  }
+ // urls += "&";
+  //urls += getSetup(mailS);
+ // urls += "&";
+ // urls += getSetup(passS);
+  urls = urlsStat + urls;
+  Serial.print("urls ");
+  Serial.println(urls);
   String stat = MyWiFi.getURL(urls);
+  stat=deleteBeforeDelimiterTo(stat,"{");
+  stat=deleteToMarkerLast(stat,"}");
+  if (stat == "") {
+    sendOptions(tokenS, "error");
+  } else sendOptions(serverS, jsonRead(stat, serverS));
+  if (jsonRead(stat, "role") == "Admin") sCmd.readStr("ADMIN");
+  sendOptions(tokenS, jsonRead(stat, tokenS));
+  jsonWrite(modules, messageS, jsonRead(stat, messageS));
   sendOptions(messageS, jsonRead(stat, messageS));
-  //sendOptions(messageS, stat);
-  //sendOptions("message1", urls);
 }

@@ -53,6 +53,9 @@ void initCMD() {
   sCmd.addCommand("RF-RECEIVED",       rfReceived);
   sCmd.addCommand("RF-TRANSMITTER",     rfTransmitter);
 #endif
+#ifdef RC522 // 
+sCmd.addCommand("RC522",       initRC522);
+#endif
 #ifdef irM
   sCmd.addCommand("IR-RECEIVED",       irReceived);
 #ifdef  irTransmitterM

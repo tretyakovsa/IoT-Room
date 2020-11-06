@@ -174,7 +174,7 @@ void initOneWire() {
 }
 #endif
 #ifdef dhtM // 
-  // -----------------  DHT
+// -----------------  DHT
 void initDHT() {
   uint8_t pin = readArgsInt();
   pin =  pinTest(pin, HIGH);
@@ -182,7 +182,7 @@ void initDHT() {
   delay(1000);
   static uint16_t t = readArgsInt();
   static uint16_t test = dht.getMinimumSamplingPeriod();
-  if (t > test) test=t;
+  if (t > test) test = t;
   //Serial.println(t);
   String temp;
   temp += dht.getTemperature();
@@ -198,7 +198,7 @@ void initDHT() {
       sendStatus(temperatureS, dht.getTemperature());
       sendStatus(humidityS, dht.getHumidity());
       alarmTest(temperatureS, highalarmtempS, lowalarmtempS, alarmtempS);
-      alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);      
+      alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);
     }, nullptr, true);
     modulesReg(temperatureS);
     modulesReg(humidityS);
@@ -207,24 +207,68 @@ void initDHT() {
 #endif
 
 #ifdef Si7021M // 
- // -----------------  Si7021 --------------------------------------------------------------------
+// -----------------  Si7021 --------------------------------------------------------------------
 void initSi7021() {
- // Добавить проверку наличия I2C устройств 
+  // Добавить проверку наличия I2C устройств
   if (sensor_Si7021.begin()) {
+    sendStatus(temperatureS, sensor_Si7021.readTemperature());
+    sendOptions(alarmtempS, 0);
+    alarmLoad(temperatureS, highalarmtempS, lowalarmtempS);
+    sendStatus(humidityS, sensor_Si7021.readHumidity());
+    sendOptions(alarmhumS, 0);
+    alarmLoad(humidityS, highalarmhumS, lowalarmhumS);
+    ts.add(tSI, 1000, [&](void*) {
       sendStatus(temperatureS, sensor_Si7021.readTemperature());
-      sendOptions(alarmtempS, 0);
-      alarmLoad(temperatureS, highalarmtempS, lowalarmtempS);
       sendStatus(humidityS, sensor_Si7021.readHumidity());
-      sendOptions(alarmhumS, 0);
-      alarmLoad(humidityS, highalarmhumS, lowalarmhumS);
-      ts.add(tSI, 1000, [&](void*) {
-        sendStatus(temperatureS, sensor_Si7021.readTemperature());
-        sendStatus(humidityS, sensor_Si7021.readHumidity());
-        alarmTest(temperatureS, highalarmtempS, lowalarmtempS, alarmtempS);
-        alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);
-      }, nullptr, true);
-      modulesReg(temperatureS);
-      modulesReg(humidityS);
+      alarmTest(temperatureS, highalarmtempS, lowalarmtempS, alarmtempS);
+      alarmTest(humidityS, highalarmhumS, lowalarmhumS, alarmhumS);
+    }, nullptr, true);
+    modulesReg(temperatureS);
+    modulesReg(humidityS);
   }
+}
+#endif
+
+#ifdef RC522 // 
+void initRC522() {
+  SPI.begin();
+  mfrc522.PCD_Init();    // Init MFRC522
+  //mfrc522.PCD_DumpVersionToSerial();  // Show details of PCD - MFRC522 Card Reader details
+  // задача опрашивать IR код
+  ts.add(tRC522, 100, [&](void*) {
+    handleRC522();
+  }, nullptr, true);
+  sendStatus(rfidkeyS, "");
+  modulesReg(rfidS);
+}
+
+void handleRC522() {
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {
+    //sendStatus(rfidkeyS, "");
+    return;
+  }
+  if ( ! mfrc522.PICC_ReadCardSerial()) {
+    sendStatus(rfidkeyS, "Bad read");
+    return;
+  }
+  String tag;
+  if (mfrc522.uid.size == 0) {
+  } else {
+    int j = mfrc522.uid.size;
+    for (int i = 0; i < j; i++) {
+      //tag += mfrc522.uid.uidByte[i];
+      String one = String(mfrc522.uid.uidByte[i], HEX);
+      if (one.length() == 1) tag += "0";
+      tag += one;
+      if (i < j-1) tag += "_";
+
+    };
+
+    tag.toUpperCase();
+    Serial.println(tag);
+    flag = sendStatus(rfidkeyS, tag);
+  };
+
+  mfrc522.PICC_HaltA();
 }
 #endif
