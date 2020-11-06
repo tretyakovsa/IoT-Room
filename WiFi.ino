@@ -9,19 +9,20 @@ void initWIFI() {
   sendSetup(spaceS, defaultTestString(getSetup(spaceS), spaceDef));
   MyWiFi.setHostname(getSetup(ssdpS));
   MyWiFi.start();        // Запустим WiFi
+
+  if (MyWiFi.modeSTA()) {
+    //statistics(statStart); // Если подключились к роутеру отправим статистику
+//    statistics();
   ts.add(tDBM, nTest_Time, [&](void*) {
     int temp = MyWiFi.RSSI();
 #ifdef webSoketM // #endif
     SoketData (dbmS, (String)temp, getStatus(dbmS));
-    //ClientSoketData (dbmS, (String)temp, getStatus(dbmS));
 #endif
     flag = sendStatus(dbmS, temp);
   }, nullptr, true);
-  if (MyWiFi.modeSTA()) {
-    statistics(statStart); // Если подключились к роутеру отправим статистику
-//    statistics();
   }
   sendSetup(ipS, MyWiFi.StringIP());
+  Serial.println(MyWiFi.StringIP());
   setupToOptions(ipS);
   sendSetup(getwayS, MyWiFi.StringGatewayIP());
   sendSetup(subnetS, MyWiFi.StringSubnetMask());
@@ -65,6 +66,7 @@ void initWIFI() {
     httpOkText();
     saveConfigSetup();
   });
+  Serial.println("Модуль включен");
 }
 //ssidap?ssidAP=test1&ssidApPass=123456789
 String wifiSet(boolean mode) {

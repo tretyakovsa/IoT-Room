@@ -77,6 +77,7 @@ void setup() {
 }
 
 void loop() {
+  MyWiFi.loop();
   ts.update();
   handleSSDP();
   HTTP.handleClient();
@@ -98,5 +99,4 @@ void loop() {
 #ifdef rfM // #endif
 handleRfReceiv();
 #endif
-//handleRC522();
 }
