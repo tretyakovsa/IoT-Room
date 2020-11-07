@@ -1,13 +1,13 @@
 // {{LangUpgrade1}}
 UPGRADE
 // {{LangConfPinout}}
-PINOUT 17 1 1 0 LedConnectedWiFi
-PINOUT 21 2 0 0 PinOutName2
-PINOUT 37 3 0 0 PinOutName3
+# PINOUT 17 1 1 0 LedConnectedWiFi
+# PINOUT 21 2 0 0 PinOutName2
+# PINOUT 37 3 0 0 PinOutName3
 // {{LangConfRelay}}
-RELAY 18 1 1 0 {{LangrelayName}}_1
-RELAY 22 2 0 0 {{LangrelayName}}_2
-RELAY 38 3 0 0 {{LangrelayName}}_3
+# RELAY 18 1 1 0 {{LangrelayName}}_1
+# RELAY 22 2 0 0 {{LangrelayName}}_2
+# RELAY 38 3 0 0 {{LangrelayName}}_3
 # RELAY 14 4 0 0 {{LangrelayName}}_4
 // {{LangConfSerial}}
 # UART 115200
@@ -38,12 +38,12 @@ A0
 // {{LangConfBUZZER}}
 # BUZZER 16
 // {{LangConfRGB}}
-# RGB 4 0 15 0 ff5000 200 255 0
-# RGB 5 1 15 0 ff5000 200 255 0
+# RGB 0 1 0 15 0 ff5000 200 255 0
+# RGB 1 3 1 15 0 ff5000 200 255 0
 // Включить аудио модуль
 AUDIO
 // Пуль
-PULT 9600 4 5 0
+PULT 9600 13 15 2
 // {{LangConfRGBS}}
 # SRGB 12 4 5 0 ffffff 100 255 {{LangrgbName}}
 // {{LangConfJalousie}}
@@ -57,7 +57,7 @@ PULT 9600 4 5 0
 # IR-RECEIVED 0
 // {{LangConfIrTransmitter}}
 # IR-TRANSMITTER 14
-RC522
+# RC522
 // {{LangConfMQTT}}
 # MQTT
 // {{LangConfAdmin}}

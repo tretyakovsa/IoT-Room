@@ -42,8 +42,8 @@ void webUpdate() {
     typeUpdate = "spiffs";
     //SPIFFS.format();
     SPIFFS.end();
-    Serial.print("Обнавим ФС ");
-    Serial.println(patch + spiffs);
+    //Serial.print("Обнавим ФС ");
+    //Serial.println(patch + spiffs);
     updateHTTP(patch + spiffs, true); // Обновим файловую систему
     SPIFFS.begin();
     SPIFFS.remove(fileConfigS); // удалим файл конфигурации
@@ -53,8 +53,8 @@ void webUpdate() {
   }
   //if (getSetup("buildData") != build || getSetup(relizS) =="alpha") {
   typeUpdate = "build";
-  Serial.print("Обнавим build ");
-  Serial.println(patch + build);
+  //Serial.print("Обнавим build ");
+  //Serial.println(patch + build);
   //updateFirmware();
   updateHTTP(patch + build, false); //Обновим булд
   SPIFFS.remove(fileConfigS); // удалим файл конфигурации
@@ -72,9 +72,9 @@ void getVershion() {
   const String server = "backup.privet.lv/iotroom/";
   const String urlsUpdateData = "production.json";
   String adress = http + server + urlsUpdateData + MODEL + RELIZ;
-  Serial.println(adress);
+  //Serial.println(adress);
   adress = MyWiFi.getURL(adress);
-  Serial.println(adress);
+  //Serial.println(adress);
   adress = deleteBeforeDelimiterTo(adress, "{");
   adress = deleteToMarkerLast(adress, "}");
   String build = jsonRead(adress, "build");
@@ -83,7 +83,7 @@ void getVershion() {
   sendOptions(spiffsS, spiffs);
   patch = "http://" + jsonRead(adress, "url") + "/";
   patch.replace("\\", "");
-  Serial.println(patch);
+ // Serial.println(patch);
 }
 // ------------------ Обновление по url
 // url файла для обновления. mode признак типа данных FS - true или Code - false
@@ -123,11 +123,11 @@ void UpdateStatus(t_httpUpdate_return & set , String mode) {
 }
 
 void update_started() {
-  Serial.println("CALLBACK:  HTTP update process started");
+ // Serial.println("CALLBACK:  HTTP update process started");
 }
 
 void update_finished() {
-  Serial.println("CALLBACK:  HTTP update process finished");
+ // Serial.println("CALLBACK:  HTTP update process finished");
 }
 
 void update_progress(int cur, int total) {
@@ -135,5 +135,5 @@ void update_progress(int cur, int total) {
 }
 
 void update_error(int err) {
-  Serial.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
+ // Serial.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
 }

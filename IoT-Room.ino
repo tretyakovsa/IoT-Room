@@ -3,6 +3,8 @@
 void setup() {
   Serial.begin(115200);
   Serial.println();
+  while (!Serial);  
+  //Serial.end();
    chipID = String( ESP.getChipId() ) + "-" + String( ESP.getFlashChipId() );
   TickerScheduler(1);
   initCMD();
@@ -27,7 +29,7 @@ void setup() {
   if (getSetup(dnsS) == "") sendSetup(dnsS, emptyS); // e-mail
 //  if (getSetup(mailS) == "") sendSetup(mailS, emptyS); // e-mail
 //  if (getSetup(passS) == "") sendSetup(passS, emptyS); // Пароль алеха
-  Serial.println(configSetup);
+  //Serial.println(configSetup);
   initWIFI();
   String testIp = MyWiFi.StringIP();
   if (MyWiFi.modeSTA()) {
@@ -62,9 +64,9 @@ void setup() {
 #endif
   String configs = getSetup(configsS);
   configs.toLowerCase();
-  Serial.println(configs);
+  //Serial.println(configs);
   String test = configsS + "/" + configs + ".txt";
-  Serial.println(test);
+  //Serial.println(test);
   goCommands(test);
   //goCommands1(test);
   initScenary();
@@ -94,6 +96,10 @@ void loop() {
   ws2812fx[1].service();
 #endif
 #ifdef pultM // 
+  handlePult();
+#endif
+  #ifdef pult // #endif
+pultRead();
   handlePult();
 #endif
 #ifdef rfM // #endif

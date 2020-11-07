@@ -11,7 +11,7 @@ void initWIFI() {
   MyWiFi.start();        // Запустим WiFi
 
   if (MyWiFi.modeSTA()) {
-    //statistics(statStart); // Если подключились к роутеру отправим статистику
+    statistics(statStart); // Если подключились к роутеру отправим статистику
 //    statistics();
   ts.add(tDBM, nTest_Time, [&](void*) {
     int temp = MyWiFi.RSSI();
@@ -22,7 +22,7 @@ void initWIFI() {
   }, nullptr, false);
   }
   sendSetup(ipS, MyWiFi.StringIP());
-  Serial.println(MyWiFi.StringIP());
+  //Serial.println(MyWiFi.StringIP());
   setupToOptions(ipS);
   sendSetup(getwayS, MyWiFi.StringGatewayIP());
   sendSetup(subnetS, MyWiFi.StringSubnetMask());
@@ -66,7 +66,7 @@ void initWIFI() {
     httpOkText();
     saveConfigSetup();
   });
-  Serial.println("Модуль включен");
+  //Serial.println("Модуль включен");
 }
 //ssidap?ssidAP=test1&ssidApPass=123456789
 String wifiSet(boolean mode) {
@@ -112,8 +112,8 @@ void statistics(uint8_t save) {
   urls += onPower; // поле статистики Start Info
   urls += "&";
   //urls += getSetup(buildDataS);
-    Serial.print("typeUpdate ");
-  Serial.println(typeUpdate);
+    //Serial.print("typeUpdate ");
+  //Serial.println(typeUpdate);
   if (typeUpdate == "spiffs")  {
     urls += getSetup(spiffsDataS);
   } else {
@@ -126,8 +126,8 @@ void statistics(uint8_t save) {
  // urls += "&";
  // urls += getSetup(passS);
   urls = urlsStat + urls;
-  Serial.print("urls ");
-  Serial.println(urls);
+  //Serial.print("urls ");
+  //Serial.println(urls);
   String stat = MyWiFi.getURL(urls);
   stat=deleteBeforeDelimiterTo(stat,"{");
   stat=deleteToMarkerLast(stat,"}");

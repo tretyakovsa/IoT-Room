@@ -43,6 +43,9 @@ void initCMD() {
 #ifdef pultM // 
   sCmd.addCommand("PULT",       pultInit);
 #endif
+#ifdef pult // 
+  sCmd.addCommand("PULT",       pultInit);
+#endif
 #ifdef PWMServoM // #endif
   sCmd.addCommand("PCA9685",       initPCA9685);
 #endif

@@ -26,10 +26,10 @@ void idNot() {}
 
 void handleScenary() {
   if (scensrioFIFO!=""){
-    Serial.println(scensrioFIFO);
+    //Serial.println(scensrioFIFO);
     String key = selectToMarker(scensrioFIFO, ",");
-    Serial.print(key);
-    Serial.println("="+getStatus(key));
+    //Serial.print(key);
+    //Serial.println("="+getStatus(key));
     scensrioFIFO=deleteBeforeDelimiter(scensrioFIFO, ",");
     String scen = ScenaryS + getSetup(configsS) + ".txt";
     goCommands(scen,key);

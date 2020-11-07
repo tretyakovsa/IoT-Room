@@ -434,3 +434,90 @@ void remoutget(String command ) {
   }
 }
 #endif
+#ifdef pult // #endif
+// Настраивает Serial по команде sCmd.addCommand("PULT",       pultInit);
+void pultInit() {
+  if (modules.indexOf("pult") != -1) swSer.end();
+  String brs = readArgsString();
+  String txs = readArgsString();
+  String rxs = readArgsString();
+   String sets = readArgsString();
+  if (brs == "" || txs == "" || rxs == "") return;
+  uint8_t tx =  pinTest(txs.toInt());
+  uint8_t rx =  pinTest(rxs.toInt());
+  uint8_t set =  pinTest(sets.toInt());
+  if (tx == 17 || rx == 17) return;
+  //uint8_t pin = readArgsInt();
+  //pinMode(set, OUTPUT);
+ // digitalWrite(set, HIGH);
+  swSer.begin(brs.toInt(), SWSERIAL_8N1, tx, rx, false, 190, 22);
+  //delay(100);
+  //swSer.println("AT+POWE9");
+  //delay(100);
+  //reseivUART();
+  //swSer.flush();
+  //delay(1000);
+  //digitalWrite(pin, HIGH);
+  //pinMode(pin, INPUT);
+  //if (uartRX == "+") {
+    if (true) {
+   // sCmd.addCommand(staS.c_str(), statusF);
+    sCmd.addCommand("RCP", rcpF);
+    sCmd.addCommand("UpdatePult", udpF);
+    modulesReg("pult");
+    sCmd.readStr("BUZZER 16");
+    sCmd.readStr(toneS + " 2200 300");
+    swSer.println("pult");
+  } else swSer.end();
+  uartRX = "";
+
+}
+void rcpF() {
+transmitUART("Remout Control Set");
+}
+void udpF() {
+  String str;
+  jsonWrite(str, ssidS, getSetup(ssidS));
+  jsonWrite(str, ssidPassS, getSetup(ssidPassS));
+  swSer.println(str);
+}
+
+
+
+void transmitUART(String str) {
+  swSer.println(str);
+}
+void reseivUART() {
+  while (swSer.available() > 0) {
+    uint8_t sum = swSer.read();
+    if (sum >= 10)  uartRX += char(sum);
+    yield();
+  }
+}
+
+void pultRead() {
+    while (swSer.available() > 0) {
+     //if (swSer.available() > 0) {
+      uint8_t sum = swSer.read();
+      if (sum >= 10)  uartRX += char(sum);
+      //swSer.print(char(sum));
+      yield();
+    }   
+
+}
+
+void handlePult() {
+    if (uartRX.indexOf("\r\n") != -1) {
+      Serial.println(uartRX);
+      String com = selectToMarker(uartRX, "\r\n");
+      com = "{" + selectToMarkerLast (com, "{");
+      pultAction(com);
+      uartRX = "";
+    }
+}
+void pultAction(String com) {
+  //sCmd.readStr(toneS + " 1200 100");
+  //remoutget(com);
+  Serial.println(com);
+}
+#endif

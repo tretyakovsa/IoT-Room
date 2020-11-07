@@ -314,6 +314,13 @@ const String staS   = "STATUS";
 const String pultS   = "pult";
 String getEffect = "{}";
 #endif
+#ifdef pult
+#include <SoftwareSerial.h>
+SoftwareSerial swSer;
+String uartRX = "";
+#include <Ticker.h>
+Ticker readSer;
+#endif
 
 #ifdef rfM // #endif
 #include <RCSwitch.h>                //https://github.com/sui77/rc-switch/

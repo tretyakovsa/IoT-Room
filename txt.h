@@ -12,6 +12,7 @@
 #define Si7021M // 394664
 #define rgbM    // 414676
 //#define pultM   // 416988
+#define pult   // 416988
 #define I2CM    // 417184
 #define PWMServoM //418248
 #define rfM  

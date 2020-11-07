@@ -265,7 +265,7 @@ void handleRC522() {
     };
 
     tag.toUpperCase();
-    Serial.println(tag);
+    //Serial.println(tag);
     flag = sendStatus(rfidkeyS, tag);
   };
 
