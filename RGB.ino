@@ -1,4 +1,5 @@
 #ifdef rgbM // #endif
+
 // RGB 4 1 60 0 ff5000 200 255 0
 void initRGB() {
   byte pin = readArgsInt(); // pin
@@ -166,5 +167,9 @@ uint16_t convertSpeed(uint8_t mcl_speed) {
   }
   return ws2812_speed;
 }
+
+#endif
+
+#ifdef rgbShimM // 
 
 #endif

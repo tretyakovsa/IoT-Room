@@ -9,7 +9,7 @@ void initShimOut() {
   String title = readArgsString(); // Пятый аргумент подпись
   String nameR = sOutS + num;
   if (title == "") title = nameR;
-  sendStatus(nameR, state,1);
+  sendStatus(nameR, state, 1);
   sendOptions(sOutS + PinS + num, pin);
   sendOptions(sOutS + "Old" + num, state);
   sendOptions(sOutS + NotS + num, inv);
@@ -24,25 +24,69 @@ void initShimOut() {
   actionsReg(sOutS + num);
   modulesReg(sOutS + num);
 }
+void initShim() {
+  uint8_t pin = readArgsInt(); // первый аргумент pin
+  pin =  pinTest(pin);
+  String num = readArgsString(); // второй аргумент прификс реле 0 1 2
+  uint16_t state = readArgsInt(); // третий  аргумент состояние на старте
+  boolean inv = readArgsInt(); // четвертый аргумент инверсия выхода
+  String title = readArgsString(); // Пятый аргумент подпись
+  String nameR = shimS + num;
+  if (title == "") title = nameR;
+  sendStatus(nameR, state, 1);
+  sendOptions(shimS + PinS + num, pin);
+  sendOptions(shimS + "Old" + num, state);
+  sendOptions(shimS + NotS + num, inv);
+  if (pin < 17) { //  это шим через GPIO
+    if (inv) {
+      analogWrite(pin, 1023 - state);
+    }
+    else analogWrite(pin, state);
+  }
+  sCmd.addCommand(shimS.c_str(), pinShim); //
+  commandsReg(shimS);
+  actionsReg(shimS + num);
+  modulesReg(shimS + num);
+}
 // http://192.168.0.91/cmd?command=relay off 1
 void pinShimOut() {
   String com = readArgsString(); // действие
   String num = readArgsString(); // номер реле
   pinShimSet(num, com, sOutS);
 }
-
-void pinShimSet(String num, String com, String name) {
-  String kayPin = name + PinS + num; // Получим имя ячейки пин по номеру
-  String kay = name + num; // Имя реле
+void pinShim() {
+  String com = readArgsString(); // действие
+  String num = readArgsString(); // номер реле
+  pinShimSet(num, com, shimS);
+}
+void pinShimSet(String num, String com, String typeShim) {
+  String kayPin = typeShim + PinS + num; // Получим имя ячейки пин по номеру
+  String kay = typeShim + num; // Имя реле
+  //Serial.print("kayPin=");
+  //Serial.println(kayPin);
+  //Serial.print("kay=");
+  //Serial.println(kay);
   uint8_t pin = getOptionsInt(kayPin); // Получим пин по Имени реле
-  uint8_t inv = getOptionsInt(name + NotS + num); // Получим признак инверсии по Имени реле
+  uint8_t inv = getOptionsInt(typeShim + NotS + num); // Получим признак инверсии по Имени реле
   uint16_t state = getStatusInt(kay); // Получим статус реле по Имени
+  //Serial.print("pin=");
+  //Serial.println(pin);
+  //Serial.print("inv=");
+  //Serial.println(inv);
+  //Serial.print("state=");
+  //Serial.println(state);
+  //Serial.print("com=");
+  //Serial.println(com);
+  int stateOld = getOptionsInt(typeShim + "Old" + num);
   // Проверим команду приготовим новый state
   if (com.toInt() != 0) state = com.toInt();
-  if (com == onS ) state = getOptionsInt(sOutS + "Old" + num);
+  if (com == onS ) {
+    state = stateOld;
+    if (state==0)state=1023;
+  }
   if (com == offS || com == "0") state = 0;
   if (com == notS) {
-    state = 1023 - state;
+    state = stateOld - state;
   }
   if (pin < 17) { //  это шим через GPIO
     if (inv) {
@@ -50,7 +94,7 @@ void pinShimSet(String num, String com, String name) {
     }
     else analogWrite(pin, state);
   }
-  if (state != 0)sendOptions(sOutS + "Old" + num, state);
+  if (state != 0)sendOptions(typeShim + "Old" + num, state);
   flag = sendStatus(kay, state);
   statusS = htmlStatus(configJson, kay, langOnS, langOffS);
 }
@@ -92,7 +136,7 @@ void initPinOut() {
 void initPin(uint8_t pin, String num, boolean state, boolean inv, String name, String title) {
   String nameR = name + num;
   if (title == "") title = nameR;
-  sendStatus(nameR, state,1);
+  sendStatus(nameR, state, 1);
   sendOptions(name + PinS + num, pin);
   sendOptions(name + NotS + num, inv);
   if (pin < 17) { //  это реле через GPIO
@@ -441,7 +485,7 @@ void pultInit() {
   String brs = readArgsString();
   String txs = readArgsString();
   String rxs = readArgsString();
-   String sets = readArgsString();
+  String sets = readArgsString();
   if (brs == "" || txs == "" || rxs == "") return;
   uint8_t tx =  pinTest(txs.toInt());
   uint8_t rx =  pinTest(rxs.toInt());
@@ -449,9 +493,10 @@ void pultInit() {
   if (tx == 17 || rx == 17) return;
   //uint8_t pin = readArgsInt();
   //pinMode(set, OUTPUT);
- // digitalWrite(set, HIGH);
+  // digitalWrite(set, HIGH);
   swSer.begin(brs.toInt(), SWSERIAL_8N1, tx, rx, false, 190, 22);
-  //delay(100);
+  delay(100);
+  swSer.println("pult");
   //swSer.println("AT+POWE9");
   //delay(100);
   //reseivUART();
@@ -460,20 +505,20 @@ void pultInit() {
   //digitalWrite(pin, HIGH);
   //pinMode(pin, INPUT);
   //if (uartRX == "+") {
-    if (true) {
-   // sCmd.addCommand(staS.c_str(), statusF);
+  if (true) {
+    // sCmd.addCommand(staS.c_str(), statusF);
     sCmd.addCommand("RCP", rcpF);
     sCmd.addCommand("UpdatePult", udpF);
     modulesReg("pult");
-    sCmd.readStr("BUZZER 16");
+    //sCmd.readStr("BUZZER 16");
     sCmd.readStr(toneS + " 2200 300");
-    swSer.println("pult");
+
   } else swSer.end();
   uartRX = "";
 
 }
 void rcpF() {
-transmitUART("Remout Control Set");
+  transmitUART("Remout Control Set");
 }
 void udpF() {
   String str;
@@ -496,24 +541,24 @@ void reseivUART() {
 }
 
 void pultRead() {
-    while (swSer.available() > 0) {
-     //if (swSer.available() > 0) {
-      uint8_t sum = swSer.read();
-      if (sum >= 10)  uartRX += char(sum);
-      //swSer.print(char(sum));
-      yield();
-    }   
+  while (swSer.available() > 0) {
+    //if (swSer.available() > 0) {
+    uint8_t sum = swSer.read();
+    if (sum >= 10)  uartRX += char(sum);
+    //swSer.print(char(sum));
+    yield();
+  }
 
 }
 
 void handlePult() {
-    if (uartRX.indexOf("\r\n") != -1) {
-      Serial.println(uartRX);
-      String com = selectToMarker(uartRX, "\r\n");
-      com = "{" + selectToMarkerLast (com, "{");
-      pultAction(com);
-      uartRX = "";
-    }
+  if (uartRX.indexOf("\r\n") != -1) {
+    Serial.println(uartRX);
+    String com = selectToMarker(uartRX, "\r\n");
+    com = "{" + selectToMarkerLast (com, "{");
+    pultAction(com);
+    uartRX = "";
+  }
 }
 void pultAction(String com) {
   //sCmd.readStr(toneS + " 1200 100");

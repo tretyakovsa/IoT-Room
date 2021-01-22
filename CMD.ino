@@ -8,6 +8,7 @@ void initCMD() {
   commandsReg("param");
 #ifdef pinShimM
   sCmd.addCommand("SHIMOUT",       initShimOut);
+  sCmd.addCommand("SHIM",       initShim);
 #endif
 #ifdef pinOutM
   sCmd.addCommand("PINOUT",       initPinOut);
@@ -38,7 +39,7 @@ void initCMD() {
   sCmd.addCommand("SI7021",       initSi7021);
 #endif
 #ifdef rgbM // 
-  sCmd.addCommand("RGB",       initRGB);
+  sCmd.addCommand("NRGB",       initRGB);
 #endif
 #ifdef pultM // 
   sCmd.addCommand("PULT",       pultInit);

@@ -39,17 +39,21 @@ void webUpdate() {
   ESPhttpUpdate.onError(update_error);
   if (getSetup("spiffsData") != spiffs || getSetup(relizS) == "alpha" || true) {
     String Timerset = readFile(configTimerS, 4096); // Сохраним все таймеры в глобальной переменной
+    String scen = ScenaryS + getSetup(configsS) + ".txt";
+    String Scenary = readFile(scen, 4096); // Сохраним сценарии в глобальной переменной
     typeUpdate = "spiffs";
-    //SPIFFS.format();
     SPIFFS.end();
-    //Serial.print("Обнавим ФС ");
-    //Serial.println(patch + spiffs);
+    
     updateHTTP(patch + spiffs, true); // Обновим файловую систему
+    Serial.println(configSetup);
     SPIFFS.begin();
     SPIFFS.remove(fileConfigS); // удалим файл конфигурации
     saveConfigSetup();
+    Serial.println(configSetup);
     SPIFFS.remove(configTimerS); // удалим файл таймеров
     writeFile(configTimerS, Timerset );
+    SPIFFS.remove(scen); // удалим файл конфигурации
+    writeFile(scen, Scenary );
   }
   //if (getSetup("buildData") != build || getSetup(relizS) =="alpha") {
   typeUpdate = "build";

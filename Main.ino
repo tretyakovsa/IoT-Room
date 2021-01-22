@@ -257,6 +257,7 @@ void initParam() {
 
 void espInfo() {
   String adminS = "{}";
+//   jsonWrite(adminS, configsEEPROMS, getOptions(configsEEPROMS));
   jsonWrite(adminS, heapS, String(ESP.getFreeHeap()));
   jsonWrite(adminS, "flashChip", String(ESP.getFlashChipId(), HEX));
   jsonWrite(adminS, "ideFlashSize", (String)ESP.getFlashChipSize());
@@ -275,6 +276,8 @@ void espInfo() {
   jsonWrite(adminS, "pageSize", (String)fs_info.pageSize);
   jsonWrite(adminS, "maxOpenFiles", (String)fs_info.maxOpenFiles);
   jsonWrite(adminS, "maxPathLength", (String)fs_info.maxPathLength);
+  jsonWrite(adminS, "buildDay", (String)__DATE__);
+  jsonWrite(adminS, "buildTime", (String)__TIME__);
   jsonWrite(adminS, "mac", MyWiFi.macAddress());
   jsonWrite(adminS, "sdk", (String)ESP.getSdkVersion());
   jsonWrite(adminS, "boot", ESP.getBootVersion());

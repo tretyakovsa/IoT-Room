@@ -98,7 +98,7 @@ uint16_t tChat_Time = 30000;
 uint16_t tTemp_Time = 5000;
 uint8_t nTest_Time = 0;
 uint16_t tDBM_Time = 30000;
-//const String ssdpDef   = "IoT-Room";
+const String verIots   = "IoT-Room";
 const String ssdpDef   = "Sonoff";
 const String spaceDef   = "home";
 const String modelURL   = "https://github.com/tretyakovsa/Sonoff_WiFi_switch";
@@ -195,6 +195,7 @@ const String i2cS   = "I2C";
 #endif
 #ifdef pinShimM
 const String sOutS   = "shimout"; //"stateRelay"; // Состояние реле
+const String shimS   = "shim"; //"stateRelay"; // Состояние реле
 #endif
 #ifdef pinOutM
 // -------- relay
@@ -302,7 +303,7 @@ const String colorRGBS   = "colorRGB";
 const String brightnessRGBS   = "brightnessRGB";
 const String modeRGBS   = "modeRGB";
 const String speedRGBS   = "speedRGB";
-const String rgbS   = "rgb";
+const String rgbS   = "nrgb";
 #endif
 
 #ifdef pultM // 

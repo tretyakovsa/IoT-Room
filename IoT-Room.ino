@@ -12,6 +12,7 @@ void setup() {
   configSetup = readFile(fileConfigS, 4096 );
   configSetup.replace("\r\n", "");
   if (configSetup == "") configSetup = "{}";
+  Serial.println(configSetup);
   //sendOptions(configsEEPROMS, loadStringEEPROM());
   //Serial.print("EEPROM=");
   //Serial.println(loadStringEEPROM());
@@ -37,6 +38,7 @@ void setup() {
   }
   jsonWrite(ssdpList, getSetup(ssdpS), testIp);
   sendOptions(ipS, testIp);
+  jsonWrite(modules, verIots, DATE_COMPILING);
   jsonWrite(modules, ssdpS, getSetup(ssdpS));
   jsonWrite(modules, configsS, getSetup(configsS));
  // jsonWrite(modules, mailS, getSetup(mailS));
