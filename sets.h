@@ -192,6 +192,7 @@ const String webClientSocketS = "webClientSocket";
 #ifdef I2CM // #endif
 #include <Wire.h>
 const String i2cS   = "I2C";
+String i2cList="{}";
 #endif
 #ifdef pinShimM
 const String sOutS   = "shimout"; //"stateRelay"; // Состояние реле

@@ -144,29 +144,30 @@ void initPin(uint8_t pin, String num, boolean state, boolean inv, String name, S
     digitalWrite(pin, state ^ inv);
   }
   if (pin > 17 && pin <= 21 ) { //это реле через UART
-    if (modules.indexOf(name + "uart") == -1) {
+    if (modules.indexOf(name + "uart") != -1) {
       modulesReg(name + "uart");
     }
     relayWrite(num.toInt(), state ^ inv);
   }
 #ifdef PWMServoM // #endif
-  if (pin > 21 && pin <= 36) { // это реле через PCA9685
-    if (modules.indexOf(i2cS) == -1) {
+  if (pin > 21 && pin <= 34) { // это реле через PCA9685
+    if (modules.indexOf(i2cS) != -1) {
       PCA9685Write(pin, state ^ inv);
     }
   }
 #endif
-#ifdef pinExt
-  if (modules.indexOf(i2cS) == -1) {
-    PCA9685Write(pin, state ^ inv);
-    pcf8574.write(pin, pcf8574.read(3));
+#ifdef pinExt // #endif
+  if (pin > 34 && pin <= 42) { // это реле через PCF8574
+    if (modules.indexOf(i2cS) != -1) {
+    PCF8574Write(pin, state ^ inv);
+    }
   }
 #endif
 }
 
 #ifdef PWMServoM // #endif
 void initPCA9685() {
-  if (modules.indexOf(i2cS) == -1) {
+  if (modules.indexOf(i2cS) != -1) {
     pwm.begin();
   }
 }
@@ -182,13 +183,14 @@ void PCA9685Write(uint8_t vpin, boolean state) {
 
 #ifdef pinExt
 void initPCF8574() {
-  if (modules.indexOf(i2cS) == -1) {
+  if (modules.indexOf(i2cS) != -1) {
     pcf8574.begin();
+    modulesReg("pcf8574");
   }
 }
 void PCF8574Write(uint8_t vpin, boolean state) {
-  if (modules.indexOf(i2cS) == -1) {
-    uint8_t pin = vpin - 38;
+  if (modules.indexOf(i2cS) != -1) {
+    uint8_t pin = vpin - 35;
     pcf8574.write(pin, state);
   }
 }
@@ -225,8 +227,14 @@ void pinSet(String num, String com, String name) {
     relayWrite(num.toInt(), state ^ inv);
   }
 #ifdef PWMServoM // #endif
-  if (pin > 21) { // это реле через PCA9685
+  if (pin > 21 && pin <= 33) { // это реле через PCA9685
     PCA9685Write(pin, state ^ inv);
+  }
+#endif
+#ifdef pinExt // #endif
+  if (pin > 34 && pin <= 42) { // это реле через PCF8574
+        Serial.println(pin);
+    PCF8574Write(pin, state ^ inv);
   }
 #endif
   flag = sendStatus(kay, state);

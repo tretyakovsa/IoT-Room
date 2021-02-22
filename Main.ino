@@ -15,10 +15,10 @@ void initI2C() {
   uint8_t pin2 = 17;
   if (pin1S == "" || pin2S == "") { // если один из аргументов не задан используем 4 5
     pin1 = 4;
-    pin1 = 5;
+    pin2 = 5;
   } else {
     pin1 = pin1S.toInt();
-    pin1 = pin1S.toInt();
+    pin2 = pin2S.toInt();
   }
   pin1 =  pinTest(pin1);
   pin2 =  pinTest(pin2);
@@ -26,9 +26,31 @@ void initI2C() {
     Wire.setClock(defaultTestString(clockFrequency, "400000").toInt());
     Wire.begin(pin1, pin2);
     modulesReg(i2cS);
+    scanI2C();
   }
 
 }
+void scanI2C() {
+  byte error, address;
+  int nDevices;
+  nDevices = 0;
+  for (address = 1; address < 127; address++ )
+  {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    if (error == 0) {
+
+      //i2cList += "0x" + String(address, HEX) + ",";
+      jsonArrAdd(configOptions, i2cS, "0x" + String(address, HEX));
+
+      nDevices++;
+    } else if (error == 4) {
+      if (address < 16)  jsonArrAdd(configOptions, i2cS + "Error", "0x" + String(address, HEX));
+    }
+  }
+  if (nDevices > 0)   {sendOptions("n"+i2cS, nDevices);} //Serial.println(i2cList);
+}
+
 #endif
 
 // -------------- Регистрация модуля
@@ -115,10 +137,10 @@ String goCommands(String inits, String key) {
   String scenOne = "";
   String temp;
   while (initsFile.size() != initsFile.position()) {
-    temp = initsFile.readStringUntil('\n') + '\n'; // читаем секцию сценария в переменную 
+    temp = initsFile.readStringUntil('\n') + '\n'; // читаем секцию сценария в переменную
     scenOne += temp;
     if (temp.indexOf("id ") != -1 ) { // если считано
-      if (scenOne.indexOf("if "+key + " ") != -1 || scenOne.indexOf("and "+key + " ") != -1 ) { // проверяем параметр очереди на наличие и если есть ключ выполняем сценарий
+      if (scenOne.indexOf("if " + key + " ") != -1 || scenOne.indexOf("and " + key + " ") != -1 ) { // проверяем параметр очереди на наличие и если есть ключ выполняем сценарий
         goCommand(scenOne);
       }
       scenOne = "";
@@ -257,7 +279,7 @@ void initParam() {
 
 void espInfo() {
   String adminS = "{}";
-//   jsonWrite(adminS, configsEEPROMS, getOptions(configsEEPROMS));
+  //   jsonWrite(adminS, configsEEPROMS, getOptions(configsEEPROMS));
   jsonWrite(adminS, heapS, String(ESP.getFreeHeap()));
   jsonWrite(adminS, "flashChip", String(ESP.getFlashChipId(), HEX));
   jsonWrite(adminS, "ideFlashSize", (String)ESP.getFlashChipSize());

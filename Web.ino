@@ -83,6 +83,7 @@ void initHTTP() {
   });
   // --------------------Выдаем данные configOptions
   HTTP.on("/config.options.json", HTTP_GET, []() {
+    scanI2C();
     httpOkJson(configOptions);
   });
   // --------------------Выдаем данные configOptions  config.admin.json

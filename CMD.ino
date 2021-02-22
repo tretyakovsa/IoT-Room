@@ -50,6 +50,9 @@ void initCMD() {
 #ifdef PWMServoM // #endif
   sCmd.addCommand("PCA9685",       initPCA9685);
 #endif
+#ifdef pinExt // #endif
+  sCmd.addCommand("PCF8574",       initPCF8574);
+#endif
 #ifdef I2CM // #endif
   sCmd.addCommand("I2C",       initI2C);
 #endif
